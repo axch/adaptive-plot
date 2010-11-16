@@ -29,6 +29,10 @@
    xresolution yresolution #!default #!default #!default #!default
    (empty-point-set) point-source #f))
 
+(define (plot-draw-point! plot x y)
+  (if (graphics-device? (plot-window plot))
+      (plot-point (plot-window plot) x y)))
+
 (define (plot-draw! plot)
   (call-with-values (lambda () (plot-dimensions plot))
     (lambda (xlow xhigh ylow yhigh)
@@ -86,7 +90,11 @@
 	  (graphics-close (plot-window plot)))))
 
 (define (plot f xlow xhigh)
-  (let ((new-plot (make-plot 40 40 f)))
+  (letrec ((new-plot (make-plot 40 40
+				(lambda (x)
+				  (let ((answer (f x)))
+				    (plot-draw-point! new-plot x answer)
+				    answer)))))
     (set! last-plot new-plot)
     (plot-resize-x! new-plot xlow xhigh)
     (plot-initialize! new-plot)
