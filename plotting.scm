@@ -6,6 +6,12 @@
 ;;; fit of fed-up-itude I started writing my own.  This is not quite
 ;;; finished.
 
+;;; TODO Make it work in MIT Scheme without mechanics
+;;; TODO Autorefinement (until curve is visually filled)
+;;; TODO Generalize autorefinement to non-curves?  (e.g. chaotic trajectories)
+;;; TODO Generalize to point sources that are not functions of the x dimension?
+
+
 (define-structure
   (plot safe-accessors (constructor %make-plot))
   xresolution
@@ -82,8 +88,9 @@
    (plot-xlow plot) (plot-xhigh plot) (plot-ylow plot) (plot-yhigh plot)))
 
 (define (plot-close-window! plot)
-  (if (graphics-device? (plot-window plot))
-      (graphics-close (plot-window plot))))
+  (if (plot? plot)
+      (if (graphics-device? (plot-window plot))
+	  (graphics-close (plot-window plot)))))
 
 (define (plot f xlow xhigh)
   (let ((new-plot (make-plot 800 800 f)))
@@ -135,7 +142,57 @@
 	  point-list))
 
 (define (point-set-insert point-list new-point-list)
-  (append point-list new-point-list))
+  (sort
+   (append point-list new-point-list)
+   (lambda (pt1 pt2)
+     (< (car pt1) (car pt2)))))
 
 (define (empty-point-set)
   '())
+
+;;;; Refinement of plots until visual continuity
+
+(define (needed-queries known-points desired-separation dimension)
+  (define (needed-interpoint-queries low-point high-point)
+    (let* ((d-low (dimension low-point))
+	   (d-high (dimension high-point))
+	   (d-distance (abs (- d-high d-low))))
+      (if (> d-distance desired-separation)
+	  (let* ((x-low (car low-point))
+		 (x-high (car high-point))
+		 (x-distance (abs (- x-high x-low)))
+		 (num-steps (inexact->exact (floor (/ d-distance desired-separation))))
+		 (step-size (/ x-distance (+ num-steps 1))))
+	    (iota num-steps (+ x-low step-size) step-size))
+	  '())))
+  (append-map needed-interpoint-queries known-points (cdr known-points)))
+
+(define (desired-separation low high desired-resolution)
+  (/ (abs (- high low)) desired-resolution))
+
+(define (plot-dim-refine! plot desired-separation dimension)
+  (let* ((relevant-points (plot-relevant-points plot))
+	 (points-to-query 
+	  (needed-queries relevant-points desired-separation dimension))
+	 (results (map (plot-point-source plot) points-to-query)))
+    (set-plot-known-points!
+     plot (point-set-insert (plot-known-points plot) (map cons points-to-query results)))))
+
+(define (ensure-x-point-known! plot x-value)
+  (if (> (length (range-query-2d (plot-known-points plot) x-value x-value)) 0)
+      'ok
+      (set-plot-known-points!
+       plot (point-set-insert (plot-known-points plot)
+			      `((,x-value . ,((plot-point-source plot) x-value)))))))
+
+(define (plot-refine! plot)
+  (if (default-object? (plot-xlow plot))
+      (ensure-x-point-known! plot -1.)
+      (ensure-x-point-known! plot (plot-xlow plot)))
+  (if (default-object? (plot-xhigh plot))
+      (ensure-x-point-known! plot 1.)
+      (ensure-x-point-known! plot (plot-xhigh plot)))
+  (call-with-values (lambda () (plot-dimensions plot))
+    (lambda (xlow xhigh ylow yhigh)
+      (plot-dim-refine! plot (desired-separation xlow xhigh (plot-xresolution plot)) car)
+      (plot-dim-refine! plot (desired-separation ylow yhigh (plot-yresolution plot)) cdr))))
