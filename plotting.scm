@@ -1,5 +1,7 @@
 (declare (usual-integrations))
 
+(load-option 'synchronous-subprocess)
+
 ;;;; Plotting
 
 ;;; I'm fed up with Mechanics's default plotting facilities, so in a
@@ -7,7 +9,6 @@
 ;;; finished.
 
 ;;; TODO Make it work in MIT Scheme without mechanics
-;;; TODO Autorefinement (until curve is visually filled)
 ;;; TODO Generalize autorefinement to non-curves?  (e.g. chaotic trajectories)
 ;;; TODO Generalize to point sources that are not functions of the x dimension?
 
@@ -205,3 +206,28 @@
 	(lambda (xlow xhigh ylow yhigh)
 	  (plot-dim-refine! plot (desired-separation ylow yhigh (plot-yresolution plot)) cdr)
 	  (plot-redraw! plot))))))
+
+;;;; Gnuplot output
+
+(define (plot-gnuplot! plot #!optional gnuplot-extra)
+  (call-with-temporary-file-pathname
+   (lambda (pathname)
+     (with-output-to-file pathname
+      (lambda ()
+	(for-each
+	 (lambda (x.y)
+	   (write (car x.y))
+	   (display " ")
+	   (write (cdr x.y))
+	   (newline))
+	 (plot-relevant-points plot))))
+     (let ((command (string-append
+		     "gnuplot -p -e \'plot \""
+		     (->namestring pathname)
+		     "\""
+		     (if (default-object? gnuplot-extra)
+			 ""
+			 (string-append " " gnuplot-extra))
+		     "'")))
+       (display command)
+       (run-shell-command command)))))
