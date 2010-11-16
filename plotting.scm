@@ -8,7 +8,6 @@
 ;;; fit of fed-up-itude I started writing my own.  This is not quite
 ;;; finished.
 
-;;; TODO Make it work in MIT Scheme without mechanics
 ;;; TODO Generalize autorefinement to non-curves?  (e.g. chaotic trajectories)
 ;;; TODO Generalize to point sources that are not functions of the x dimension?
 
@@ -40,7 +39,7 @@
       (let ((xresolution (plot-xresolution plot))
 	    (yresolution (plot-yresolution plot)))
 	(plot-close-window! plot)
-	(set-plot-window! plot (frame xlow xhigh ylow yhigh 960 1200))
+	(set-plot-window! plot (new-plot-window xlow xhigh ylow yhigh 960 1200))
 	(plot-redraw! plot)))))
 
 (define (plot-redraw! plot)
@@ -209,18 +208,21 @@
 
 ;;;; Gnuplot output
 
+(define (plot-dump! plot filename)
+  (with-output-to-file filename
+    (lambda ()
+      (for-each
+       (lambda (x.y)
+	 (write (exact->inexact (car x.y)))
+	 (display " ")
+	 (write (exact->inexact (cdr x.y)))
+	 (newline))
+       (plot-relevant-points plot)))))
+
 (define (plot-gnuplot! plot #!optional gnuplot-extra)
   (call-with-temporary-file-pathname
    (lambda (pathname)
-     (with-output-to-file pathname
-      (lambda ()
-	(for-each
-	 (lambda (x.y)
-	   (write (car x.y))
-	   (display " ")
-	   (write (cdr x.y))
-	   (newline))
-	 (plot-relevant-points plot))))
+     (plot-dump! plot pathname)
      (let ((command (string-append
 		     "gnuplot -p -e \'plot \""
 		     (->namestring pathname)
@@ -230,4 +232,73 @@
 			 (string-append " " gnuplot-extra))
 		     "'")))
        (display command)
+       (newline)
        (run-shell-command command)))))
+
+
+;;;; Making windows
+
+;;; This is copied from ScmUtils' FRAME and its immediate
+;;; dependencies.  The copy is to avoid depending on ScmUtils; I also
+;;; renamed the procedures to avoid conflicting with ScmUtils.
+(define (new-plot-window xmin xmax ymin ymax
+			 frame-width frame-height #!optional display)
+  (if (not (and (integer? frame-width) (> frame-width 0)
+		(integer? frame-height) (> frame-height 0)))
+      (error "Bad frame width or height"))
+  (let ((window (%plot-make-window frame-width frame-height -10 0 display)))
+    (graphics-set-coordinate-limits window xmin ymin xmax ymax)
+    (graphics-set-clip-rectangle window xmin ymin xmax ymax)
+    (graphics-clear window)
+    window))
+
+(define (%plot-make-window width height x y #!optional display)
+  (let ((window
+         (let ((name (graphics-type-name (graphics-type #f))))
+           (cond ((eq? name 'x)
+		  (if (default-object? display)
+		      (set! display #f))
+		  (%plot-make-window/x11 width height x y display))
+                 ((eq? name 'win32)
+		  (if (not (default-object? display))
+		      (error "No remote Win32 display"))
+		  (%plot-make-window/win32 width height x y))
+                 ((eq? name 'os/2)
+		  (if (not (default-object? display))
+		      (error "No remote OS/2 display"))
+		  (%plot-make-window/os2 width height x y))
+                 (else (error "Unsupported graphics type:" name))))))
+    (graphics-set-coordinate-limits window 0 (- (- height 1)) (- width 1) 0)
+    window))
+
+(define (%plot-make-window/x11 width height x y #!optional display)
+  (if (default-object? display)
+      (set! display #f))
+  (let ((window (make-graphics-device 'x display (x-geometry-string x y width height) true)))
+    (if (not (string-ci=? "MacOSX" microcode-id/operating-system-variant))
+        (x-graphics/disable-keyboard-focus window))
+    (x-graphics/set-input-hint window false)
+    (x-graphics/map-window window)
+    (x-graphics/flush window)
+    window))
+
+(define (%plot-make-window/win32 width height x y)
+  (let ((window (make-graphics-device 'win32 width height 'grayscale-128)))
+    (graphics-operation window 'move-window x y)
+    window))
+
+(define (%plot-make-window/os2 width height x y)
+  (let ((window (make-graphics-device 'os/2 width height)))
+    (call-with-values
+     (lambda ()
+       (graphics-operation window 'desktop-size))
+     (lambda (dx dy)
+       (call-with-values
+        (lambda ()
+          (graphics-operation window 'window-frame-size))
+        (lambda (fx fy)
+          (graphics-operation window 'set-window-position x (- dy (+ y fy)))))))
+    window))
+
+(define (plot-point window x y)
+  (graphics-draw-point window (exact->inexact x) (exact->inexact y)))
