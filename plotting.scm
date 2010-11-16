@@ -279,6 +279,8 @@
 		  (%plot-make-window/os2 width height x y))
                  (else (error "Unsupported graphics type:" name))))))
     (graphics-set-coordinate-limits window 0 (- (- height 1)) (- width 1) 0)
+    (graphics-operation window 'set-background-color "white")
+    (graphics-operation window 'set-foreground-color "black")
     window))
 
 (define (%plot-make-window/x11 width height x y #!optional display)
