@@ -31,7 +31,7 @@
 
 (define (plot-draw-point! plot x y)
   (if (graphics-device? (plot-window plot))
-      (plot-point (plot-window plot) x y)))
+      (%plot-point (plot-window plot) x y)))
 
 (define (plot-draw! plot)
   (call-with-values (lambda () (plot-dimensions plot))
@@ -44,13 +44,19 @@
 
 (define (plot-redraw! plot)
   (graphics-clear (plot-window plot))
+  (plot-initialize! plot)
   (call-with-values (lambda () (plot-dimensions plot))
     (lambda (xlow xhigh ylow yhigh)
       (graphics-set-coordinate-limits (plot-window plot) xlow ylow xhigh yhigh)
       (let ((relevant-points (plot-relevant-points plot)))
+	#;
 	(for-each (lambda (x.y)
-		    (plot-point (plot-window plot) (car x.y) (cdr x.y)))
+		    (%plot-point (plot-window plot) (car x.y) (cdr x.y)))
 		  relevant-points)
+	(for-each (lambda (x.y1 x.y2)
+		    (%plot-line (plot-window plot) (car x.y1) (cdr x.y1) (car x.y2) (cdr x.y2)))
+		  relevant-points
+		  (cdr relevant-points))
 	(pp (list "X range was" (xmin relevant-points) (xmax relevant-points)))
 	(pp (list "Y range was" (ymin relevant-points) (ymax relevant-points)))))))
 
@@ -300,5 +306,12 @@
           (graphics-operation window 'set-window-position x (- dy (+ y fy)))))))
     window))
 
-(define (plot-point window x y)
+(define (%plot-point window x y)
   (graphics-draw-point window (exact->inexact x) (exact->inexact y)))
+
+(define (%plot-line window x0 y0 x1 y1)
+  (graphics-draw-line window
+                      (exact->inexact x0)
+                      (exact->inexact y0)
+                      (exact->inexact x1)
+                      (exact->inexact y1)))
