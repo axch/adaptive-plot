@@ -39,7 +39,7 @@
       (let ((xresolution (plot-xresolution plot))
 	    (yresolution (plot-yresolution plot)))
 	(plot-close-window! plot)
-	(set-plot-window! plot (frame xlow xhigh ylow yhigh 1000 1600))
+	(set-plot-window! plot (frame xlow xhigh ylow yhigh 960 1200))
 	(plot-redraw! plot)))))
 
 (define (plot-redraw! plot)
