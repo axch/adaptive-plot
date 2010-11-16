@@ -10,6 +10,10 @@
 
 ;;; TODO Generalize autorefinement to non-curves?  (e.g. chaotic trajectories)
 ;;; TODO Generalize to point sources that are not functions of the x dimension?
+;;; TODO Generalize to multiple point sources
+;;; TODO Clean up the code
+;;; TODO Fix "Floating-point overflow signalled by x-graphics-draw-point."
+;;; TODO Autorefinement to smooth out corners in line plots?
 
 
 (define-structure
