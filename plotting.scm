@@ -1,6 +1,7 @@
 (declare (usual-integrations))
 
 (load-option 'synchronous-subprocess)
+(load-option 'wt-tree)
 
 ;;;; Plotting
 
@@ -177,6 +178,184 @@
 	(lambda (xlow xhigh ylow yhigh)
 	  (plot-dim-refine! plot (desired-separation ylow yhigh (plot-yresolution plot)) cdr)
 	  (plot-redraw! plot))))))
+
+;;; The stats of the parabola that goes through (x1, 0), (0, 0), and
+;;; (x3, y), with the condition that x1 < 0 < x3 or x3 < 0 < x1.
+;;; The stats of such a parabola are the area under the lobe and the x
+;;; and y corrdinates of the point that takes the largest possible
+;;; triangular bite out of it (returned in that order)
+(define (grounded-parabola-stats x1 x3 y)
+  (let* ((base (abs x1))
+	 (peak-x (/ x1 2))
+	 (peak-y (/ (* -1 y peak-x peak-x)
+		    (* (- x3 x1) x3)))
+	 (area (abs (* 2/3 base peak-y))))
+    (values area peak-x peak-y)))
+
+;;; The stats of the p1,0 lobe of the parabola that goes through (x1,
+;;; y1), (0, 0), and (x3, y3), under the condition that x1 < 0 < x3
+;;; and the p1, 0, p3 angle is obtuse.
+(define (obtuse-parabola-left-stats x1 y1 x3 y3)
+  (let* ((dist-p1 (sqrt (+ (square x1) (square y1))))
+	 (cos-p1-angle (/ x1 dist-p1))
+	 (sin-p1-angle (/ y1 dist-p1))
+	 ;; rotation by -(angle - pi)
+	 (cos-rot-angle (- cos-p1-angle))
+	 (sin-rot-angle sin-p1-angle)
+	 (new-x3 (- (* cos-rot-angle x3) (* sin-rot-angle y3)))
+	 (new-y3 (+ (* sin-rot-angle x3) (* cos-rot-angle y3))))
+    (receive
+     (area peak-x peak-y)
+     (grounded-parabola-stats (- dist-p1) new-x3 new-y3)
+     ;; rotation back, by +(angle - pi)
+     (let ((old-peak-x (+ (* cos-rot-angle peak-x) (* sin-rot-angle peak-y)))
+	   (old-peak-y (+ (* -1 sin-rot-angle peak-x) (* cos-rot-angle peak-y))))
+       (values area old-peak-x old-peak-y)))))
+
+;;; The stats of the 0,p3 lobe of the parabola that goes through (x1,
+;;; y1), (0, 0), and (x3, y3), under the condition that x1 < 0 < x3
+;;; and the p1, 0, p3 angle is obtuse.
+(define (obtuse-parabola-right-stats x1 y1 x3 y3)
+  (let* ((dist-p3 (sqrt (+ (square x3) (square y3))))
+	 (cos-p3-angle (/ x3 dist-p3))
+	 (sin-p3-angle (/ y3 dist-p3))
+	 ;; rotation by -angle
+	 (new-x1 (+ (* cos-p3-angle x1) (* sin-p3-angle y1)))
+	 (new-y1 (+ (* -1 sin-p3-angle x1) (* cos-p3-angle y1))))
+    (receive
+     (area peak-x peak-y)
+     (grounded-parabola-stats dist-p3 new-x1 new-y1)
+     ;; rotation back, by +angle
+     (let ((old-peak-x (- (* cos-p3-angle peak-x) (* sin-p3-angle peak-y)))
+	   (old-peak-y (+ (* sin-p3-angle peak-x) (* cos-p3-angle peak-y))))
+       (values area old-peak-x old-peak-y)))))
+
+;;; The stats of the given lobe of the parabola that goes through
+;;; (x1, y1), (0, 0), and (x3, y3), under the condition that x1 < 0 <
+;;; x3 and the p1, 0, p3 angle is obtuse.  Legal values for LOBE are
+;;; 'left for the p1,0 lobe and 'right for the 0,p3 lobe
+(define (obtuse-parabola-stats lobe x1 y1 x3 y3)
+  (if (eq? lobe 'left)
+      (obtuse-parabola-left-stats x1 y1 x3 y3)
+      (obtuse-parabola-right-stats x1 y1 x3 y3)))
+
+;;; The stats of the given lobe of the parabola that goes through
+;;; (x1, y1), (0, 0), and (x3, y3), under the condition that x1 < 0 <
+;;; x3.  (The p1, 0, p3 angle may be acute.)
+(define (origin-parabola-stats lobe x1 y1 x3 y3)
+  (let* ((slope1 (/ y1 x1))
+	 (slope3 (/ y3 x3))
+	 (slope-max (max (abs slope1) (abs slope3))))
+    (if (< slope-max 2/3)
+	(obtuse-parabola-stats lobe x1 y1 x3 y3)
+	(receive
+	 (area peak-x peak-y)
+	 (obtuse-parabola-stats lobe
+	  x1 (/ y1 (* 2 slope-max)) x3 (/ y3 (* 2 slope-max)))
+	 (values (* area 2 slope-max) peak-x (* peak-y 2 slope-max))))))
+
+;;; The stats of the given lobe of the parabola that goes through
+;;; (x1, y1), (x2, y2), and (x3, y3), under the condition that x1 < x2
+;;; < x3.
+(define (parabola-stats lobe x1 y1 x2 y2 x3 y3)
+  (receive
+   (area peak-x peak-y)
+   (origin-parabola-stats lobe
+    (- x1 x2) (- y1 y2) (- x3 x2) (- y3 y2))
+   (values area (+ peak-x x2) (+ peak-y y2))))
+
+(define (plot-line-interpolation-map plot big-lobe?)
+  (let* ((relevant-points (plot-relevant-points plot))
+	 (relevant-segments
+	  (map make-segment (cons #f relevant-points) relevant-points 
+	       (cdr relevant-points) (append (cddr relevant-points) (list #f))))
+	 (meaningful-segments (filter big-lobe? relevant-segments)))
+    (alist->wt-tree segment-wt-tree-type
+		    (map (lambda (seg)
+			   (cons seg #f))
+			 meaningful-segments))))
+
+(define (plot-update-interpolation-map tree new-p big-lobe?)
+  (define (assert thing)
+    (if (not thing)
+	(error "Assertion failed")))
+  (let ((biggest-segment (wt-tree/min map)))
+    (assert (< (car (segment-p1 biggest-segment)) (car new-p)
+	       (car (segment-p2 biggest-segment))))
+    (let* ((candidates (split-segment biggest-segment new-p))
+	   (insertees (filter big-lobe? candidates)))
+      (let loop ((tree tree)
+		 (insertees insertees))
+	(if (null? insertees)
+	    tree
+	    (loop (wt-tree/add (car insertees) #t) (cdr insertees)))))))
+
+(define (plot-line-interpolate! plot)
+  (let ((big-lobe? (plot-big-lobe plot)))
+    (let loop ((to-do (plot-line-interpolation-map plot big-lobe?)))
+      (if (wt-tree/empty? to-do)
+	  'ok
+	  (let* ((new-x (segment-candidate-x (wt-tree/min to-do)))
+		 (new-y ((plot-point-source plot) new-x)))
+	    (loop (plot-update-interpolation-map
+		   to-do (cons new-x new-y) big-lobe?)))))))
+
+(define (plot-big-lobe plot)
+  (receive
+   (xlow xhigh ylow yhigh)
+   (plot-dimensions plot)
+   (let* ((data-area (* (- xhigh xlow) (- yhigh ylow)))
+	  (screen-area (* (plot-xresolution plot) (plot-yresolution plot)))
+	  (invisible-area (/ data-area screen-area)))
+     (lambda (seg)
+       (> (segment-candidate-area seg) invisible-area)))))
+
+;;; This is the segment between p1 and p2.  x0 < x1 < x2 < x3.  p0 or
+;;; p3 may be #f.  There are two lobes over this segment, one defined
+;;; by p0 and one by p3.  The candidate-area is the area of the
+;;; larger, and the candidate-x is the x-coordinate of the point that
+;;; would take the biggest triangular bite out of it.  An invariant of
+;;; the geomtery is that x1 < candidate-x < x2.  If candidate-area is
+;;; 0, candidate-x may be #f.
+(define-structure (segment safe-accessors (constructor %make-segment))
+  p0 p1 p2 p3 candidate-x candidate-area)
+
+(define (make-segment p0 p1 p2 p3)
+  (receive
+   (p0-area p0-x p0-y)
+   (if p0
+       (parabola-stats 'right
+        (car p0) (cdr p0) (car p1) (cdr p1) (car p2) (cdr p2))
+       (values 0 #f #f))
+   (receive
+    (p3-area p3-x p3-y)
+    (if p3
+	(parabola-stats 'left
+         (car p1) (cdr p1) (car p2) (cdr p2) (car p3) (cdr p3))
+	(values 0 #f #f))
+    (if (> p0-area p3-area)
+	(%make-segment p0 p1 p2 p3 p0-x p0-area)
+	(%make-segment p0 p1 p2 p3 p3-x p3-area)))))
+
+(define (segment-ignorable-< seg1 seg2)
+  (cond ((< (segment-candidate-area seg1) (segment-candidate-area seg2))
+	 #f)
+	((> (segment-candidate-area seg1) (segment-candidate-area seg2))
+	 #t)
+	(else
+	 (> (hash seg1) (hash seg2)))))
+
+(define segment-wt-tree-type (make-wt-tree-type segment-ignorable-<))
+
+;;; Assuming x0 < x1 < new-x < x2 < x3, produces two new segments:
+;;; x0 < x1 < new-x < x2 and x1 < new-x < x2 < x3.
+(define (split-segment segment new-p)
+  (let ((p0 (segment-p0 segment))
+	(p1 (segment-p1 segment))
+	(p2 (segment-p2 segment))
+	(p3 (segment-p3 segment)))
+    (list (make-segment p0 p1 new-p p2)
+	  (make-segment p1 new-p p2 p3))))
 
 ;;;; Point sets and range queries
 
