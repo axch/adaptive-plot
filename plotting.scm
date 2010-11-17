@@ -54,10 +54,11 @@
     (lambda (xlow xhigh ylow yhigh)
       (graphics-set-coordinate-limits (plot-window plot) xlow ylow xhigh yhigh)
       (let ((relevant-points (plot-relevant-points plot)))
-	#;
+#;	
 	(for-each (lambda (x.y)
 		    (%plot-point (plot-window plot) (car x.y) (cdr x.y)))
 		  relevant-points)
+
 	(for-each (lambda (x.y1 x.y2)
 		    (%plot-line (plot-window plot) (car x.y1) (cdr x.y1) (car x.y2) (cdr x.y2)))
 		  relevant-points
@@ -101,11 +102,12 @@
 	  (graphics-close (plot-window plot)))))
 
 (define (plot f xlow xhigh)
-  (letrec ((new-plot (make-plot 40 40
-				(lambda (x)
-				  (let ((answer (f x)))
-				    (plot-draw-point! new-plot x answer)
-				    answer)))))
+  (letrec ((new-plot
+	    (make-plot 40 40
+	     (lambda (x)
+	       (let ((answer (f x)))
+		 (plot-draw-point! new-plot x answer)
+		 answer)))))
     (set! last-plot new-plot)
     (plot-resize-x! new-plot xlow xhigh)
     (plot-initialize! new-plot)
@@ -156,9 +158,11 @@
 (define (ensure-x-point-known! plot x-value)
   (if (> (length (range-query-2d (plot-known-points plot) x-value x-value)) 0)
       'ok
-      (set-plot-known-points!
-       plot (point-set-insert (plot-known-points plot)
-			      `((,x-value . ,((plot-point-source plot) x-value)))))))
+      (plot-learn-point! plot x-value ((plot-point-source plot) x-value))))
+
+(define (plot-learn-point! plot x y)
+  (set-plot-known-points!
+   plot (point-set-insert (plot-known-points plot) `((,x . ,y)))))
 
 (define (plot-initialize! plot)
   (if (default-object? (plot-xlow plot))
@@ -178,6 +182,16 @@
 	(lambda (xlow xhigh ylow yhigh)
 	  (plot-dim-refine! plot (desired-separation ylow yhigh (plot-yresolution plot)) cdr)
 	  (plot-redraw! plot))))))
+
+(define (plot-refine! plot)
+  (plot-initialize! plot)
+  (receive
+   (xlow xhigh ylow yhigh)
+   (plot-dimensions plot)
+   (plot-dim-refine! plot (desired-separation xlow xhigh 10) car)
+   (plot-redraw! plot)
+   (plot-line-interpolate! plot)
+   (plot-redraw! plot)))
 
 ;;; The stats of the parabola that goes through (x1, 0), (0, 0), and
 ;;; (x3, y), with the condition that x1 < 0 < x3 or x3 < 0 < x1.
@@ -279,16 +293,16 @@
   (define (assert thing)
     (if (not thing)
 	(error "Assertion failed")))
-  (let ((biggest-segment (wt-tree/min map)))
+  (let ((biggest-segment (wt-tree/min tree)))
     (assert (< (car (segment-p1 biggest-segment)) (car new-p)
 	       (car (segment-p2 biggest-segment))))
     (let* ((candidates (split-segment biggest-segment new-p))
 	   (insertees (filter big-lobe? candidates)))
-      (let loop ((tree tree)
+      (let loop ((tree (wt-tree/delete-min tree))
 		 (insertees insertees))
 	(if (null? insertees)
 	    tree
-	    (loop (wt-tree/add (car insertees) #t) (cdr insertees)))))))
+	    (loop (wt-tree/add tree (car insertees) #t) (cdr insertees)))))))
 
 (define (plot-line-interpolate! plot)
   (let ((big-lobe? (plot-big-lobe plot)))
@@ -297,18 +311,26 @@
 	  'ok
 	  (let* ((new-x (segment-candidate-x (wt-tree/min to-do)))
 		 (new-y ((plot-point-source plot) new-x)))
+	    (pp (wt-tree/min to-do))
+	    (plot-learn-point! plot new-x new-y)
 	    (loop (plot-update-interpolation-map
 		   to-do (cons new-x new-y) big-lobe?)))))))
 
-(define (plot-big-lobe plot)
+(define (plot-data-area plot)
   (receive
    (xlow xhigh ylow yhigh)
    (plot-dimensions plot)
-   (let* ((data-area (* (- xhigh xlow) (- yhigh ylow)))
-	  (screen-area (* (plot-xresolution plot) (plot-yresolution plot)))
-	  (invisible-area (/ data-area screen-area)))
-     (lambda (seg)
-       (> (segment-candidate-area seg) invisible-area)))))
+   (* (- xhigh xlow) (- yhigh ylow))))
+
+(define (plot-screen-area plot)
+  (* (plot-xresolution plot) (plot-yresolution plot)))
+
+(define (plot-invisible-area plot)
+  (/ (plot-data-area plot) (plot-screen-area plot)))
+
+(define (plot-big-lobe plot)
+  (lambda (seg)
+    (> (segment-candidate-area seg) (plot-invisible-area plot))))
 
 ;;; This is the segment between p1 and p2.  x0 < x1 < x2 < x3.  p0 or
 ;;; p3 may be #f.  There are two lobes over this segment, one defined
@@ -491,7 +513,8 @@
     window))
 
 (define (%plot-point window x y)
-  (graphics-draw-point window (exact->inexact x) (exact->inexact y)))
+  (graphics-draw-point window (exact->inexact x) (exact->inexact y))
+  (pp `("Plotting" ,(exact->inexact x) ,(exact->inexact y))))
 
 (define (%plot-line window x0 y0 x1 y1)
   (graphics-draw-line window
