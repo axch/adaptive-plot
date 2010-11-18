@@ -439,7 +439,7 @@
 		     (->namestring pathname)
 		     "\""
 		     (if (default-object? gnuplot-extra)
-			 ""
+			 " with lines"
 			 (string-append " " gnuplot-extra))
 		     "'")))
        (display command)
