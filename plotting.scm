@@ -13,8 +13,11 @@
 ;;; TODO Generalize to point sources that are not functions of the x dimension?
 ;;; TODO Generalize to multiple point sources
 ;;; TODO Clean up the code
-;;; TODO Fix "Floating-point overflow signalled by x-graphics-draw-point."
-;;; TODO Autorefinement to smooth out corners in line plots?
+;;; TODO A way to avoid autorefining randomized functions for too long
+;;; TODO A way to specify refining by just densing up the x axis
+;;;   without adaptation (good for randomized functions)
+;;; TODO Make gnuplot output the default?  Find a way to give the repl
+;;;   back while keeping a gnuplot window open?
 
 
 (define-structure
