@@ -36,7 +36,11 @@
 
 (define (plot-draw-point! plot x y)
   (if (graphics-device? (plot-window plot))
-      (%plot-point (plot-window plot) x y)))
+      (receive
+       (xlow xhigh ylow yhigh) (plot-dimensions plot)
+       (and (<= xlow y xhigh)
+	    (<= ylow y yhigh)
+	    (%plot-point (plot-window plot) x y)))))
 
 (define (plot-draw! plot)
   (call-with-values (lambda () (plot-dimensions plot))
@@ -53,6 +57,7 @@
   (call-with-values (lambda () (plot-dimensions plot))
     (lambda (xlow xhigh ylow yhigh)
       (graphics-set-coordinate-limits (plot-window plot) xlow ylow xhigh yhigh)
+      (graphics-set-clip-rectangle (plot-window plot) xlow ylow xhigh yhigh)
       (let ((relevant-points (plot-relevant-points plot)))
 #;	
 	(for-each (lambda (x.y)
