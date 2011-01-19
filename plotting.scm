@@ -427,7 +427,7 @@
 
 ;;;; Gnuplot output
 
-(define (plot-dump! plot filename)
+(define (gnuplot-write-alist alist filename)
   (with-output-to-file filename
     (lambda ()
       (for-each
@@ -436,12 +436,15 @@
 	 (display " ")
 	 (write (exact->inexact (cdr x.y)))
 	 (newline))
-       (plot-relevant-points plot)))))
+       alist))))
 
-(define (plot-gnuplot! plot #!optional gnuplot-extra)
+(define (plot-dump! plot filename)
+  (gnuplot-write-alist (plot-relevant-points plot) filename))
+
+(define (gnuplot-plot-alist alist #!optional gnuplot-extra)
   (call-with-temporary-file-pathname
    (lambda (pathname)
-     (plot-dump! plot pathname)
+     (gnuplot-write-alist alist pathname)
      (let ((command (string-append
 		     "gnuplot -p -e \'plot \""
 		     (->namestring pathname)
@@ -453,6 +456,9 @@
        (display command)
        (newline)
        (run-shell-command command)))))
+
+(define (plot-gnuplot! plot #!optional gnuplot-extra)
+  (gnuplot-plot-alist (plot-relevant-points plot) gnuplot-extra))
 
 ;;;; Making windows
 
