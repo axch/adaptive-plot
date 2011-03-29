@@ -457,7 +457,7 @@
        (newline)
        (run-shell-command command)))))
 
-(define (gnuplot-histogram-alist alist #!optional binsize)
+(define (gnuplot-histogram-alist alist #!optional data-name binsize)
   ;; TODO Abstract the commonalities among these two
   (define (compute-bin-size numbers)
     (let* ((sorted (sort numbers <))
@@ -472,10 +472,12 @@
      (let ((command (string-append
 		     "gnuplot -p -e \'"
                      "binwidth=" (number->string binsize) "; "
-                     "bin(x,width)=width*floor(x/width)+binwidth/2; "
+                     "bin(x,width)=width*floor(x/width)+(binwidth+1)/2; "
+                     "set boxwidth binwidth; "
                      "set style fill solid; "
                      "plot \"" (->namestring pathname) "\" "
-                     "using (bin($1,binwidth)):2 smooth freq with boxes"
+                     "using (bin($1,binwidth)):2 smooth freq with boxes "
+                     (if (default-object? data-name) "" (string-append "title \"" data-name "\" "))
 		     "'")))
        (display command)
        (newline)
