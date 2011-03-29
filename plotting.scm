@@ -457,6 +457,30 @@
        (newline)
        (run-shell-command command)))))
 
+(define (gnuplot-histogram-alist alist #!optional binsize)
+  ;; TODO Abstract the commonalities among these two
+  (define (compute-bin-size numbers)
+    (let* ((sorted (sort numbers <))
+           (minimum (car sorted))
+           (maximum (last sorted)))
+      (/ (- maximum minimum) 200)))
+  (if (default-object? binsize)
+      (set! binsize (compute-bin-size (map car alist))))
+  (call-with-temporary-file-pathname
+   (lambda (pathname)
+     (gnuplot-write-alist alist pathname)
+     (let ((command (string-append
+		     "gnuplot -p -e \'"
+                     "binwidth=" (number->string binsize) "; "
+                     "bin(x,width)=width*floor(x/width)+binwidth/2; "
+                     "set style fill solid; "
+                     "plot \"" (->namestring pathname) "\" "
+                     "using (bin($1,binwidth)):2 smooth freq with boxes"
+		     "'")))
+       (display command)
+       (newline)
+       (run-shell-command command)))))
+
 (define (plot-gnuplot! plot #!optional gnuplot-extra)
   (gnuplot-plot-alist (plot-relevant-points plot) gnuplot-extra))
 
