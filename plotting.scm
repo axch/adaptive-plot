@@ -476,7 +476,7 @@
                      "set boxwidth binwidth; "
                      "set style fill solid; "
                      "plot \"" (->namestring pathname) "\" "
-                     "using (bin($1,binwidth)):2 smooth freq with boxes "
+                     "using (bin($1,binwidth)):($2/binwidth) smooth freq with boxes "
                      (if (default-object? data-name) "" (string-append "title \"" data-name "\" "))
 		     "'")))
        (display command)
