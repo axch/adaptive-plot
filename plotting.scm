@@ -441,12 +441,16 @@
 (define (plot-dump! plot filename)
   (gnuplot-write-alist (plot-relevant-points plot) filename))
 
-(define (gnuplot-plot-alist alist #!optional gnuplot-extra)
+(define (gnuplot-plot-alist alist #!optional gnuplot-extra gnuplot-prefix)
   (call-with-temporary-file-pathname
    (lambda (pathname)
      (gnuplot-write-alist alist pathname)
      (let ((command (string-append
-		     "gnuplot -p -e \'plot \""
+		     "gnuplot -p -e \'"
+                     (if (default-object? gnuplot-prefix)
+                         ""
+                         (string-append gnuplot-prefix "; "))
+                     "plot \""
 		     (->namestring pathname)
 		     "\""
 		     (if (default-object? gnuplot-extra)
