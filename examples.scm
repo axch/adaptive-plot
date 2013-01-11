@@ -32,6 +32,7 @@
 
 ;; Sharp extremum at 1/(sqrt 2); the weird constant is there to
 ;; prevent the plotter from guessing the minimum by accident.
+;; Gnuplot natively cuts the extremum off.
 (plot (lambda (x) (abs (- x (/ 1 (sqrt 2))))) -1 1)
 
 (plot-gnuplot! last-plot)
@@ -53,5 +54,11 @@
 
 ;; Offset so it can't guess the key points
 (plot (lambda (x) (quartic-mess (+ x (sqrt 2)))) -3 3)
+
+(plot-gnuplot! last-plot)
+
+;; Gnuplot not only fails to follow the heights of the peaks, it
+;; misses around half of them completely.
+(plot (lambda (x) (sin (* 200 x))) -1 1)
 
 (plot-gnuplot! last-plot)
