@@ -46,6 +46,7 @@
 	    (%plot-point (plot-window plot) x y)))))
 
 (define (plot-draw! plot)
+  (plot-ensure-initialized! new-plot)
   (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
    (let ((xresolution (plot-xresolution plot))
          (yresolution (plot-yresolution plot)))
@@ -86,7 +87,6 @@
 		 answer)))))
     (set! last-plot new-plot)
     (plot-resize-x! new-plot xlow xhigh)
-    (plot-ensure-initialized! new-plot)
     (plot-draw! new-plot)
     (plot-refine! new-plot)
     'ok))
