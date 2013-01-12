@@ -34,7 +34,7 @@
     new-plot))
 
 (define (gnuplot f xlow xhigh #!optional gnuplot-extra gnuplot-prefix)
-  (plot-gnuplot! (plot-quietly f xlow xhigh gnuplot-extra gnuplot-prefix)))
+  (plot-gnu! (plot-quietly f xlow xhigh gnuplot-extra gnuplot-prefix)))
 
 ;;;; Interactive manipulation
 
@@ -54,7 +54,7 @@
       (if (graphics-device? (plot-window plot))
 	  (graphics-close (plot-window plot)))))
 
-(define (plot-gnuplot! plot #!optional gnuplot-extra gnuplot-prefix)
+(define (plot-gnu! plot #!optional gnuplot-extra gnuplot-prefix)
   (gnuplot-plot-alist (plot-relevant-points plot) gnuplot-extra gnuplot-prefix)
   plot)
 

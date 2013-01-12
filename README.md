@@ -49,10 +49,9 @@ TODO plot-resize!, plot-resize-x!, plot-resize-y!
 (plot-close-window! plot)
 - Get rid of the Scheme window (and don't recreate it)
 
-(plot-gnuplot! plot)
+(plot-gnu! plot)
 - Draw the (current state of) the plot in a fresh gnuplot window.  (Does not
   autorefine)
-- TODO maybe call this plot-gnu! ?
 
 
 Interactive querying:
