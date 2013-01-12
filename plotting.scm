@@ -227,13 +227,16 @@
 ;;; biggest mistakes relative to a locally quadratic approximation of
 ;;; the function.
 (define (plot-parabolic-interpolate! plot)
-  (let ((points (plot-relevant-points plot))
-        (new-point (lambda (x)
-                     (let ((y ((plot-point-source plot) x)))
-                       (plot-learn-point! plot x y)
-                       y)))
-        (big-lobe? (plot-big-lobe plot)))
-    (interpolate-approximation points new-point big-lobe?)))
+  (interpolate-approximation
+   (plot-relevant-points plot)
+   (plot-watched-f plot)
+   (plot-big-lobe plot)))
+
+(define (plot-watched-f plot)
+  (lambda (x)
+    (let ((y ((plot-point-source plot) x)))
+      (plot-learn-point! plot x y)
+      y)))
 
 (define (plot-data-area plot)
   (receive
