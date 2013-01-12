@@ -46,7 +46,7 @@
 	    (%plot-point (plot-window plot) x y)))))
 
 (define (plot-draw! plot)
-  (plot-ensure-initialized! new-plot)
+  (plot-ensure-initialized! plot)
   (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
    (let ((xresolution (plot-xresolution plot))
          (yresolution (plot-yresolution plot)))
