@@ -148,8 +148,7 @@
 
 (define (plot-adaptive-refine! plot)
   (plot-ensure-initialized! plot)
-  (receive
-   (xlow xhigh ylow yhigh) (plot-dimensions plot)
+  (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
    (plot-dim-refine! plot (desired-separation xlow xhigh 10) car)
    (plot-redraw! plot)
    (plot-parabolic-interpolate! plot)
@@ -173,9 +172,7 @@
 
 (define (plot-small-lobe plot)
   (define (plot-data-area plot)
-    (receive
-        (xlow xhigh ylow yhigh)
-      (plot-dimensions plot)
+    (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
       (* (- xhigh xlow) (- yhigh ylow))))
   (define (plot-screen-area plot)
     (* (plot-xresolution plot) (plot-yresolution plot)))
