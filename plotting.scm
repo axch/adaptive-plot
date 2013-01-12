@@ -314,8 +314,8 @@
 
 (define segment-wt-tree-type (make-wt-tree-type segment-ignorable-<))
 
-;;; Assuming x0 < x1 < new-x < x2 < x3, produces two new segments:
-;;; x0 < x1 < new-x < x2 and x1 < new-x < x2 < x3.
+;;; Assuming x0 < x1 < new-x < x2 < x3, produces a list of two new
+;;; segments: x0 < x1 < new-x < x2 and x1 < new-x < x2 < x3.
 (define (split-segment segment new-p)
   (let ((p0 (segment-p0 segment))
 	(p1 (segment-p1 segment))
