@@ -74,7 +74,7 @@
 
 (define (plot-redraw! plot)
   (graphics-clear (plot-window plot))
-  (plot-initialize! plot)
+  (plot-ensure-initialized! plot)
   (call-with-values (lambda () (plot-dimensions plot))
     (lambda (xlow xhigh ylow yhigh)
       (graphics-set-coordinate-limits (plot-window plot) xlow ylow xhigh yhigh)
@@ -136,7 +136,7 @@
 		 answer)))))
     (set! last-plot new-plot)
     (plot-resize-x! new-plot xlow xhigh)
-    (plot-initialize! new-plot)
+    (plot-ensure-initialized! new-plot)
     (plot-draw! new-plot)
     (plot-refine! new-plot)
     'ok))
@@ -161,7 +161,7 @@
   (set-plot-known-points!
    plot (point-set-insert (plot-known-points plot) x y)))
 
-(define (plot-initialize! plot)
+(define (plot-ensure-initialized! plot)
   (define (ensure-x-point-known! x-value)
     (if (> (length (range-query-2d (plot-known-points plot) x-value x-value)) 0)
         'ok
@@ -176,7 +176,7 @@
 ;;; Uniform refinement
 
 (define (plot-uniform-refine! plot)
-  (plot-initialize! plot)
+  (plot-ensure-initialized! plot)
   (call-with-values (lambda () (plot-dimensions plot))
     (lambda (xlow xhigh ylow yhigh)
       (plot-dim-refine! plot (desired-separation xlow xhigh (plot-xresolution plot)) car)
@@ -217,7 +217,7 @@
 ;;; Adaptive refinement by parabolic interpolation
 
 (define (plot-adaptive-refine! plot)
-  (plot-initialize! plot)
+  (plot-ensure-initialized! plot)
   (receive
    (xlow xhigh ylow yhigh) (plot-dimensions plot)
    (plot-dim-refine! plot (desired-separation xlow xhigh 10) car)
