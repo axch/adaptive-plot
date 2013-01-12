@@ -222,18 +222,17 @@
 
 (define plot-refine! plot-adaptive-refine!)
 
-(define (plot-line-interpolation-map plot big-lobe?)
-  (let* ((relevant-points (plot-relevant-points plot))
-	 (relevant-segments
+(define (plot-line-interpolation-map relevant-points keep?)
+  (let* ((relevant-segments
 	  (map make-segment (cons #f relevant-points) relevant-points 
 	       (cdr relevant-points) (append (cddr relevant-points) (list #f))))
-	 (meaningful-segments (filter big-lobe? relevant-segments)))
+	 (meaningful-segments (filter keep? relevant-segments)))
     (alist->wt-tree segment-wt-tree-type
 		    (map (lambda (seg)
 			   (cons seg #f))
 			 meaningful-segments))))
 
-(define (plot-update-interpolation-map tree new-p big-lobe?)
+(define (plot-update-interpolation-map tree new-p keep?)
   (define (assert thing)
     (if (not thing)
 	(error "Assertion failed")))
@@ -241,7 +240,7 @@
     (assert (< (car (segment-p1 biggest-segment)) (car new-p)
 	       (car (segment-p2 biggest-segment))))
     (let* ((candidates (split-segment biggest-segment new-p))
-	   (insertees (filter big-lobe? candidates)))
+	   (insertees (filter keep? candidates)))
       (let loop ((tree (wt-tree/delete-min tree))
 		 (insertees insertees))
 	(if (null? insertees)
@@ -250,7 +249,8 @@
 
 (define (plot-line-interpolate! plot)
   (let ((big-lobe? (plot-big-lobe plot)))
-    (let loop ((to-do (plot-line-interpolation-map plot big-lobe?)))
+    (let loop ((to-do (plot-line-interpolation-map
+                       (plot-relevant-points plot) big-lobe?)))
       (if (wt-tree/empty? to-do)
 	  'ok
 	  (let* ((new-x (segment-candidate-x (wt-tree/min to-do)))
