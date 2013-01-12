@@ -34,11 +34,23 @@
     new-plot))
 
 (define (gnuplot f xlow xhigh #!optional gnuplot-extra gnuplot-prefix)
-  (plot-gnu! (plot-quietly f xlow xhigh gnuplot-extra gnuplot-prefix)))
+  (plot-gnu! (plot-quietly f xlow xhigh) gnuplot-extra gnuplot-prefix))
 
 ;;;; Interactive manipulation
 
 (define last-plot #f)
+
+(define (plot-quietly f xlow xhigh)
+  (letrec ((new-plot
+	    (make-plot 960 1200
+	     (lambda (x)
+	       (let ((answer (f x)))
+		 (plot-draw-point! new-plot x answer)
+		 answer)))))
+    (set! last-plot new-plot)
+    (plot-resize-x! new-plot xlow xhigh)
+    (plot-refine! new-plot)
+    new-plot))
 
 (define (plot-draw! plot)
   (plot-ensure-initialized! plot)

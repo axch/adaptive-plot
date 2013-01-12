@@ -47,8 +47,9 @@
 
 (plot-gnu! last-plot)
 
-;; Still works with a larger range
-(plot quartic-mess -10 10)
+;; Still works with a larger range; plot it without showing the Scheme
+;; plot window just for kicks.
+(plot-quietly quartic-mess -10 10)
 
 (plot-gnu! last-plot)
 

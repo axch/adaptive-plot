@@ -36,9 +36,9 @@ Interactive manipulation:
 
 last-plot
 
-TODO (plot-quietly f xlow xhigh)
+(plot-quietly f xlow xhigh)
 - Do the adaptive point selection, but produce no output.  Return the
-  plot object
+  plot object and set last-plot.
 
 (plot-draw! plot)
 - Draw the plot in a Scheme window.  (Does not autorefine)
