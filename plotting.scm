@@ -89,7 +89,7 @@
     (plot-resize-x! new-plot xlow xhigh)
     (plot-draw! new-plot)
     (plot-refine! new-plot)
-    'ok))
+    new-plot))
 
 (define last-plot #f)
 

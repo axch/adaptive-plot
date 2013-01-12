@@ -7,8 +7,7 @@ TODO Control the size of the discrepancy that is considered acceptable
 Facade:
 
 (plot f xlow xhigh)
-- Draw the function in a Scheme window.  Set last-plot.
-  TODO: return the plot object
+- Draw the function in a Scheme window.  Return the plot object and set last-plot.
 
 TODO (gnuplot f xlow xhigh)
 - Draw the function in a fresh gnuplot window.  To flash a Scheme window
