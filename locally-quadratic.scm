@@ -82,11 +82,11 @@
 ;;; Given a piecewise linear curve as a list of points, make a
 ;;; priority queue of the lowest-quality segments in that curve.
 ;;; TODO turn keep? into drop? and make it optional.
-(define (interpolation-queue points keep?)
+(define (interpolation-queue points drop?)
   (let* ((segments
 	  (map make-segment (cons #f points) points
 	       (cdr points) (append (cddr points) (list #f))))
-	 (meaningful-segments (filter keep? segments)))
+	 (meaningful-segments (remove drop? segments)))
     (alist->wt-tree segment-wt-tree-type
 		    (map (lambda (seg)
 			   (cons seg #f))
@@ -96,7 +96,7 @@
 ;;; point that breaks the worst segment therein, produce a new queue
 ;;; for the curve formed by splitting that segment with that point.
 ;;; TODO turn keep? into drop? and make it optional.
-(define (update-interpolation-queue tree new-p keep?)
+(define (update-interpolation-queue tree new-p drop?)
   (define (assert thing)
     (if (not thing)
 	(error "Assertion failed")))
@@ -111,7 +111,7 @@
     (assert (< (car (segment-p1 biggest-segment)) (car new-p)
 	       (car (segment-p2 biggest-segment))))
     (let* ((candidates (split-segment biggest-segment new-p))
-	   (insertees (filter keep? candidates)))
+	   (insertees (remove drop? candidates)))
       (wt-tree/insert-alist (wt-tree/delete-min tree)
                             (map (lambda (seg)
                                    (cons seg #f))
@@ -122,12 +122,12 @@
 ;;; segment first.  Returns nothing useful; the communication
 ;;; mechanism is the x values that `f' is called with.  TODO turn
 ;;; keep? into drop? and make it optional.
-(define (interpolate-approximation points f keep?)
-  (let loop ((to-do (interpolation-queue points keep?)))
+(define (interpolate-approximation points f drop?)
+  (let loop ((to-do (interpolation-queue points drop?)))
     (if (wt-tree/empty? to-do)
         'ok
         (let* ((new-x (segment-candidate-x (wt-tree/min to-do)))
                (new-y (f new-x)))
           (pp (wt-tree/min to-do))
           (loop (update-interpolation-queue
-                 to-do (cons new-x new-y) keep?))))))
+                 to-do (cons new-x new-y) drop?))))))

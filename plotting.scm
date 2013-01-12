@@ -230,7 +230,7 @@
   (interpolate-approximation
    (plot-relevant-points plot)
    (plot-watched-f plot)
-   (plot-big-lobe plot)))
+   (plot-small-lobe plot)))
 
 (define (plot-watched-f plot)
   (lambda (x)
@@ -250,6 +250,6 @@
 (define (plot-invisible-area plot)
   (/ (plot-data-area plot) (plot-screen-area plot)))
 
-(define (plot-big-lobe plot)
+(define (plot-small-lobe plot)
   (lambda (seg)
-    (> (segment-lobe-area seg) (plot-invisible-area plot))))
+    (< (segment-lobe-area seg) (plot-invisible-area plot))))
