@@ -198,7 +198,7 @@
       (ensure-x-point-known! plot 1.)
       (ensure-x-point-known! plot (plot-xhigh plot))))
 
-(define (plot-refine! plot)
+(define (plot-uniform-refine! plot)
   (plot-initialize! plot)
   (call-with-values (lambda () (plot-dimensions plot))
     (lambda (xlow xhigh ylow yhigh)
@@ -209,15 +209,16 @@
 	  (plot-dim-refine! plot (desired-separation ylow yhigh (plot-yresolution plot)) cdr)
 	  (plot-redraw! plot))))))
 
-(define (plot-refine! plot)
+(define (plot-adaptive-refine! plot)
   (plot-initialize! plot)
   (receive
-   (xlow xhigh ylow yhigh)
-   (plot-dimensions plot)
+   (xlow xhigh ylow yhigh) (plot-dimensions plot)
    (plot-dim-refine! plot (desired-separation xlow xhigh 10) car)
    (plot-redraw! plot)
    (plot-line-interpolate! plot)
    (plot-redraw! plot)))
+
+(define plot-refine! plot-adaptive-refine!)
 
 ;;; The stats of the parabola that goes through (x1, 0), (0, 0), and
 ;;; (x3, y), with the condition that x1 < 0 < x3 or x3 < 0 < x1.
