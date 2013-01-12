@@ -227,17 +227,13 @@
 ;;; biggest mistakes relative to a locally quadratic approximation of
 ;;; the function.
 (define (plot-parabolic-interpolate! plot)
-  (let ((big-lobe? (plot-big-lobe plot)))
-    (let loop ((to-do (interpolation-queue
-                       (plot-relevant-points plot) big-lobe?)))
-      (if (wt-tree/empty? to-do)
-	  'ok
-	  (let* ((new-x (segment-candidate-x (wt-tree/min to-do)))
-		 (new-y ((plot-point-source plot) new-x)))
-	    (pp (wt-tree/min to-do))
-	    (plot-learn-point! plot new-x new-y)
-	    (loop (update-interpolation-queue
-		   to-do (cons new-x new-y) big-lobe?)))))))
+  (let ((points (plot-relevant-points plot))
+        (new-point (lambda (x)
+                     (let ((y ((plot-point-source plot) x)))
+                       (plot-learn-point! plot x y)
+                       y)))
+        (big-lobe? (plot-big-lobe plot)))
+    (interpolate-approximation points new-point big-lobe?)))
 
 (define (plot-data-area plot)
   (receive

@@ -116,3 +116,18 @@
                             (map (lambda (seg)
                                    (cons seg #f))
                                  insertees)))))
+
+;;; Iteratively refine the piecewise linear approximation of the given
+;;; function `f' given by the given `points', splitting the worst
+;;; segment first.  Returns nothing useful; the communication
+;;; mechanism is the x values that `f' is called with.  TODO turn
+;;; keep? into drop? and make it optional.
+(define (interpolate-approximation points f keep?)
+  (let loop ((to-do (interpolation-queue points keep?)))
+    (if (wt-tree/empty? to-do)
+        'ok
+        (let* ((new-x (segment-candidate-x (wt-tree/min to-do)))
+               (new-y (f new-x)))
+          (pp (wt-tree/min to-do))
+          (loop (update-interpolation-queue
+                 to-do (cons new-x new-y) keep?))))))
