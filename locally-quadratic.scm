@@ -78,11 +78,15 @@
 	 (> (hash seg1) (hash seg2)))))
 
 (define segment-wt-tree-type (make-wt-tree-type segment-quality-<))
-
+
 ;;; Given a piecewise linear curve as a list of points, make a
-;;; priority queue of the lowest-quality segments in that curve.
-;;; TODO turn keep? into drop? and make it optional.
-(define (interpolation-queue points drop?)
+;;; priority queue of the lowest-quality segments in that curve.  If
+;;; supplied, the `drop?' argument is a predicate that picks out those
+;;; segments that are so good that they need not be added to the
+;;; queue.
+(define (interpolation-queue points #!optional drop?)
+  (if (default-object? drop?)
+      (set! drop? (lambda (x) #f)))
   (let* ((segments
 	  (map make-segment (cons #f points) points
 	       (cdr points) (append (cddr points) (list #f))))
@@ -94,9 +98,13 @@
 
 ;;; Given an interpolation queue for a piecewise linear curve, and a
 ;;; point that breaks the worst segment therein, produce a new queue
-;;; for the curve formed by splitting that segment with that point.
-;;; TODO turn keep? into drop? and make it optional.
-(define (update-interpolation-queue tree new-p drop?)
+;;; for the curve formed by splitting that segment with that point.  If
+;;; supplied, the `drop?' argument is a predicate that picks out those
+;;; segments that are so good that they need not be added to the
+;;; new queue.  The existing queue elements are not filtered.
+;;; TODO `drop?' should really be part of the interpolation queue
+;;; datastructure itself, to avoid synchronization issues.
+(define (update-interpolation-queue tree new-p #!optional drop?)
   (define (assert thing)
     (if (not thing)
 	(error "Assertion failed")))
@@ -107,6 +115,8 @@
           tree
           (loop (wt-tree/add tree (caar items) (cdar items))
                 (cdr items)))))
+  (if (default-object? drop?)
+      (set! drop? (lambda (x) #f)))
   (let ((biggest-segment (wt-tree/min tree)))
     (assert (< (car (segment-p1 biggest-segment)) (car new-p)
 	       (car (segment-p2 biggest-segment))))
@@ -120,9 +130,13 @@
 ;;; Iteratively refine the piecewise linear approximation of the given
 ;;; function `f' given by the given `points', splitting the worst
 ;;; segment first.  Returns nothing useful; the communication
-;;; mechanism is the x values that `f' is called with.  TODO turn
-;;; keep? into drop? and make it optional.
-(define (interpolate-approximation points f drop?)
+;;; mechanism is the x values that `f' is called with.  If supplied,
+;;; the `drop?' argument is a predicate that picks out those segments
+;;; that are so good they need not be further refined.  Interpolation
+;;; proceeds until all remaining segments satisfy `drop?'.  If `drop?'
+;;; is not supplied, interpolation will proceed forever (unless `f'
+;;; escapes with a nonlocal control transfer of some kind).
+(define (interpolate-approximation points f #!optional drop?)
   (let loop ((to-do (interpolation-queue points drop?)))
     (if (wt-tree/empty? to-do)
         'ok
