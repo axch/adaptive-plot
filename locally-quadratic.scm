@@ -92,6 +92,10 @@
 			   (cons seg #f))
 			 meaningful-segments))))
 
+;;; Given an interpolation queue for a piecewise linear curve, and a
+;;; point that breaks the worst segment therein, produce a new queue
+;;; for the curve formed by splitting that segment with that point.
+;;; TODO turn keep? into drop? and make it optional.
 (define (update-interpolation-queue tree new-p keep?)
   (define (assert thing)
     (if (not thing)
