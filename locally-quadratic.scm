@@ -33,13 +33,12 @@
 ;;; of p0 or p3 may be #f, indicating that the piecewise linear curve
 ;;; ends with this segment.  There are one or two lobes over this
 ;;; segment, one defined by p0 and one by p3 (if present).  The
-;;; candidate-area is the area of the larger, and the candidate-x is
-;;; the x-coordinate of the point that would take the biggest
-;;; triangular bite out of it.  An invariant of the geomtery is that
-;;; x1 < candidate-x < x2.  If candidate-area is 0, candidate-x may be
-;;; #f.
+;;; lobe-area is the area of the larger, and the candidate-x is the
+;;; x-coordinate of the point that would take the biggest triangular
+;;; bite out of it.  An invariant of the geomtery is that
+;;; x1 < candidate-x < x2.  If lobe-area is 0, candidate-x may be #f.
 (define-structure (segment safe-accessors (constructor %make-segment))
-  p0 p1 p2 p3 candidate-x candidate-area)
+  p0 p1 p2 p3 candidate-x lobe-area)
 
 (define (make-segment p0 p1 p2 p3)
   (receive
@@ -68,12 +67,12 @@
     (list (make-segment p0 p1 new-p p2)
 	  (make-segment p1 new-p p2 p3))))
 
-;;; Segments are ordered by quality: good segments admit only small
-;;; candidate areas.
+;;; Segments are ordered by quality: good segments have small lobe
+;;; areas.
 (define (segment-quality-< seg1 seg2)
-  (cond ((< (segment-candidate-area seg1) (segment-candidate-area seg2))
+  (cond ((< (segment-lobe-area seg1) (segment-lobe-area seg2))
 	 #f)
-	((> (segment-candidate-area seg1) (segment-candidate-area seg2))
+	((> (segment-lobe-area seg1) (segment-lobe-area seg2))
 	 #t)
 	(else ; Arbitrary stable order
 	 (> (hash seg1) (hash seg2)))))

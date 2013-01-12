@@ -253,4 +253,4 @@
 
 (define (plot-big-lobe plot)
   (lambda (seg)
-    (> (segment-candidate-area seg) (plot-invisible-area plot))))
+    (> (segment-lobe-area seg) (plot-invisible-area plot))))
