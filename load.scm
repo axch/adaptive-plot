@@ -29,6 +29,7 @@
 
 (load-relative "plotting")
 (load-relative "parabolas")
+(load-relative "locally-quadratic")
 (load-relative "point-sets")
 (load-relative "gnuplot")
 (load-relative "windowing")
