@@ -405,41 +405,3 @@
 	(p3 (segment-p3 segment)))
     (list (make-segment p0 p1 new-p p2)
 	  (make-segment p1 new-p p2 p3))))
-
-;;;; Point sets and range queries
-
-;;; This is the abstraction that can be replaced with a proper range
-;;; tree if desired.
-
-(define (xmin point-list)
-  (apply min (map car point-list)))
-
-(define (xmax point-list)
-  (apply max (map car point-list)))
-
-(define (ymin point-list)
-  (apply min (map cdr point-list)))
-
-(define (ymax point-list)
-  (apply max (map cdr point-list)))
-
-(define (range-query-2d point-list #!optional xlow xhigh ylow yhigh)
-  (filter (lambda (x.y)
-	    (and (or (default-object? xlow)
-		     (<= xlow (car x.y)))
-		 (or (default-object? xhigh)
-		     (<= (car x.y) xhigh))
-		 (or (default-object? ylow)
-		     (<= ylow (cdr x.y)))
-		 (or (default-object? yhigh)
-		     (<= (cdr x.y) yhigh))))
-	  point-list))
-
-(define (point-set-insert point-list new-point-list)
-  (sort
-   (append point-list new-point-list)
-   (lambda (pt1 pt2)
-     (< (car pt1) (car pt2)))))
-
-(define (empty-point-set)
-  '())
