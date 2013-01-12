@@ -80,7 +80,7 @@
       (graphics-set-coordinate-limits (plot-window plot) xlow ylow xhigh yhigh)
       (graphics-set-clip-rectangle (plot-window plot) xlow ylow xhigh yhigh)
       (let ((relevant-points (plot-relevant-points plot)))
-#;	
+#;
 	(for-each (lambda (x.y)
 		    (%plot-point (plot-window plot) (car x.y) (cdr x.y)))
 		  relevant-points)
@@ -155,33 +155,7 @@
 
 ;;;; Refinement of plots until visual continuity
 
-(define (needed-queries known-points desired-separation dimension)
-  (define (needed-interpoint-queries low-point high-point)
-    (let* ((d-low (dimension low-point))
-	   (d-high (dimension high-point))
-	   (d-distance (abs (- d-high d-low))))
-      (if (> d-distance desired-separation)
-	  (let* ((x-low (car low-point))
-		 (x-high (car high-point))
-		 (x-distance (abs (- x-high x-low)))
-		 (num-steps (inexact->exact (floor (/ d-distance desired-separation))))
-		 (step-size (/ x-distance (+ num-steps 1))))
-	    (iota num-steps (+ x-low step-size) step-size))
-	  '())))
-  (append-map needed-interpoint-queries known-points (cdr known-points)))
-
-(define (desired-separation low high desired-resolution)
-  (/ (abs (- high low)) desired-resolution))
-
-(define (plot-dim-refine! plot desired-separation dimension)
-  (let* ((relevant-points (plot-relevant-points plot))
-	 (points-to-query 
-	  (needed-queries relevant-points desired-separation dimension))
-	 (results (map (plot-point-source plot) points-to-query)))
-    (set-plot-known-points!
-     plot (point-set-union
-           (plot-known-points plot)
-           (alist->point-set (map cons points-to-query results))))))
+;;; Utilities
 
 (define (plot-learn-point! plot x y)
   (set-plot-known-points!
@@ -199,6 +173,8 @@
       (ensure-x-point-known! 1.)
       (ensure-x-point-known! (plot-xhigh plot))))
 
+;;; Uniform refinement
+
 (define (plot-uniform-refine! plot)
   (plot-initialize! plot)
   (call-with-values (lambda () (plot-dimensions plot))
@@ -210,6 +186,36 @@
 	  (plot-dim-refine! plot (desired-separation ylow yhigh (plot-yresolution plot)) cdr)
 	  (plot-redraw! plot))))))
 
+(define (desired-separation low high desired-resolution)
+  (/ (abs (- high low)) desired-resolution))
+
+(define (plot-dim-refine! plot desired-separation dimension)
+  (let* ((relevant-points (plot-relevant-points plot))
+	 (points-to-query
+	  (needed-queries relevant-points desired-separation dimension))
+	 (results (map (plot-point-source plot) points-to-query)))
+    (set-plot-known-points!
+     plot (point-set-union
+           (plot-known-points plot)
+           (alist->point-set (map cons points-to-query results))))))
+
+(define (needed-queries known-points desired-separation dimension)
+  (define (needed-interpoint-queries low-point high-point)
+    (let* ((d-low (dimension low-point))
+	   (d-high (dimension high-point))
+	   (d-distance (abs (- d-high d-low))))
+      (if (> d-distance desired-separation)
+	  (let* ((x-low (car low-point))
+		 (x-high (car high-point))
+		 (x-distance (abs (- x-high x-low)))
+		 (num-steps (inexact->exact (floor (/ d-distance desired-separation))))
+		 (step-size (/ x-distance (+ num-steps 1))))
+	    (iota num-steps (+ x-low step-size) step-size))
+	  '())))
+  (append-map needed-interpoint-queries known-points (cdr known-points)))
+
+;;; Adaptive refinement by parabolic interpolation
+
 (define (plot-adaptive-refine! plot)
   (plot-initialize! plot)
   (receive
@@ -218,8 +224,6 @@
    (plot-redraw! plot)
    (plot-parabolic-interpolate! plot)
    (plot-redraw! plot)))
-
-(define plot-refine! plot-adaptive-refine!)
 
 ;;; Iteratively refine the piecewise linear approximation that is the
 ;;; given plot by adding points in the places where it makes the
@@ -249,3 +253,5 @@
     (/ (plot-data-area plot) (plot-screen-area plot)))
   (lambda (seg)
     (< (segment-lobe-area seg) (plot-invisible-area plot))))
+
+(define plot-refine! plot-adaptive-refine!)
