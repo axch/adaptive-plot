@@ -1,5 +1,8 @@
 plotting-first-input ???
 
+TODO Control the size of the discrepancy that is considered acceptable
+- maybe in the facade, certainly in the interactive manipulations
+
 
 Facade:
 
@@ -65,6 +68,8 @@ TODO (plot-relevant-points-alist plot)
 
 TODO (plot-write-points! plot filename)
 - write the plot out as a gnuplot-compatible data table
+
+TODO discover the size of the discrepancy
 
 
 Manipulate without autorefinement:
