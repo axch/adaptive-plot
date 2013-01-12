@@ -236,7 +236,7 @@
 		 (new-y ((plot-point-source plot) new-x)))
 	    (pp (wt-tree/min to-do))
 	    (plot-learn-point! plot new-x new-y)
-	    (loop (plot-update-interpolation-map
+	    (loop (update-interpolation-queue
 		   to-do (cons new-x new-y) big-lobe?)))))))
 
 (define (plot-data-area plot)

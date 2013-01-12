@@ -92,7 +92,7 @@
 			   (cons seg #f))
 			 meaningful-segments))))
 
-(define (plot-update-interpolation-map tree new-p keep?)
+(define (update-interpolation-queue tree new-p keep?)
   (define (assert thing)
     (if (not thing)
 	(error "Assertion failed")))
