@@ -217,7 +217,7 @@
    (xlow xhigh ylow yhigh) (plot-dimensions plot)
    (plot-dim-refine! plot (desired-separation xlow xhigh 10) car)
    (plot-redraw! plot)
-   (plot-line-interpolate! plot)
+   (plot-parabolic-interpolate! plot)
    (plot-redraw! plot)))
 
 (define plot-refine! plot-adaptive-refine!)
@@ -247,7 +247,11 @@
 	    tree
 	    (loop (wt-tree/add tree (car insertees) #t) (cdr insertees)))))))
 
-(define (plot-line-interpolate! plot)
+;;; Iteratively refine the piecewise linear approximation that is the
+;;; given plot by adding points in the places where it makes the
+;;; biggest mistakes relative to a locally quadratic approximation of
+;;; the function.
+(define (plot-parabolic-interpolate! plot)
   (let ((big-lobe? (plot-big-lobe plot)))
     (let loop ((to-do (plot-line-interpolation-map
                        (plot-relevant-points plot) big-lobe?)))
