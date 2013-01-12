@@ -28,6 +28,7 @@
   (self-relatively (lambda () (load filename))))
 
 (load-relative "plotting")
+(load-relative "parabola-stats")
 (load-relative "point-sets")
 (load-relative "gnuplot")
 (load-relative "windowing")
