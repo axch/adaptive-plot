@@ -9,11 +9,13 @@ Facade:
 (plot f xlow xhigh)
 - Draw the function in a Scheme window.  Return the plot object and set last-plot.
 
-TODO (gnuplot f xlow xhigh)
-- Draw the function in a fresh gnuplot window.  To flash a Scheme window
-  or not?  In any case the Scheme window should be closed before the gnuplot
-  window appears.  Set last-plot and return the plot object.
-- Should accept gnuplot control strings
+(gnuplot f xlow xhigh)
+- Draw the function in a fresh gnuplot window.  Set last-plot and
+  return the plot object.
+- TODO option to show the plot in a Scheme window while it's being refined
+  - If so, the Scheme window should be closed before the gnuplot
+    window appears
+- TODO pick an interface for gnuplot control strings
 
 TODO control the resolution of the plot somewhere
 - fluids?
