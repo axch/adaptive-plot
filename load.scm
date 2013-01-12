@@ -34,3 +34,4 @@
 (load-relative "point-sets")
 (load-relative "gnuplot")
 (load-relative "windowing")
+(load-relative "interface")

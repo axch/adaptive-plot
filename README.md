@@ -25,7 +25,7 @@ Of independent interest:
 - TODO rename to gnuplot-alist
 
 (gnuplot-histogram-alist alist ...)
-- TODO Maybe keep this private?
+- TODO Maybe unrelease this and keep it in my own files?
 - I think this is implementable in terms of gnuplot-plot-alist now,
   using the gnuplot-prefix argument
 
@@ -34,7 +34,7 @@ Interactive manipulation:
 
 last-plot
 
-TODO (plot-quitely f xlow xhigh)
+TODO (plot-quietly f xlow xhigh)
 - Do the adaptive point selection, but produce no output.  Return the
   plot object
 
@@ -44,7 +44,7 @@ TODO (plot-quitely f xlow xhigh)
 TODO plot-resize!, plot-resize-x!, plot-resize-y!
 - Zoom the plot view (in or out) and refine
 
-plot-close-window!
+(plot-close-window! plot)
 - Get rid of the Scheme window (and don't recreate it)
 
 (plot-gnuplot! plot)

@@ -45,14 +45,6 @@
 	    (<= ylow y yhigh)
 	    (%plot-point (plot-window plot) x y)))))
 
-(define (plot-draw! plot)
-  (plot-ensure-initialized! plot)
-  (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
-   (let ((xresolution (plot-xresolution plot))
-         (yresolution (plot-yresolution plot)))
-     (plot-close-window! plot)
-     (set-plot-window! plot (new-plot-window xlow xhigh ylow yhigh 960 1200))
-     (plot-redraw! plot))))
 
 (define (plot-redraw! plot)
   (graphics-clear (plot-window plot))
@@ -72,26 +64,6 @@
                (cdr relevant-points))
      (pp (list "X range was" (xmin relevant-points) (xmax relevant-points)))
      (pp (list "Y range was" (ymin relevant-points) (ymax relevant-points))))))
-
-(define (plot-close-window! plot)
-  (if (plot? plot)
-      (if (graphics-device? (plot-window plot))
-	  (graphics-close (plot-window plot)))))
-
-(define (plot f xlow xhigh)
-  (letrec ((new-plot
-	    (make-plot 960 1200
-	     (lambda (x)
-	       (let ((answer (f x)))
-		 (plot-draw-point! new-plot x answer)
-		 answer)))))
-    (set! last-plot new-plot)
-    (plot-resize-x! new-plot xlow xhigh)
-    (plot-draw! new-plot)
-    (plot-refine! new-plot)
-    new-plot))
-
-(define last-plot #f)
 
 (define (plotting-first-input operation)
   (let ((done-plotting? #f))
@@ -180,5 +152,3 @@
     (/ (plot-data-area plot) (plot-screen-area plot)))
   (lambda (seg)
     (< (segment-lobe-area seg) (plot-invisible-area plot))))
-
-(define plot-refine! plot-adaptive-refine!)
