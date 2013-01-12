@@ -304,7 +304,9 @@
 	(%make-segment p0 p1 p2 p3 p0-x p0-area)
 	(%make-segment p0 p1 p2 p3 p3-x p3-area)))))
 
-(define (segment-ignorable-< seg1 seg2)
+;;; 'less ignorable' is 'more obnoxious', but I need a < operation
+;;; because weight-balanced trees only do 'min'.
+(define (segment-ignorability-< seg1 seg2)
   (cond ((< (segment-candidate-area seg1) (segment-candidate-area seg2))
 	 #f)
 	((> (segment-candidate-area seg1) (segment-candidate-area seg2))
@@ -312,7 +314,7 @@
 	(else
 	 (> (hash seg1) (hash seg2)))))
 
-(define segment-wt-tree-type (make-wt-tree-type segment-ignorable-<))
+(define segment-wt-tree-type (make-wt-tree-type segment-ignorability-<))
 
 ;;; Assuming x0 < x1 < new-x < x2 < x3, produces a list of two new
 ;;; segments: x0 < x1 < new-x < x2 and x1 < new-x < x2 < x3.
