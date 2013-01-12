@@ -444,68 +444,6 @@
 (define (empty-point-set)
   '())
 
-;;;; Gnuplot output
-
-(define (gnuplot-write-alist alist filename)
-  (with-output-to-file filename
-    (lambda ()
-      (for-each
-       (lambda (x.y)
-	 (write (exact->inexact (car x.y)))
-	 (display " ")
-	 (write (exact->inexact (cdr x.y)))
-	 (newline))
-       alist))))
-
-(define (gnuplot-plot-alist alist #!optional gnuplot-extra gnuplot-prefix)
-  (call-with-temporary-file-pathname
-   (lambda (pathname)
-     (gnuplot-write-alist alist pathname)
-     (let ((command (string-append
-		     "gnuplot -p -e \'"
-                     (if (default-object? gnuplot-prefix)
-                         ""
-                         (string-append gnuplot-prefix "; "))
-                     "plot \""
-		     (->namestring pathname)
-		     "\""
-		     (if (default-object? gnuplot-extra)
-			 " with lines"
-			 (string-append " " gnuplot-extra))
-		     "'")))
-       (display command)
-       (newline)
-       (run-shell-command command)))))
-
-(define (gnuplot-histogram-alist alist #!optional data-name binsize)
-  ;; TODO Abstract the commonalities among these two
-  (define (compute-bin-size numbers)
-    (let* ((sorted (sort numbers <))
-           (minimum (car sorted))
-           (maximum (last sorted)))
-      (/ (- maximum minimum) 200)))
-  (if (default-object? binsize)
-      (set! binsize (compute-bin-size (map car alist))))
-  (call-with-temporary-file-pathname
-   (lambda (pathname)
-     (gnuplot-write-alist alist pathname)
-     (let ((command (string-append
-		     "gnuplot -p -e \'"
-                     "binwidth=" (number->string binsize) "; "
-                     "bin(x,width)=width*floor(x/width)+(binwidth+1)/2; "
-                     "set boxwidth binwidth; "
-                     "set style fill solid; "
-                     "plot \"" (->namestring pathname) "\" "
-                     "using (bin($1,binwidth)):($2/binwidth) smooth freq with boxes "
-                     (if (default-object? data-name) "" (string-append "title \"" data-name "\" "))
-		     "'")))
-       (display command)
-       (newline)
-       (run-shell-command command)))))
-
-(define (plot-gnuplot! plot #!optional gnuplot-extra gnuplot-prefix)
-  (gnuplot-plot-alist (plot-relevant-points plot) gnuplot-extra gnuplot-prefix))
-
 ;;;; Making windows
 
 ;;; This is copied from ScmUtils' FRAME and its immediate

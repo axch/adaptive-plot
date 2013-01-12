@@ -28,3 +28,4 @@
   (self-relatively (lambda () (load filename))))
 
 (load-relative "plotting")
+(load-relative "gnuplot")
