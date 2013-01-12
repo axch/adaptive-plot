@@ -79,11 +79,14 @@
 
 (define segment-wt-tree-type (make-wt-tree-type segment-quality-<))
 
-(define (plot-line-interpolation-map relevant-points keep?)
-  (let* ((relevant-segments
-	  (map make-segment (cons #f relevant-points) relevant-points
-	       (cdr relevant-points) (append (cddr relevant-points) (list #f))))
-	 (meaningful-segments (filter keep? relevant-segments)))
+;;; Given a piecewise linear curve as a list of points, make a
+;;; priority queue of the lowest-quality segments in that curve.
+;;; TODO turn keep? into drop? and make it optional.
+(define (plot-line-interpolation-map points keep?)
+  (let* ((segments
+	  (map make-segment (cons #f points) points
+	       (cdr points) (append (cddr points) (list #f))))
+	 (meaningful-segments (filter keep? segments)))
     (alist->wt-tree segment-wt-tree-type
 		    (map (lambda (seg)
 			   (cons seg #f))
