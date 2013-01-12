@@ -179,7 +179,9 @@
 	  (needed-queries relevant-points desired-separation dimension))
 	 (results (map (plot-point-source plot) points-to-query)))
     (set-plot-known-points!
-     plot (point-set-insert (plot-known-points plot) (map cons points-to-query results)))))
+     plot (point-set-union
+           (plot-known-points plot)
+           (alist->point-set (map cons points-to-query results))))))
 
 (define (ensure-x-point-known! plot x-value)
   (if (> (length (range-query-2d (plot-known-points plot) x-value x-value)) 0)
@@ -188,7 +190,7 @@
 
 (define (plot-learn-point! plot x y)
   (set-plot-known-points!
-   plot (point-set-insert (plot-known-points plot) `((,x . ,y)))))
+   plot (point-set-insert (plot-known-points plot) x y)))
 
 (define (plot-initialize! plot)
   (if (default-object? (plot-xlow plot))
