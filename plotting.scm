@@ -37,24 +37,6 @@
 ;;; TODO Make gnuplot output the default?  Find a way to give the repl
 ;;;   back while keeping a gnuplot window open?
 
-
-(define-structure
-  (plot safe-accessors (constructor %make-plot))
-  xresolution
-  yresolution
-  xlow
-  xhigh
-  ylow
-  yhigh
-  known-points
-  point-source
-  window)
-
-(define (make-plot xresolution yresolution point-source)
-  (%make-plot
-   xresolution yresolution #!default #!default #!default #!default
-   (empty-point-set) point-source #f))
-
 (define (plot-draw-point! plot x y)
   (if (graphics-device? (plot-window plot))
       (receive
@@ -92,36 +74,6 @@
 	(pp (list "X range was" (xmin relevant-points) (xmax relevant-points)))
 	(pp (list "Y range was" (ymin relevant-points) (ymax relevant-points)))))))
 
-(define (plot-resize! plot #!optional new-xlow new-xhigh new-ylow new-yhigh)
-  (set-plot-xlow!  plot new-xlow)
-  (set-plot-xhigh! plot new-xhigh)
-  (set-plot-ylow!  plot new-ylow)
-  (set-plot-yhigh! plot new-yhigh))
-
-(define (plot-resize-x! plot #!optional new-xlow new-xhigh)
-  (set-plot-xlow!  plot new-xlow)
-  (set-plot-xhigh! plot new-xhigh))
-
-(define (plot-resize-y! plot #!optional new-ylow new-yhigh)
-  (set-plot-ylow!  plot new-ylow)
-  (set-plot-yhigh! plot new-yhigh))
-
-(define (plot-dimensions plot)
-  (let ((relevant-points (plot-relevant-points plot)))
-    (define (... thing compute)
-      (if (default-object? thing)
-	  (compute relevant-points)
-	  thing))
-    (let ((xlow  (... (plot-xlow plot)  xmin))
-	  (xhigh (... (plot-xhigh plot) xmax))
-	  (ylow  (... (plot-ylow plot)  ymin))
-	  (yhigh (... (plot-yhigh plot) ymax)))
-      (values xlow xhigh ylow yhigh))))
-
-(define (plot-relevant-points plot)
-  (range-query-2d (plot-known-points plot)
-   (plot-xlow plot) (plot-xhigh plot) (plot-ylow plot) (plot-yhigh plot)))
-
 (define (plot-close-window! plot)
   (if (plot? plot)
       (if (graphics-device? (plot-window plot))
@@ -154,24 +106,6 @@
 	answer))))
 
 ;;;; Refinement of plots until visual continuity
-
-;;; Utilities
-
-(define (plot-learn-point! plot x y)
-  (set-plot-known-points!
-   plot (point-set-insert (plot-known-points plot) x y)))
-
-(define (plot-ensure-initialized! plot)
-  (define (ensure-x-point-known! x-value)
-    (if (> (length (range-query-2d (plot-known-points plot) x-value x-value)) 0)
-        'ok
-        (plot-learn-point! plot x-value ((plot-point-source plot) x-value))))
-  (if (default-object? (plot-xlow plot))
-      (ensure-x-point-known! -1.)
-      (ensure-x-point-known! (plot-xlow plot)))
-  (if (default-object? (plot-xhigh plot))
-      (ensure-x-point-known! 1.)
-      (ensure-x-point-known! (plot-xhigh plot))))
 
 ;;; Uniform refinement
 

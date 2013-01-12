@@ -27,6 +27,7 @@
 (define (load-relative filename)
   (self-relatively (lambda () (load filename))))
 
+(load-relative "plots")
 (load-relative "plotting")
 (load-relative "parabolas")
 (load-relative "locally-quadratic")
