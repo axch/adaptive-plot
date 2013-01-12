@@ -183,22 +183,21 @@
            (plot-known-points plot)
            (alist->point-set (map cons points-to-query results))))))
 
-(define (ensure-x-point-known! plot x-value)
-  (if (> (length (range-query-2d (plot-known-points plot) x-value x-value)) 0)
-      'ok
-      (plot-learn-point! plot x-value ((plot-point-source plot) x-value))))
-
 (define (plot-learn-point! plot x y)
   (set-plot-known-points!
    plot (point-set-insert (plot-known-points plot) x y)))
 
 (define (plot-initialize! plot)
+  (define (ensure-x-point-known! x-value)
+    (if (> (length (range-query-2d (plot-known-points plot) x-value x-value)) 0)
+        'ok
+        (plot-learn-point! plot x-value ((plot-point-source plot) x-value))))
   (if (default-object? (plot-xlow plot))
-      (ensure-x-point-known! plot -1.)
-      (ensure-x-point-known! plot (plot-xlow plot)))
+      (ensure-x-point-known! -1.)
+      (ensure-x-point-known! (plot-xlow plot)))
   (if (default-object? (plot-xhigh plot))
-      (ensure-x-point-known! plot 1.)
-      (ensure-x-point-known! plot (plot-xhigh plot))))
+      (ensure-x-point-known! 1.)
+      (ensure-x-point-known! (plot-xhigh plot))))
 
 (define (plot-uniform-refine! plot)
   (plot-initialize! plot)
