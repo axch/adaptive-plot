@@ -29,3 +29,4 @@
 
 (load-relative "plotting")
 (load-relative "gnuplot")
+(load-relative "windowing")
