@@ -228,7 +228,7 @@
 ;;; the function.
 (define (plot-parabolic-interpolate! plot)
   (let ((big-lobe? (plot-big-lobe plot)))
-    (let loop ((to-do (plot-line-interpolation-map
+    (let loop ((to-do (interpolation-queue
                        (plot-relevant-points plot) big-lobe?)))
       (if (wt-tree/empty? to-do)
 	  'ok

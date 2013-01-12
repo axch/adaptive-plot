@@ -82,7 +82,7 @@
 ;;; Given a piecewise linear curve as a list of points, make a
 ;;; priority queue of the lowest-quality segments in that curve.
 ;;; TODO turn keep? into drop? and make it optional.
-(define (plot-line-interpolation-map points keep?)
+(define (interpolation-queue points keep?)
   (let* ((segments
 	  (map make-segment (cons #f points) points
 	       (cdr points) (append (cddr points) (list #f))))
