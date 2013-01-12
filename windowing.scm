@@ -79,15 +79,9 @@
 
 (define (%plot-make-window/os2 width height x y)
   (let ((window (make-graphics-device 'os/2 width height)))
-    (call-with-values
-     (lambda ()
-       (graphics-operation window 'desktop-size))
-     (lambda (dx dy)
-       (call-with-values
-        (lambda ()
-          (graphics-operation window 'window-frame-size))
-        (lambda (fx fy)
-          (graphics-operation window 'set-window-position x (- dy (+ y fy)))))))
+    (receive (dx dy) (graphics-operation window 'desktop-size)
+     (receive (fx fy) (graphics-operation window 'window-frame-size)
+      (graphics-operation window 'set-window-position x (- dy (+ y fy)))))
     window))
 
 (define (%plot-point window x y)
