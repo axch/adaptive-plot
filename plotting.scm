@@ -456,9 +456,6 @@
 	 (newline))
        alist))))
 
-(define (plot-dump! plot filename)
-  (gnuplot-write-alist (plot-relevant-points plot) filename))
-
 (define (gnuplot-plot-alist alist #!optional gnuplot-extra gnuplot-prefix)
   (call-with-temporary-file-pathname
    (lambda (pathname)
