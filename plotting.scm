@@ -238,18 +238,15 @@
       (plot-learn-point! plot x y)
       y)))
 
-(define (plot-data-area plot)
-  (receive
-   (xlow xhigh ylow yhigh)
-   (plot-dimensions plot)
-   (* (- xhigh xlow) (- yhigh ylow))))
-
-(define (plot-screen-area plot)
-  (* (plot-xresolution plot) (plot-yresolution plot)))
-
-(define (plot-invisible-area plot)
-  (/ (plot-data-area plot) (plot-screen-area plot)))
-
 (define (plot-small-lobe plot)
+  (define (plot-data-area plot)
+    (receive
+        (xlow xhigh ylow yhigh)
+      (plot-dimensions plot)
+      (* (- xhigh xlow) (- yhigh ylow))))
+  (define (plot-screen-area plot)
+    (* (plot-xresolution plot) (plot-yresolution plot)))
+  (define (plot-invisible-area plot)
+    (/ (plot-data-area plot) (plot-screen-area plot)))
   (lambda (seg)
     (< (segment-lobe-area seg) (plot-invisible-area plot))))
