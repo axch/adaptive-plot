@@ -48,6 +48,7 @@ plot-close-window!
 (plot-gnuplot! plot)
 - Draw the (current state of) the plot in a fresh gnuplot window.  (Does not
   autorefine)
+- TODO maybe call this plot-gnu! ?
 
 
 Interactive querying:

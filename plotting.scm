@@ -502,8 +502,8 @@
        (newline)
        (run-shell-command command)))))
 
-(define (plot-gnuplot! plot #!optional gnuplot-extra)
-  (gnuplot-plot-alist (plot-relevant-points plot) gnuplot-extra))
+(define (plot-gnuplot! plot #!optional gnuplot-extra gnuplot-prefix)
+  (gnuplot-plot-alist (plot-relevant-points plot) gnuplot-extra gnuplot-prefix))
 
 ;;;; Making windows
 
