@@ -16,6 +16,8 @@
 ;;; License along with Adaptive Plot.  If not, see
 ;;; <http://www.gnu.org/licenses/>.
 
+;;;; Plotting
+
 (define (self-relatively thunk)
   (let ((place (ignore-errors current-load-pathname)))
     (if (pathname? place)
@@ -27,9 +29,11 @@
 (define (load-relative filename)
   (self-relatively (lambda () (load filename))))
 
+(load-option 'synchronous-subprocess)
+(load-option 'wt-tree)
+
 (load-relative "plots")
 (load-relative "drawing")
-(load-relative "plotting")
 (load-relative "parabolas")
 (load-relative "locally-quadratic")
 (load-relative "point-sets")
@@ -37,3 +41,23 @@
 (load-relative "gnuplot")
 (load-relative "windowing")
 (load-relative "interface")
+
+;;; TODO Generalize autorefinement to non-curves?  (e.g. chaotic trajectories)
+;;; TODO Generalize to point sources that are not functions of the x dimension?
+;;; TODO Generalize to multiple point sources
+;;; TODO Clean up the code
+;;; TODO A way to avoid autorefining randomized functions for too long
+;;; TODO A way to specify refining by just densing up the x axis
+;;;   without adaptation (good for randomized functions)
+;;; TODO Make gnuplot output the default?  Find a way to give the repl
+;;;   back while keeping a gnuplot window open?
+
+(define (plotting-first-input operation)
+  (let ((done-plotting? #f))
+    (lambda (f)
+      (let ((answer (operation f)))
+	(if (not done-plotting?)
+	    (begin (plot f -3. 4.)
+		   (pp answer)
+		   (set! done-plotting? #t)))
+	answer))))
