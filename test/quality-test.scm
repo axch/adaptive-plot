@@ -78,8 +78,8 @@
     (produces #(46 3.0484 12.002))
     ;; It also turns out that at this resolution it misses the spikes
     ;; at 1 and -1.
-    (receive (xlow xhigh ylow yhigh) (plot-dimensions a-plot)
-             (check (= 0.95 yhigh)))
+    (receive (xlow xhigh ylow yhigh) (plot-dimensions a-plot) yhigh)
+    (produces 0.95)
 
     ;; Resetting the resolution of the plot allows the process to
     ;; continue
