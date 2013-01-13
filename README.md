@@ -51,7 +51,8 @@ plot-zoom!, plot-zoom-x!, plot-zoom-y!
   They constitute a request to test the function at -1 and 1, but then to
   clip the plot output to include all available data.
 
-TODO set the plot's resolution and refine
+plot-resolve!
+- set the plot's resolution and refine
 
 (plot-close-window! plot)
 - Get rid of the Scheme window (and don't recreate it)
@@ -74,6 +75,7 @@ plot-xresolution ? plot-yresolution ?
 - extract the known points filtered by the current viewport
 
 TODO discover the size of the discrepancy
+- Maybe this is just a unit testing utility?
 
 
 Manipulate without autorefinement:
@@ -85,7 +87,8 @@ Manipulate without autorefinement:
 plot-resize!, plot-resize-x!, plot-resize-y!
 - Zoom the plot view without refining
 
-TODO set the plot's resolution without triggering refinement
+plot-new-resolution!
+- set the plot's resolution without triggering refinement
 
 plot-refine!
 - manually invoke adaptive refinement

@@ -68,6 +68,10 @@
   (plot-resize-y! plot new-ylow new-yhigh)
   (plot-refine! plot))
 
+(define (plot-resolve! plot xres yres)
+  (plot-new-resolution! plot xres yres)
+  (plot-refine! plot))
+
 ;;;; No autorefinement
 
 (define (start-plot f xlow xhigh)
