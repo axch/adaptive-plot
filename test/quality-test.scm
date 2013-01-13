@@ -24,6 +24,17 @@
          (* x x))
      2))
 
+;; Smooth extremum at zero; discontinuities at -1 and 1
+(define (quartic-mess x)
+  (cond ((< x -1) 0.95)
+        ((> x 1) 0.95)
+        (else (expt x 4))))
+
+(define (quartic-mess-anti x)
+  (cond ((< x -1) (+ (* 0.95 x) 0.95 -1/5))
+        ((> x 1)  (+ (* 0.95 x) 1/5 -0.95))
+        (else (/ (expt x 5) 5))))
+
 (in-test-group
  quality
 
@@ -36,4 +47,12 @@
     ;; The plot of abs would only be discrepant at the kink, which is
     ;; contained in just one segment.
     #(40 0.63403 0.63403)
-    (plot-stats (offset abs) (offset abs-anti) -1 1 0 2))))
+    (plot-stats (offset abs) (offset abs-anti) -1 1 0 2))
+
+   (generic-match
+    ;; I am disappointed that there is a discrepancy in excess of 1
+    ;; pixel somewhere; this means the parabolic approximation wasn't
+    ;; aggressive enough.
+    #(184 1.3498 34.412)
+    (plot-stats (offset quartic-mess) (offset quartic-mess-anti) -2 2 0 1))
+   ))
