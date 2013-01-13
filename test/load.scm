@@ -17,5 +17,5 @@
 ;;; <http://www.gnu.org/licenses/>.
 
 (load-relative "../testing/load")
-(load-relative "utils")
-(load-relative "quality-test")
+(load-relative-compiled "utils")
+(load-relative-compiled "quality-test")
