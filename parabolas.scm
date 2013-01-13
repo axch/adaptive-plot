@@ -27,8 +27,10 @@
 ;;; measured by the area of the difference between them.  For this, I
 ;;; need to be able to answer the following geometric question:
 ;;;
-;;;  "Consider the parabola P passing through three points p1, p2, p3,
-;;;   where p2 is taken to be between p1 and p3 on the curve of P.
+;;;  "Consider the vertical parabola P passing through three points
+;;;   p1, p2, p3, where the x coordinates are taken to be in order: x1
+;;;   < x2 < x3.  [This parabola is given by Lagrange interpolation of
+;;;   a polynomial quadratic in x through the given y coordinates.]
 ;;;   Call the area bounded by P and the segment [p1,p2] the 'left
 ;;;   lobe', and the area bounded by P and the segment [p2,p3] the
 ;;;   'right lobe'.  For each lobe, what is its area, and what are the
@@ -36,11 +38,15 @@
 ;;;   maximum area with the segment bounding that lobe?"
 ;;;
 ;;; Let us call the answer to this question the "stats" of that lobe
-;;; of that parabola.  I solve this question by the strategy of
+;;; of that parabola.  I approach this question by the strategy of
 ;;; iterative simplification: from the general case, move p2 to the
 ;;; origin, then scale the vertical axis to make an obtuse parabola,
 ;;; then rotate the desired lobe so that segment lies on the x axis,
-;;; and then the answer is obvious.
+;;; and then the answer is obvious.  Unfortunately, I realized two
+;;; years after writing the program that the rotation step at the end
+;;; changes the parabola, so technically I am not actually answering
+;;; the desired question but a different one.  However, the aesthetic
+;;; results seem to be pretty good, so I haven't fixed it yet.  TODO.
 
 ;;; The stats of the given lobe of the parabola that goes through
 ;;; (x1, y1), (x2, y2), and (x3, y3), under the condition that x1 < x2
