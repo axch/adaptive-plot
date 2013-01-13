@@ -37,35 +37,6 @@
 ;;; TODO Make gnuplot output the default?  Find a way to give the repl
 ;;;   back while keeping a gnuplot window open?
 
-(define (plot-draw-point! plot x y)
-  (if (graphics-device? (plot-window plot))
-      (receive
-       (xlow xhigh ylow yhigh) (plot-dimensions plot)
-       (and (<= xlow y xhigh)
-	    (<= ylow y yhigh)
-	    (%plot-point (plot-window plot) x y)))))
-
-(define (plot-sync-window! plot)
-  (if (graphics-device? (plot-window plot))
-      (begin
-       (graphics-clear (plot-window plot))
-       (plot-ensure-initialized! plot)
-       (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
-        (graphics-set-coordinate-limits (plot-window plot) xlow ylow xhigh yhigh)
-        (graphics-set-clip-rectangle (plot-window plot) xlow ylow xhigh yhigh)
-        (let ((relevant-points (plot-relevant-points-alist plot)))
-          #;
-          (for-each
-           (lambda (x.y)
-             (%plot-point (plot-window plot) (car x.y) (cdr x.y)))
-           relevant-points)
-          (for-each
-           (lambda (x.y1 x.y2)
-             (%plot-line (plot-window plot)
-                         (car x.y1) (cdr x.y1) (car x.y2) (cdr x.y2)))
-           relevant-points
-           (cdr relevant-points)))))))
-
 (define (plotting-first-input operation)
   (let ((done-plotting? #f))
     (lambda (f)

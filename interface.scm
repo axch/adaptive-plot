@@ -38,19 +38,7 @@
     (plot-refine! new-plot)
     new-plot))
 
-(define (plot-draw! plot)
-  (plot-stop-drawing! plot)
-  (plot-ensure-initialized! plot)
-  (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
-   (let ((xresolution (plot-xresolution plot))
-         (yresolution (plot-yresolution plot)))
-     (set-plot-window! plot (new-plot-window xlow xhigh ylow yhigh 960 1200))
-     (plot-sync-window! plot))))
-
-(define (plot-stop-drawing! plot)
-  (if (graphics-device? (plot-window plot))
-      (graphics-close (plot-window plot)))
-  (set-plot-window! plot #f))
+;; Also plot-draw! and plot-stop-drawing!
 
 (define (plot-gnu! plot #!optional gnuplot-extra gnuplot-prefix)
   (gnuplot-plot-alist (plot-relevant-points-alist plot) gnuplot-extra gnuplot-prefix)
