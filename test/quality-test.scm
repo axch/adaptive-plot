@@ -27,15 +27,12 @@
 (in-test-group
  quality
 
- (define-each-test
-   (receive
-    (num-points max-disc tot-disc)
-    (plot-stats sin (lambda (x) (- (cos x))) -10 10 -1 1)
-    (check (= 328 num-points))
-    (check (generic-match 0.86642 max-disc))
-    (check (generic-match 113.88 tot-disc)))
+ (define-each-check
+   (generic-match
+    #(328 0.86642 113.88)
+    (plot-stats sin (lambda (x) (- (cos x))) -10 10 -1 1))
 
-   (check-plot-stats 
-    ((offset abs) (offset abs-anti) -1 1 0 2)
+   (generic-match
     ;; The plot of abs would only be discrepant at the kink.
-    (40 0.63403 0.63403))))
+    #(40 0.63403 0.63403)
+    (plot-stats (offset abs) (offset abs-anti) -1 1 0 2))))

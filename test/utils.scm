@@ -64,16 +64,7 @@
          (pixels (plot-pixels plot))
          (data-per-pixel (/ data-area pixels))
          (pixel-disc (map (lambda (d) (/ d data-per-pixel)) disc)))
-    (values
+    (vector
      (length points)
      (maximum pixel-disc)
      (sum pixel-disc))))
-
-(define-syntax check-plot-stats
-  (syntax-rules ()
-    ((_ (spec-item ...) (pts max tot))
-     (receive (num-points max-disc tot-disc)
-       (plot-stats spec-item ...)
-       (check (= pts num-points))
-       (check (generic-match max max-disc))
-       (check (generic-match tot tot-disc))))))
