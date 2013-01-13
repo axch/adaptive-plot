@@ -49,6 +49,8 @@ TODO plot-resize!, plot-resize-x!, plot-resize-y!
   They constitute a request to test the function at -1 and 1, but then to
   clip the plot output to include all available data.
 
+TODO set the plot's resolution and autorefine
+
 (plot-close-window! plot)
 - Get rid of the Scheme window (and don't recreate it)
 
@@ -77,16 +79,21 @@ TODO discover the size of the discrepancy
 
 Manipulate without autorefinement:
 
-(plot-start f xlow xhigh)
+(start-plot f xlow xhigh)
 - Create a plot, but do not make a Scheme window or invoke the
   function to be plotted.
 
 plot-resize!, plot-resize-x!, plot-resize-y!
 - Zoom the plot view without refining
 
-TODO plot-refine-x!, plot-refine-y!
-- manually refine a plot in the x or y dimension with uniform spacing
-  - the spacing is sort of determined by the plot size and resolution;
-    
+TODO set the plot's resolution without triggering refinement
+
 plot-refine!
 - manually invoke adaptive refinement
+
+plot-uniform-refine!, plot-uniform-refine-x!, plot-uniform-refine-y!
+- manually refine a plot in the x or y dimension or both with uniform spacing
+  - the spacing is determined by the plot size and resolution;
+
+TODO document plot-dim-refine! as a way to refine a plot to a
+resolution other than the one the plot it targeting?
