@@ -45,7 +45,7 @@ last-plot
 (plot-draw! plot)
 - Draw the plot in a Scheme window.  (Does not autorefine)
 
-TODO plot-resize!, plot-resize-x!, plot-resize-y!
+plot-zoom!, plot-zoom-x!, plot-zoom-y!
 - Zoom the plot view (in or out) and refine
 - The semantics of omitting bounds along the x dimension are complicated:
   They constitute a request to test the function at -1 and 1, but then to

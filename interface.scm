@@ -56,6 +56,17 @@
   (gnuplot-plot-alist (plot-relevant-points-alist plot) gnuplot-extra gnuplot-prefix)
   plot)
 
+(define (plot-zoom! plot #optional new-xlow new-xhigh new-ylow new-yhigh)
+  (plot-resize! plot new-xlow new-xhigh new-ylow new-yhigh)
+  (plot-refine! plot))
+
+(define (plot-zoom-x! plot #optional new-xlow new-xhigh)
+  (plot-resize-x! plot new-xlow new-xhigh)
+  (plot-refine! plot))
+
+(define (plot-zoom-y! plot #optional new-ylow new-yhigh)
+  (plot-resize-y! plot new-ylow new-yhigh)
+  (plot-refine! plot))
 
 ;;;; No autorefinement
 
