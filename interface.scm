@@ -41,7 +41,7 @@
 ;; Also plot-draw! and plot-stop-drawing!
 
 (define (plot-gnu! plot #!optional gnuplot-extra gnuplot-prefix)
-  (gnuplot-plot-alist (plot-relevant-points-alist plot) gnuplot-extra gnuplot-prefix)
+  (gnuplot-alist (plot-relevant-points-alist plot) gnuplot-extra gnuplot-prefix)
   plot)
 
 (define (plot-zoom! plot #!optional new-xlow new-xhigh new-ylow new-yhigh)

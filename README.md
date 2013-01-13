@@ -26,8 +26,7 @@ TODO control the resolution of the plot somewhere
 
 Of independent interest:
 
-(gnuplot-plot-alist alist ...)
-- TODO rename to gnuplot-alist
+(gnuplot-alist alist ...)
 
 (gnuplot-histogram-alist alist ...)
 - TODO Maybe unrelease this and keep it in my own files?

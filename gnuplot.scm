@@ -31,7 +31,7 @@
 	 (newline))
        alist))))
 
-(define (gnuplot-plot-alist alist #!optional gnuplot-extra gnuplot-prefix)
+(define (gnuplot-alist alist #!optional gnuplot-extra gnuplot-prefix)
   (call-with-temporary-file-pathname
    (lambda (pathname)
      (gnuplot-write-alist alist pathname)
