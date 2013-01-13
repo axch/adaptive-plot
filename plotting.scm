@@ -62,9 +62,7 @@
           (for-each (lambda (x.y1 x.y2)
                       (%plot-line (plot-window plot) (car x.y1) (cdr x.y1) (car x.y2) (cdr x.y2)))
                     relevant-points
-                    (cdr relevant-points))
-          (pp (list "X range was" (xmin relevant-points) (xmax relevant-points)))
-          (pp (list "Y range was" (ymin relevant-points) (ymax relevant-points))))))))
+                    (cdr relevant-points)))))))
 
 (define (plotting-first-input operation)
   (let ((done-plotting? #f))
