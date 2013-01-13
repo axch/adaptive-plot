@@ -45,10 +45,7 @@
 ;;; TODO Generalize autorefinement to non-curves?  (e.g. chaotic trajectories)
 ;;; TODO Generalize to point sources that are not functions of the x dimension?
 ;;; TODO Generalize to multiple point sources
-;;; TODO Clean up the code
 ;;; TODO A way to avoid autorefining randomized functions for too long
-;;; TODO A way to specify refining by just densing up the x axis
-;;;   without adaptation (good for randomized functions)
 ;;; TODO Make gnuplot output the default?  Find a way to give the repl
 ;;;   back while keeping a gnuplot window open?
 
