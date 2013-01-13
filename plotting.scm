@@ -45,7 +45,7 @@
 	    (<= ylow y yhigh)
 	    (%plot-point (plot-window plot) x y)))))
 
-(define (plot-redraw! plot)
+(define (plot-sync-window! plot)
   (if (graphics-device? (plot-window plot))
       (begin
        (graphics-clear (plot-window plot))
@@ -88,13 +88,13 @@
   (plot-ensure-initialized! plot)
   (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
    (plot-dim-refine! plot (desired-separation xlow xhigh (plot-xresolution plot)) car)
-   (plot-redraw! plot)))
+   (plot-sync-window! plot)))
 
 (define (plot-uniform-refine-y! plot)
   (plot-ensure-initialized! plot)
   (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
    (plot-dim-refine! plot (desired-separation ylow yhigh (plot-yresolution plot)) cdr)
-   (plot-redraw! plot)))
+   (plot-sync-window! plot)))
 
 (define (desired-separation low high desired-resolution)
   (/ (abs (- high low)) desired-resolution))
@@ -130,9 +130,9 @@
   (plot-ensure-initialized! plot)
   (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
    (plot-dim-refine! plot (desired-separation xlow xhigh 10) car)
-   (plot-redraw! plot)
+   (plot-sync-window! plot)
    (plot-parabolic-interpolate! plot)
-   (plot-redraw! plot)))
+   (plot-sync-window! plot)))
 
 ;;; Iteratively refine the piecewise linear approximation that is the
 ;;; given plot by adding points in the places where it makes the

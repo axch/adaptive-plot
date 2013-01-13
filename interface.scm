@@ -45,7 +45,7 @@
          (yresolution (plot-yresolution plot)))
      (plot-stop-drawing! plot)
      (set-plot-window! plot (new-plot-window xlow xhigh ylow yhigh 960 1200))
-     (plot-redraw! plot))))
+     (plot-sync-window! plot))))
 
 (define (plot-stop-drawing! plot)
   (if (plot? plot)
