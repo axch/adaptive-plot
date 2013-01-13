@@ -24,6 +24,11 @@
          (* x x))
      2))
 
+(define (step x)
+  (if (< x 0)
+      -1
+      1))
+
 ;; This function has a smooth (4th-order) extremum at zero and
 ;; discontinuities at -1 and 1.
 (define (quartic-mess x)
@@ -56,6 +61,11 @@
     ;; aggressive enough.
     #(184 1.3498 34.412)
     (plotting-stats (offset quartic-mess) (offset quartic-mess-anti) -2 2 0 1))
+
+   (generic-match
+    ;; Step seems to be harder than abs...
+    #(71 1.9542 1.9542)
+    (plotting-stats (offset step) (offset abs) -1 1 -1 1))
    )
 
  (define-test (low-resolution-plots-need-fewer-points)
