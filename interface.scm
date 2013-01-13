@@ -43,11 +43,11 @@
   (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
    (let ((xresolution (plot-xresolution plot))
          (yresolution (plot-yresolution plot)))
-     (plot-close-window! plot)
+     (plot-stop-drawing! plot)
      (set-plot-window! plot (new-plot-window xlow xhigh ylow yhigh 960 1200))
      (plot-redraw! plot))))
 
-(define (plot-close-window! plot)
+(define (plot-stop-drawing! plot)
   (if (plot? plot)
       (if (graphics-device? (plot-window plot))
 	  (begin (graphics-close (plot-window plot))

@@ -54,8 +54,8 @@ plot-zoom!, plot-zoom-x!, plot-zoom-y!
 plot-resolve!
 - set the plot's resolution and refine
 
-(plot-close-window! plot)
-- Get rid of the Scheme window (and don't recreate it)
+(plot-stop-drawing! plot)
+- Get rid of the Scheme window (it will not be recreated automatically)
 
 (plot-gnu! plot)
 - Draw the (current state of) the plot in a fresh gnuplot window.  (Does not
