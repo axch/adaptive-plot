@@ -18,6 +18,7 @@ Facade:
     window appears
   - Control the size of the Scheme window, or come up with really good defaults
 - TODO pick an interface for gnuplot control strings
+  - global variables to hold defaults if parameters not supplied?
 
 TODO control the resolution of the plot somewhere
 - optionals? fluids?
