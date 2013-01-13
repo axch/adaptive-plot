@@ -56,7 +56,7 @@
 
 ;; Here ylow and yhigh are expected to be the true maxima of f in the
 ;; given x range.
-(define (assert-plots-well f anti-f xlow xhigh ylow yhigh max-disc tot-disc)
+(define (plot-stats f anti-f xlow xhigh ylow yhigh)
   (let* ((plot (plot-quietly f xlow xhigh))
          (points (plot-known-points plot))
          (disc (discrepancies (antiderivative->integrator anti-f) points))
@@ -64,5 +64,7 @@
          (pixels (plot-pixels plot))
          (data-per-pixel (/ data-area pixels))
          (pixel-disc (map (lambda (d) (/ d data-per-pixel)) disc)))
-    (assert-< (maximum pixel-disc) max-disc "Maximum discrepancy")
-    (assert-< (sum pixel-disc) tot-disc "Total discrepancy")))
+    (values
+     (length points)
+     (maximum pixel-disc)
+     (sum pixel-disc))))

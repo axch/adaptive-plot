@@ -16,6 +16,15 @@
 ;;; License along with Adaptive Plot.  If not, see
 ;;; <http://www.gnu.org/licenses/>.
 
-(load-relative "../testing/load")
-(load-relative "utils")
-(load-relative "quality-test")
+(declare (usual-integrations))
+
+(in-test-group
+ quality
+
+ (define-each-test
+   (receive
+    (num-points max-disc tot-disc)
+    (plot-stats sin (lambda (x) (- (cos x))) -10 10 -1 1)
+    (check (= 328 num-points))
+    (check (generic-match 0.86642 max-disc))
+    (check (generic-match 113.88 tot-disc)))))
