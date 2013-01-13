@@ -48,10 +48,9 @@
      (plot-sync-window! plot))))
 
 (define (plot-stop-drawing! plot)
-  (if (plot? plot)
-      (if (graphics-device? (plot-window plot))
-	  (begin (graphics-close (plot-window plot))
-                 (set-plot-window! plot #f)))))
+  (if (graphics-device? (plot-window plot))
+      (graphics-close (plot-window plot)))
+  (set-plot-window! plot #f))
 
 (define (plot-gnu! plot #!optional gnuplot-extra gnuplot-prefix)
   (gnuplot-plot-alist (plot-relevant-points-alist plot) gnuplot-extra gnuplot-prefix)
