@@ -1,6 +1,6 @@
 ;;; This file is part of Adaptive Plot, a library for plotting
 ;;; functions from the MIT Scheme REPL
-;;; Copyright (C) 2010-2011 Alexey Radul
+;;; Copyright (C) 2013 Alexey Radul
 ;;;
 ;;; Adaptive Plot is free software: you can redistribute it and/or
 ;;; modify it under the terms of the GNU Affero General Public License
