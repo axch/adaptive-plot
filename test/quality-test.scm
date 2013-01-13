@@ -92,4 +92,21 @@
     ;; With the resolution restored, the spikes are recovered.
     (receive (xlow xhigh ylow yhigh) (plot-dimensions a-plot) yhigh)
     (produces 0.99973)
-    )))
+    ))
+
+ (define-test (plotting-a-cusp)
+   (interaction
+    (define (cusp x)
+      (sqrt (abs x)))
+    (define (cusp-anti x)
+      (if (< x 0)
+          (- (/ (expt (- x) 3/2) 3/2))
+          (/ (expt x 3/2) 3/2)))
+    (define a-plot (plot-quietly (offset cusp) -1 1))
+    (plot-stats a-plot (offset cusp-anti) -1 1 0 1.4)
+    (produces #(117 1.1329 37.847))
+    ;; Unfortunately, even at this resolution, it visibly misses the
+    ;; trough of the cusp (which is zero, of course); but Gnuplot
+    ;; native does around 7x worse.
+    (receive (xlow xhigh ylow yhigh) (plot-dimensions a-plot) ylow)
+    (produces 0.01291))))
