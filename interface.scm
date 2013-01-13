@@ -21,14 +21,7 @@
 ;;;; Facade: common patterns made simple
 
 (define (plot f xlow xhigh)
-  (letrec ((new-plot
-	    (make-plot 960 1200
-	     (lambda (x)
-	       (let ((answer (f x)))
-		 (plot-draw-point! new-plot x answer)
-		 answer)))))
-    (set! last-plot new-plot)
-    (plot-resize-x! new-plot xlow xhigh)
+  (let ((new-plot (start-plot f xlow xhigh)))
     (plot-draw! new-plot)
     (plot-refine! new-plot)
     new-plot))
@@ -41,14 +34,7 @@
 (define last-plot #f)
 
 (define (plot-quietly f xlow xhigh)
-  (letrec ((new-plot
-	    (make-plot 960 1200
-	     (lambda (x)
-	       (let ((answer (f x)))
-		 (plot-draw-point! new-plot x answer)
-		 answer)))))
-    (set! last-plot new-plot)
-    (plot-resize-x! new-plot xlow xhigh)
+  (let ((new-plot (start-plot f xlow xhigh)))
     (plot-refine! new-plot)
     new-plot))
 
@@ -71,3 +57,17 @@
   plot)
 
 (define plot-refine! plot-adaptive-refine!)
+
+
+;;;; No autorefinement
+
+(define (start-plot f xlow xhigh)
+  (letrec ((new-plot
+	    (make-plot 960 1200
+	     (lambda (x)
+	       (let ((answer (f x)))
+		 (plot-draw-point! new-plot x answer)
+		 answer)))))
+    (set! last-plot new-plot)
+    (plot-resize-x! new-plot xlow xhigh)
+    new-plot))

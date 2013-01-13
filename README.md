@@ -77,8 +77,9 @@ TODO discover the size of the discrepancy
 
 Manipulate without autorefinement:
 
-TODO (plot-start f xlow xhigh)
-- Initialize a quiet plot but do not autorefine yet
+(plot-start f xlow xhigh)
+- Create a plot, but do not make a Scheme window or invoke the
+  function to be plotted.
 
 plot-resize!, plot-resize-x!, plot-resize-y!
 - Zoom the plot view without refining
