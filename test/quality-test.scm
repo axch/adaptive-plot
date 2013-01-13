@@ -18,6 +18,12 @@
 
 (declare (usual-integrations))
 
+(define (abs-anti x)
+  (/ (if (< x 0)
+         (- (* x x))
+         (* x x))
+     2))
+
 (in-test-group
  quality
 
@@ -27,4 +33,9 @@
     (plot-stats sin (lambda (x) (- (cos x))) -10 10 -1 1)
     (check (= 328 num-points))
     (check (generic-match 0.86642 max-disc))
-    (check (generic-match 113.88 tot-disc)))))
+    (check (generic-match 113.88 tot-disc)))
+
+   (check-plot-stats 
+    ((offset abs) (offset abs-anti) -1 1 0 2)
+    ;; The plot of abs would only be discrepant at the kink.
+    (40 0.63403 0.63403))))
