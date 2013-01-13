@@ -16,5 +16,32 @@
 ;;; License along with Adaptive Plot.  If not, see
 ;;; <http://www.gnu.org/licenses/>.
 
-(load-relative "../testing/load")
-(load-relative "utils")
+(declare (usual-integrations))
+
+;; Prevent accidental guessing of locations of geometric features.
+(define (offset f #!optional amount)
+  (if (default-object? amount)
+      (set! amount (/ 1 (sqrt 2))))
+  (lambda (x)
+    (f (- x amount))))
+
+(define (discrepancy f-area)
+  (lambda (x1.y1 x2.y2)
+    (let* ((x1 (car x1.y1))
+           (y1 (cdr x1.y1))
+           (x2 (car x2.y2))
+           (y2 (cdr x2.y2))
+           (area (f-area x1 x2))
+           (base (abs (- x2 x1)))
+           (avg-height (/ (+ y1 y2) 2))
+           (trapezoid (* base avg-height)))
+      (abs (- area trapezoid)))))
+
+(define (discrepancies f-area points)
+  (map (discrepancy f-area) points (cdr points)))
+
+(define (sum numbers)
+  (apply + numbers))
+
+(define (maximum numbers)
+  (apply max numbers))
