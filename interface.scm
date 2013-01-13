@@ -39,11 +39,11 @@
     new-plot))
 
 (define (plot-draw! plot)
+  (plot-stop-drawing! plot)
   (plot-ensure-initialized! plot)
   (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
    (let ((xresolution (plot-xresolution plot))
          (yresolution (plot-yresolution plot)))
-     (plot-stop-drawing! plot)
      (set-plot-window! plot (new-plot-window xlow xhigh ylow yhigh 960 1200))
      (plot-sync-window! plot))))
 
