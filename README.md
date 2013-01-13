@@ -73,9 +73,6 @@ plot-xresolution ? plot-yresolution ?
 (plot-relevant-points-alist plot)
 - extract the known points filtered by the current viewport
 
-TODO (plot-write-points! plot filename)
-- write the plot out as a gnuplot-compatible data table
-
 TODO discover the size of the discrepancy
 
 
