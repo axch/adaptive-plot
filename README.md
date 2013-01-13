@@ -45,6 +45,9 @@ last-plot
 
 TODO plot-resize!, plot-resize-x!, plot-resize-y!
 - Zoom the plot view (in or out) and refine
+- The semantics of omitting bounds along the x dimension are complicated:
+  They constitute a request to test the function at -1 and 1, but then to
+  clip the plot output to include all available data.
 
 (plot-close-window! plot)
 - Get rid of the Scheme window (and don't recreate it)
