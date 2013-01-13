@@ -91,8 +91,7 @@
     (produces #(175 1.0653 35.823))
     ;; With the resolution restored, the spikes are recovered.
     (receive (xlow xhigh ylow yhigh) (plot-dimensions a-plot) yhigh)
-    (produces 0.99973)
-    ))
+    (produces 0.99973)))
 
  (define-test (plotting-a-cusp)
    (interaction
@@ -109,4 +108,16 @@
     ;; trough of the cusp (which is zero, of course); but Gnuplot
     ;; native does around 7x worse.
     (receive (xlow xhigh ylow yhigh) (plot-dimensions a-plot) ylow)
-    (produces 0.01291))))
+    (produces 0.01291)))
+
+ (define-test (sin-200x)
+   (define (f x) (sin (* 200 x)))
+   (define (f-anti x) (/ (- (cos (* 200 x))) 200))
+   ;; This takes a lot of points because there are a lot of extrema to
+   ;; cover (128 or so); but the maximum discrepancy remains under
+   ;; control.
+   (check
+    (generic-match
+     #(2749 1.1949 666.56)
+     (plotting-stats f f-anti -1 1 -1 1))))
+ )
