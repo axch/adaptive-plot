@@ -53,7 +53,7 @@
        (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
         (graphics-set-coordinate-limits (plot-window plot) xlow ylow xhigh yhigh)
         (graphics-set-clip-rectangle (plot-window plot) xlow ylow xhigh yhigh)
-        (let ((relevant-points (plot-relevant-points plot)))
+        (let ((relevant-points (plot-relevant-points-alist plot)))
           #;
           (for-each (lambda (x.y)
           (%plot-point (plot-window plot) (car x.y) (cdr x.y)))
@@ -98,7 +98,7 @@
   (/ (abs (- high low)) desired-resolution))
 
 (define (plot-dim-refine! plot desired-separation dimension)
-  (let* ((relevant-points (plot-relevant-points plot))
+  (let* ((relevant-points (plot-relevant-points-alist plot))
 	 (points-to-query
 	  (needed-queries relevant-points desired-separation dimension))
 	 (results (map (plot-point-source plot) points-to-query)))
@@ -138,7 +138,7 @@
 ;;; the function.
 (define (plot-parabolic-interpolate! plot)
   (interpolate-approximation
-   (plot-relevant-points plot)
+   (plot-relevant-points-alist plot)
    (plot-watched-f plot)
    (plot-small-lobe plot)))
 

@@ -53,7 +53,7 @@
 	  (graphics-close (plot-window plot)))))
 
 (define (plot-gnu! plot #!optional gnuplot-extra gnuplot-prefix)
-  (gnuplot-plot-alist (plot-relevant-points plot) gnuplot-extra gnuplot-prefix)
+  (gnuplot-plot-alist (plot-relevant-points-alist plot) gnuplot-extra gnuplot-prefix)
   plot)
 
 (define plot-refine! plot-adaptive-refine!)
