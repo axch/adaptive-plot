@@ -56,8 +56,6 @@
   (gnuplot-plot-alist (plot-relevant-points-alist plot) gnuplot-extra gnuplot-prefix)
   plot)
 
-(define plot-refine! plot-adaptive-refine!)
-
 
 ;;;; No autorefinement
 
@@ -71,3 +69,5 @@
     (set! last-plot new-plot)
     (plot-resize-x! new-plot xlow xhigh)
     new-plot))
+
+(define plot-refine! plot-adaptive-refine!)
