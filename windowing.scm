@@ -85,8 +85,7 @@
     window))
 
 (define (%plot-point window x y)
-  (graphics-draw-point window (exact->inexact x) (exact->inexact y))
-  (pp `("Plotting" ,(exact->inexact x) ,(exact->inexact y))))
+  (graphics-draw-point window (exact->inexact x) (exact->inexact y)))
 
 (define (%plot-line window x0 y0 x1 y1)
   (graphics-draw-line window

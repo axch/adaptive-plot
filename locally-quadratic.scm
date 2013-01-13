@@ -142,6 +142,5 @@
         'ok
         (let* ((new-x (segment-candidate-x (wt-tree/min to-do)))
                (new-y (f new-x)))
-          (pp (wt-tree/min to-do))
           (loop (update-interpolation-queue
                  to-do (cons new-x new-y) drop?))))))
