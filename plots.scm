@@ -44,6 +44,9 @@
    xresolution yresolution #!default #!default #!default #!default
    (empty-point-set) point-source #f))
 
+(define (plot-pixels plot)
+  (* (plot-xresolution plot) (plot-yresolution plot)))
+
 (define (plot-resize! plot #!optional new-xlow new-xhigh new-ylow new-yhigh)
   (set-plot-xlow!  plot new-xlow)
   (set-plot-xhigh! plot new-xhigh)
