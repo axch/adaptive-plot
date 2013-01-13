@@ -33,6 +33,7 @@
     (plot-stats sin (lambda (x) (- (cos x))) -10 10 -1 1))
 
    (generic-match
-    ;; The plot of abs would only be discrepant at the kink.
+    ;; The plot of abs would only be discrepant at the kink, which is
+    ;; contained in just one segment.
     #(40 0.63403 0.63403)
     (plot-stats (offset abs) (offset abs-anti) -1 1 0 2))))
