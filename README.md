@@ -8,6 +8,7 @@ Facade:
 
 (plot f xlow xhigh)
 - Draw the function in a Scheme window.  Return the plot object and set last-plot.
+- TODO control the size of the Scheme window, or come up with really good defaults
 
 (gnuplot f xlow xhigh)
 - Draw the function in a fresh gnuplot window.  Set last-plot and
@@ -15,10 +16,11 @@ Facade:
 - TODO option to show the plot in a Scheme window while it's being refined
   - If so, the Scheme window should be closed before the gnuplot
     window appears
+  - Control the size of the Scheme window, or come up with really good defaults
 - TODO pick an interface for gnuplot control strings
 
 TODO control the resolution of the plot somewhere
-- fluids?
+- optionals? fluids?
 
 
 Of independent interest:
@@ -49,7 +51,7 @@ TODO plot-resize!, plot-resize-x!, plot-resize-y!
   They constitute a request to test the function at -1 and 1, but then to
   clip the plot output to include all available data.
 
-TODO set the plot's resolution and autorefine
+TODO set the plot's resolution and refine
 
 (plot-close-window! plot)
 - Get rid of the Scheme window (and don't recreate it)
@@ -65,10 +67,10 @@ plot-xlow plot-xhigh plot-ylow plot-yhigh plot-dimensions
 
 plot-xresolution ? plot-yresolution ?
 
-TODO (plot-known-points-alist plot)
-- extract the known points
+(plot-known-points-alist plot)
+- extract the known points as a list of x-y pairs
 
-TODO (plot-relevant-points-alist plot)
+(plot-relevant-points-alist plot)
 - extract the known points filtered by the current viewport
 
 TODO (plot-write-points! plot filename)

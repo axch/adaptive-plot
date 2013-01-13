@@ -58,5 +58,7 @@
 
 (define (alist->point-set l) l)
 
+(define (point-set->alist s) s)
+
 (define (empty-point-set)
   '())

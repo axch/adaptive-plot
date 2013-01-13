@@ -70,9 +70,15 @@
 	  (yhigh (... (plot-yhigh plot) ymax)))
       (values xlow xhigh ylow yhigh))))
 
+(define (plot-known-points-alist plot)
+  (point-set->alist (plot-known-points plot)))
+
 (define (plot-relevant-points plot)
   (range-query-2d (plot-known-points plot)
    (plot-xlow plot) (plot-xhigh plot) (plot-ylow plot) (plot-yhigh plot)))
+
+(define (plot-relevant-points-alist plot)
+  (point-set->alist (plot-relevant-points plot)))
 
 (define (plot-learn-point! plot x y)
   (set-plot-known-points!
