@@ -45,3 +45,24 @@
 
 (define (maximum numbers)
   (apply max numbers))
+
+(define (antiderivative->integrator f-antiderivative)
+  (define (integrator x1 x2)
+    (if (> x1 x2)
+        (integrator x2 x1)
+        (- (f-antiderivative x2)
+           (f-antiderivative x1))))
+  integrator)
+
+;; Here ylow and yhigh are expected to be the true maxima of f in the
+;; given x range.
+(define (assert-plots-well f anti-f xlow xhigh ylow yhigh max-disc tot-disc)
+  (let* ((plot (plot-quietly f xlow xhigh))
+         (points (plot-known-points plot))
+         (disc (discrepancies (antiderivative->integrator anti-f) points))
+         (data-area (* (abs (- xhigh xlow)) (abs (- yhigh ylow))))
+         (pixels (plot-pixels plot))
+         (data-per-pixel (/ data-area pixels))
+         (pixel-disc (map (lambda (d) (/ d data-per-pixel)) disc)))
+    (assert-< (maximum pixel-disc) max-disc "Maximum discrepancy")
+    (assert-< (sum pixel-disc) tot-disc "Total discrepancy")))
