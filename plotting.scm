@@ -55,14 +55,16 @@
         (graphics-set-clip-rectangle (plot-window plot) xlow ylow xhigh yhigh)
         (let ((relevant-points (plot-relevant-points-alist plot)))
           #;
-          (for-each (lambda (x.y)
-          (%plot-point (plot-window plot) (car x.y) (cdr x.y)))
-          relevant-points)
-
-          (for-each (lambda (x.y1 x.y2)
-                      (%plot-line (plot-window plot) (car x.y1) (cdr x.y1) (car x.y2) (cdr x.y2)))
-                    relevant-points
-                    (cdr relevant-points)))))))
+          (for-each
+           (lambda (x.y)
+             (%plot-point (plot-window plot) (car x.y) (cdr x.y)))
+           relevant-points)
+          (for-each
+           (lambda (x.y1 x.y2)
+             (%plot-line (plot-window plot)
+                         (car x.y1) (cdr x.y1) (car x.y2) (cdr x.y2)))
+           relevant-points
+           (cdr relevant-points)))))))
 
 (define (plotting-first-input operation)
   (let ((done-plotting? #f))
