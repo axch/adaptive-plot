@@ -62,8 +62,8 @@
   (set-plot-yhigh! plot new-yhigh))
 
 (define (plot-new-resolution! plot xres yres)
-  (set-plot-xresolution! xres)
-  (set-plot-yresolution! yres))
+  (set-plot-xresolution! plot xres)
+  (set-plot-yresolution! plot yres))
 
 (define (plot-dimensions plot)
   (let ((relevant-points (plot-relevant-points plot)))

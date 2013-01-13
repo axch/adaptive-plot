@@ -24,7 +24,8 @@
          (* x x))
      2))
 
-;; Smooth extremum at zero; discontinuities at -1 and 1
+;; This function has a smooth (4th-order) extremum at zero and
+;; discontinuities at -1 and 1.
 (define (quartic-mess x)
   (cond ((< x -1) 0.95)
         ((> x 1) 0.95)
@@ -41,18 +42,44 @@
  (define-each-check
    (generic-match
     #(328 0.86642 113.88)
-    (plot-stats sin (lambda (x) (- (cos x))) -10 10 -1 1))
+    (plotting-stats sin (lambda (x) (- (cos x))) -10 10 -1 1))
 
    (generic-match
     ;; The plot of abs would only be discrepant at the kink, which is
     ;; contained in just one segment.
     #(40 0.63403 0.63403)
-    (plot-stats (offset abs) (offset abs-anti) -1 1 0 2))
+    (plotting-stats (offset abs) (offset abs-anti) -1 1 0 2))
 
    (generic-match
     ;; I am disappointed that there is a discrepancy in excess of 1
     ;; pixel somewhere; this means the parabolic approximation wasn't
     ;; aggressive enough.
     #(184 1.3498 34.412)
-    (plot-stats (offset quartic-mess) (offset quartic-mess-anti) -2 2 0 1))
-   ))
+    (plotting-stats (offset quartic-mess) (offset quartic-mess-anti) -2 2 0 1))
+   )
+
+ (define-test (low-resolution-plots-need-fewer-points)
+   (interaction
+    (define a-plot (start-plot (offset quartic-mess) -2 2))
+    (plot-resolve! a-plot 100 100)
+    (plot-stats a-plot (offset quartic-mess-anti) -2 2 0 1)
+    ;; Though it seems that in this case something makes the relative
+    ;; quality of the plot worse.
+    (produces #(46 3.0484 12.002))
+    ;; It also turns out that at this resolution it misses the spikes
+    ;; at 1 and -1.
+    (receive (xlow xhigh ylow yhigh) (plot-dimensions a-plot)
+             (check (= 0.95 yhigh)))
+
+    ;; Resetting the resolution of the plot allows the process to
+    ;; continue
+    (plot-resolve! a-plot 960 1200)
+    (plot-stats a-plot (offset quartic-mess-anti) -2 2 0 1)
+    ;; And the initial 46 points are not wasted (in fact, in this case
+    ;; the plotting uses fewer points than from plotting at the high
+    ;; resolution directly.
+    (produces #(175 1.0653 35.823))
+    ;; With the resolution restored, the spikes are recovered.
+    (receive (xlow xhigh ylow yhigh) (plot-dimensions a-plot) yhigh)
+    (produces 0.99973)
+    )))
