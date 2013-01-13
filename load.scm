@@ -32,14 +32,14 @@
 (load-option 'synchronous-subprocess)
 (load-option 'wt-tree)
 
+(load-relative "point-sets")
 (load-relative "plots")
+(load-relative "windowing")
 (load-relative "drawing")
 (load-relative "parabolas")
 (load-relative "locally-quadratic")
-(load-relative "point-sets")
 (load-relative "refinement")
 (load-relative "gnuplot")
-(load-relative "windowing")
 (load-relative "interface")
 
 ;;; TODO Generalize autorefinement to non-curves?  (e.g. chaotic trajectories)
