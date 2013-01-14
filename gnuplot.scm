@@ -32,13 +32,14 @@
        alist))))
 
 (define (gnuplot-alist alist . adverbs)
-  (let ((gnuplot-extra (lax-alist-lookup adverbs 'commanding "with lines"))
+  (let ((gnuplot-extra (lax-alist-lookup adverbs 'commanding ""))
         (gnuplot-prefix (lax-alist-lookup adverbs 'prefixing "")))
     (call-with-temporary-file-pathname
      (lambda (pathname)
        (gnuplot-write-alist alist pathname)
        (let ((command (string-append
                        "gnuplot -p -e \'"
+                       "set style data lines; "
                        gnuplot-prefix
                        "; plot \""
                        (->namestring pathname)
