@@ -26,7 +26,7 @@
   (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
    (let ((xresolution (plot-xresolution plot))
          (yresolution (plot-yresolution plot)))
-     (set-plot-window! plot (new-plot-window xlow xhigh ylow yhigh 960 1200))
+     (set-plot-window! plot (new-plot-window xlow xhigh ylow yhigh 1024 768))
      (plot-sync-window! plot))))
 
 (define (plot-stop-drawing! plot)
