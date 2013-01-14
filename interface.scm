@@ -75,4 +75,28 @@
     (plot-resize-x! new-plot xlow xhigh)
     new-plot))
 
-(define plot-refine! plot-adaptive-refine!)
+(define (plot-refine! plot . adverbs)
+  (interpret-refinement-adverb
+   (last (filter refinement-adverb? (cons 'adaptively adverbs)))
+   plot))
+
+(define refinement-functions
+  `((adaptively  . ,plot-adaptive-refine!)
+    (uniformly   . ,plot-uniform-refine!)
+    (x-uniformly . ,plot-uniform-refine-x!)
+    (y-uniformly . ,plot-uniform-refine-y!)))
+
+(define (refinement-adverb? adverb)
+  (or (memq adverb (map car refinement-functions))
+      (and (pair? adverb)
+           (memq (car adverb)
+                 (map car refinement-functions)))))
+
+(define (interpret-refinement-adverb adverb plot)
+  (define (refinement-function name)
+    ;; Never errors out because I filter the adverbs
+    (cdr (assq name refinement-functions)))
+  (if (not (pair? adverb))
+      (interpret-refinement-adverb (list adverb) plot)
+      (apply (refinement-function (car adverb))
+             plot (cdr adverb))))
