@@ -21,9 +21,6 @@ Facade:
 - TODO pick an interface for gnuplot control strings
   - global variables to hold defaults if parameters not supplied?
 
-TODO control the resolution of the plot somewhere
-- optionals? fluids?
-
 
 Of independent interest:
 
@@ -54,6 +51,12 @@ plot-zoom!, plot-zoom-x!, plot-zoom-y!
 
 plot-resolve!
 - set the plot's resolution and refine
+- The semantics of the plot's resolution are that it determines the
+  size of features the refinement will try to explore.  For best
+  visual results, this should match or exceed the resolution of the
+  graphic where the plot will be drawn.  For fastest computation, this
+  should be as small as possible.  Only the product matters for
+  locally quadratic refinement.
 
 (plot-stop-drawing! plot)
 - Get rid of the Scheme window (it will not be recreated automatically)
@@ -101,4 +104,4 @@ plot-uniform-refine!, plot-uniform-refine-x!, plot-uniform-refine-y!
     visible discontinuity it would never be done.
 
 TODO document plot-dim-refine! as a way to refine a plot to a
-resolution other than the one the plot it targeting?
+resolution other than the one the plot is targeting?
