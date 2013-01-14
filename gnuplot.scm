@@ -40,6 +40,7 @@
        (let ((command (string-append
                        "gnuplot -p -e \'"
                        "set style data lines; "
+                       "set key noautotitles; "
                        gnuplot-prefix
                        "; plot \""
                        (->namestring pathname)
