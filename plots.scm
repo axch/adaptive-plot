@@ -40,9 +40,9 @@
   window
   dimensions-cache)
 
-(define (make-plot xresolution yresolution point-source)
+(define (make-plot point-source)
   (%make-plot
-   xresolution yresolution #!default #!default #!default #!default
+   1200 960 #!default #!default #!default #!default
    (empty-point-set) point-source #f #f))
 
 (define (plot-clear-dimensions-cache! plot)
