@@ -68,9 +68,14 @@
     (plotting-stats (offset step) (offset abs) -1 1 -1 1))
 
    (generic-match
-    ;; ... unless, of course, the geometry is outside the x-clip
+    ;; ... unless, of course, the geometry is outside the x-clip...
     #(12 0 0)
     (plotting-stats (offset step 2) (offset abs 2) -1 1 -1 1))
+
+   (generic-match
+    ;; ... in which case all straight lines are equally easy
+    #(12 0 0)
+    (plotting-stats (offset abs 2) (offset abs-anti 2) -1 1 1 3))
    )
 
  (define-test (low-resolution-plots-need-fewer-points)
