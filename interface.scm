@@ -23,9 +23,9 @@
 (define (plot f xlow xhigh . adverbs)
   (define scheme-window-wanted?
     (not (eq? (last
-               (filter (lambda (a) (or (eq? a 'quietly) (eq? a 'loudly)))
-                       (cons 'loudly adverbs)))
-              'quietly)))
+               (filter (lambda (a) (or (eq? a 'invisibly) (eq? a 'visibly)))
+                       (cons 'visibly adverbs)))
+              'invisibly)))
   (let ((plot (new-plot f xlow xhigh)))
     (if scheme-window-wanted?
         (plot-draw! plot))
@@ -35,11 +35,11 @@
 (define (gnuplot f xlow xhigh . adverbs)
   (apply plot-gnu!
          (plot-stop-drawing!
-          (apply plot f xlow xhigh (cons 'quietly adverbs))) adverbs))
+          (apply plot f xlow xhigh (cons 'invisibly adverbs))) adverbs))
 
 ;;;; Interactive manipulation
 
-;; (plot ... 'quietly)
+;; (plot ... 'invisibly)
 
 ;; Also plot-draw! and plot-stop-drawing!
 

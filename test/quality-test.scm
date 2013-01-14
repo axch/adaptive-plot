@@ -118,7 +118,7 @@
       (if (< x 0)
           (- (/ (expt (- x) 3/2) 3/2))
           (/ (expt x 3/2) 3/2)))
-    (define a-plot (plot (offset cusp) -1 1 'quietly))
+    (define a-plot (plot (offset cusp) -1 1 'invisibly))
     (plot-stats a-plot (offset cusp-anti) -1 1 0 1.4)
     (produces #(117 1.1329 37.847))
     ;; Unfortunately, even at this resolution, it visibly misses the

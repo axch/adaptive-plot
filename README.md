@@ -11,10 +11,7 @@ Facade:
 
 (gnuplot f xlow xhigh)
 - Draw the function in a fresh gnuplot window.  Return the plot object.
-- TODO option to show the plot in a Scheme window while it's being refined
-  - If so, the Scheme window should be closed before the gnuplot
-    window appears
-  - Control the size of the Scheme window, or come up with really good defaults
+  - with visibly shows the plot in a Scheme window while it's being refined
 - TODO pick an interface for gnuplot control strings
   - global variables to hold defaults if parameters not supplied?
 
@@ -31,7 +28,7 @@ Of independent interest:
 
 Interactive manipulation:
 
-(plot f xlow xhigh 'quietly)
+(plot f xlow xhigh 'invisibly)
 - Do the adaptive point selection, but produce no output.  Return the
   plot object.
 
