@@ -1,8 +1,5 @@
 plotting-first-input ???
 
-TODO Control the size of the discrepancy that is considered acceptable
-- maybe in the facade, certainly in the interactive manipulations
-
 
 Facade:
 
