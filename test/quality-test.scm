@@ -87,7 +87,7 @@
 
  (define-test (low-resolution-plots-need-fewer-points)
    (interaction
-    (define a-plot (start-plot (offset quartic-mess) -2 2))
+    (define a-plot (new-plot (offset quartic-mess) -2 2))
     (plot-resolve! a-plot 100 100)
     (plot-stats a-plot (offset quartic-mess-anti) -2 2 0 1)
     ;; Though it seems that in this case something makes the relative

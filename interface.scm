@@ -26,11 +26,11 @@
                (filter (lambda (a) (or (eq? a 'quietly) (eq? a 'loudly)))
                        (cons 'loudly adverbs)))
               'quietly)))
-  (let ((new-plot (start-plot f xlow xhigh)))
+  (let ((plot (new-plot f xlow xhigh)))
     (if scheme-window-wanted?
-        (plot-draw! new-plot))
-    (apply plot-refine! new-plot adverbs)
-    new-plot))
+        (plot-draw! plot))
+    (apply plot-refine! plot adverbs)
+    plot))
 
 (define (gnuplot f xlow xhigh . adverbs)
   (apply plot-gnu!
@@ -65,15 +65,15 @@
 
 ;;;; No autorefinement
 
-(define (start-plot f xlow xhigh)
-  (letrec ((new-plot
+(define (new-plot f xlow xhigh)
+  (letrec ((plot
 	    (make-plot
 	     (lambda (x)
 	       (let ((answer (f x)))
-		 (plot-draw-point! new-plot x answer)
+		 (plot-draw-point! plot x answer)
 		 answer)))))
-    (plot-resize-x! new-plot xlow xhigh)
-    new-plot))
+    (plot-resize-x! plot xlow xhigh)
+    plot))
 
 (define (plot-refine! plot . adverbs)
   (interpret-refinement-adverb
