@@ -36,16 +36,7 @@
   (apply max (map cdr point-list)))
 
 (define (range-query-2d point-list #!optional xlow xhigh ylow yhigh)
-  (filter (lambda (x.y)
-	    (and (or (default-object? xlow)
-		     (<= xlow (car x.y)))
-		 (or (default-object? xhigh)
-		     (<= (car x.y) xhigh))
-		 (or (default-object? ylow)
-		     (<= ylow (cdr x.y)))
-		 (or (default-object? yhigh)
-		     (<= (cdr x.y) yhigh))))
-	  point-list))
+  (filter (in-box? xlow xhigh ylow yhigh) point-list))
 
 (define (point-set-union point-list new-point-list)
   (sort

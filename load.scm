@@ -33,6 +33,7 @@
 (load-option 'wt-tree)
 
 (load-relative "auto-compilation")
+(load-relative-compiled "utils")
 (load-relative-compiled "point-sets")
 (load-relative-compiled "plots")
 (load-relative-compiled "windowing")
