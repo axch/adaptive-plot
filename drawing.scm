@@ -20,13 +20,18 @@
 
 ;;;; Drawing
 
+(define *scheme-plot-window-x-res* 1024)
+(define *scheme-plot-window-y-res* 768)
+
 (define (plot-draw! plot)
   (plot-stop-drawing! plot)
   (plot-ensure-initialized! plot)
   (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
    (let ((xresolution (plot-xresolution plot))
          (yresolution (plot-yresolution plot)))
-     (set-plot-window! plot (new-plot-window xlow xhigh ylow yhigh 1024 768))
+     (set-plot-window! plot (new-plot-window xlow xhigh ylow yhigh
+                                             *scheme-plot-window-x-res*
+                                             *scheme-plot-window-y-res*))
      (plot-sync-window! plot))))
 
 (define (plot-stop-drawing! plot)

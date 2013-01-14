@@ -8,7 +8,8 @@ Facade:
 
 (plot f xlow xhigh)
 - Draw the function in a Scheme window.  Return the plot object and set last-plot.
-- TODO control the size of the Scheme window, or come up with really good defaults
+- Control the size of the Scheme window with *scheme-plot-window-x-res*,
+  *scheme-plot-window-y-res*
 
 (gnuplot f xlow xhigh)
 - Draw the function in a fresh gnuplot window.  Set last-plot and
