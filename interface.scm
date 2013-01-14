@@ -35,7 +35,7 @@
 (define (gnuplot f xlow xhigh . adverbs)
   (apply plot-gnu!
          (plot-stop-drawing!
-          (apply plot f xlow xhigh (cons 'invisibly adverbs))) adverbs))
+          (apply plot f xlow xhigh 'invisibly adverbs)) adverbs))
 
 ;;;; Interactive manipulation
 
