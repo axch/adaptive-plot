@@ -37,27 +37,31 @@
   yhigh
   known-points
   point-source
-  window)
+  window
+  dimensions-cache)
 
 (define (make-plot xresolution yresolution point-source)
   (%make-plot
    xresolution yresolution #!default #!default #!default #!default
-   (empty-point-set) point-source #f))
+   (empty-point-set) point-source #f #f))
+
+(define (plot-clear-dimensions-cache! plot)
+  (set-plot-dimensions-cache! plot #f))
 
 (define (plot-pixels plot)
   (* (plot-xresolution plot) (plot-yresolution plot)))
 
 (define (plot-resize! plot #!optional new-xlow new-xhigh new-ylow new-yhigh)
-  (set-plot-xlow!  plot new-xlow)
-  (set-plot-xhigh! plot new-xhigh)
-  (set-plot-ylow!  plot new-ylow)
-  (set-plot-yhigh! plot new-yhigh))
+  (plot-resize-x! plot new-xlow new-xhigh)
+  (plot-resize-y! plot new-ylow new-yhigh))
 
 (define (plot-resize-x! plot #!optional new-xlow new-xhigh)
+  (plot-clear-dimensions-cache! plot)
   (set-plot-xlow!  plot new-xlow)
   (set-plot-xhigh! plot new-xhigh))
 
 (define (plot-resize-y! plot #!optional new-ylow new-yhigh)
+  (plot-clear-dimensions-cache! plot)
   (set-plot-ylow!  plot new-ylow)
   (set-plot-yhigh! plot new-yhigh))
 
@@ -65,7 +69,7 @@
   (set-plot-xresolution! plot xres)
   (set-plot-yresolution! plot yres))
 
-(define (plot-dimensions plot)
+(define (plot-compute-dimensions plot)
   (let ((relevant-points (plot-relevant-points plot)))
     (define (... thing compute)
       (if (default-object? thing)
@@ -76,6 +80,10 @@
 	  (ylow  (... (plot-ylow plot)  ymin))
 	  (yhigh (... (plot-yhigh plot) ymax)))
       (values xlow xhigh ylow yhigh))))
+
+(define plot-dimensions
+  (slot-memoize plot-compute-dimensions
+                plot-dimensions-cache set-plot-dimensions-cache! #f))
 
 (define (plot-known-points-alist plot)
   (point-set->alist (plot-known-points plot)))
@@ -89,7 +97,17 @@
 
 (define (plot-learn-point! plot x y)
   (set-plot-known-points!
-   plot (point-set-insert (plot-known-points plot) x y)))
+   plot (point-set-insert (plot-known-points plot) x y))
+  (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
+   (if ((in-box? xlow xhigh ylow yhigh) (cons x y))
+       'ok
+       (plot-clear-dimensions-cache! plot))))
+
+(define (plot-learn-point-set! plot points)
+  (set-plot-known-points!
+   plot (point-set-union (plot-known-points plot) points))
+  ;; TODO Test whether all the new points are in the old dimensions?
+  (plot-clear-dimensions-cache! plot))
 
 (define (plot-ensure-initialized! plot)
   (define (ensure-x-point-known! x-value)

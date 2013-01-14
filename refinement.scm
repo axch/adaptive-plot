@@ -47,10 +47,7 @@
 	 (points-to-query
 	  (needed-queries relevant-points desired-separation dimension))
 	 (results (map (plot-point-source plot) points-to-query)))
-    (set-plot-known-points!
-     plot (point-set-union
-           (plot-known-points plot)
-           (alist->point-set (map cons points-to-query results))))))
+    (plot-learn-point-set! plot (alist->point-set (map cons points-to-query results)))))
 
 (define (needed-queries known-points desired-separation dimension)
   (define (needed-interpoint-queries low-point high-point)

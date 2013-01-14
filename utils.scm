@@ -28,3 +28,12 @@
              (<= ylow (cdr x.y)))
          (or (default-object? yhigh)
              (<= (cdr x.y) yhigh)))))
+
+(define (slot-memoize f read-slot write-slot sentinel)
+  (lambda (x)
+    (let ((current (read-slot x)))
+      (if (eq? sentinel current)
+          (let ((answer (f x)))
+            (write-slot x answer)
+            answer)
+          current))))
