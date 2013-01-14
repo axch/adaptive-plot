@@ -39,17 +39,15 @@
   (filter (in-box? xlow xhigh ylow yhigh) point-list))
 
 (define (point-set-union point-list new-point-list)
-  (sort
-   (append point-list new-point-list)
-   (lambda (pt1 pt2)
-     (< (car pt1) (car pt2)))))
+  (append point-list new-point-list))
 
 (define (point-set-insert point-list x y)
   (point-set-union point-list (alist->point-set `((,x . ,y)))))
 
 (define (alist->point-set l) l)
 
-(define (point-set->alist s) s)
+(define (point-set->alist s)
+  (sort s (lambda (pt1 pt2) (< (car pt1) (car pt2)))))
 
 (define (empty-point-set)
   '())
