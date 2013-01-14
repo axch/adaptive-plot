@@ -29,7 +29,7 @@
   (let ((new-plot (start-plot f xlow xhigh)))
     (if scheme-window-wanted?
         (plot-draw! new-plot))
-    (plot-refine! new-plot)
+    (apply plot-refine! new-plot adverbs)
     new-plot))
 
 (define (gnuplot f xlow xhigh . adverbs)
