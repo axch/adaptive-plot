@@ -1,6 +1,3 @@
-plotting-first-input ???
-
-
 Facade:
 
 (plot f xlow xhigh)

@@ -50,13 +50,3 @@
 ;;; TODO A way to avoid autorefining randomized functions for too long
 ;;; TODO Make gnuplot output the default?  Find a way to give the repl
 ;;;   back while keeping a gnuplot window open?
-
-(define (plotting-first-input operation)
-  (let ((done-plotting? #f))
-    (lambda (f)
-      (let ((answer (operation f)))
-	(if (not done-plotting?)
-	    (begin (plot f -3. 4.)
-		   (pp answer)
-		   (set! done-plotting? #t)))
-	answer))))
