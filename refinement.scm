@@ -42,6 +42,11 @@
 (define (desired-separation low high desired-resolution)
   (/ (abs (- high low)) desired-resolution))
 
+;; Attempt to break each segment of the plot into the smallest number
+;; of uniformly sized subsegments whose length along the given
+;; dimension does not exceed the desired separation.  This always
+;; works along the x dimension, and works along the y dimension for
+;; functions that are lines in this region.
 (define (plot-dim-refine! plot desired-separation dimension)
   (let* ((relevant-points (plot-relevant-points-alist plot))
 	 (points-to-query
