@@ -77,23 +77,29 @@
 
 ;;; Adaptive refinement by parabolic interpolation
 
-(define (plot-adaptive-refine! plot)
+(define (plot-adaptive-refine! plot #!optional xres yres)
+  ;; The optional arguments set the intended number of pixels to
+  ;; refine to.  Since the algorithm doesn't care about the aspect
+  ;; ratio, this is one number.  If just one number is given, take it.
+  ;; If two are given, multiply them.
+  (if (not (default-object? yres))
+      (set! xres (* xres yres)))
   (plot-ensure-initialized! plot)
   (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
    (plot-dim-refine! plot (desired-separation xlow xhigh 10) car)
    (plot-sync-window! plot)
-   (plot-parabolic-interpolate! plot)
+   (plot-parabolic-interpolate! plot xres)
    (plot-sync-window! plot)))
 
 ;;; Iteratively refine the piecewise linear approximation that is the
 ;;; given plot by adding points in the places where it makes the
 ;;; biggest mistakes relative to a locally quadratic approximation of
 ;;; the function.
-(define (plot-parabolic-interpolate! plot)
+(define (plot-parabolic-interpolate! plot #!optional res)
   (interpolate-approximation
    (plot-relevant-points-alist plot)
    (plot-watched-f plot)
-   (plot-small-lobe plot)))
+   (plot-small-lobe plot res)))
 
 (define (plot-watched-f plot)
   (lambda (x)
@@ -101,11 +107,13 @@
       (plot-learn-point! plot x y)
       y)))
 
-(define (plot-small-lobe plot)
+(define (plot-small-lobe plot #!optional res)
+  (if (default-object? res)
+      (set! res (plot-pixels plot)))
   (define (plot-data-area plot)
     (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
       (* (- xhigh xlow) (- yhigh ylow))))
   (define (plot-invisible-area plot)
-    (/ (plot-data-area plot) (plot-pixels plot)))
+    (/ (plot-data-area plot) res))
   (lambda (seg)
     (<= (segment-lobe-area seg) (plot-invisible-area plot))))
