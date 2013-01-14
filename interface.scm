@@ -21,14 +21,21 @@
 ;;;; Facade: common patterns made simple
 
 (define (plot f xlow xhigh . adverbs)
+  (define scheme-window-wanted?
+    (not (eq? (last
+               (filter (lambda (a) (or (eq? a 'quietly) (eq? a 'loudly)))
+                       (cons 'loudly adverbs)))
+              'quietly)))
   (let ((new-plot (start-plot f xlow xhigh)))
-    (if (not (memq 'quietly adverbs))
+    (if scheme-window-wanted?
         (plot-draw! new-plot))
     (plot-refine! new-plot)
     new-plot))
 
 (define (gnuplot f xlow xhigh . adverbs)
-  (apply plot-gnu! (plot f xlow xhigh 'quietly) adverbs))
+  (apply plot-gnu!
+         (plot-stop-drawing!
+          (apply plot f xlow xhigh (cons 'quietly adverbs))) adverbs))
 
 ;;;; Interactive manipulation
 
