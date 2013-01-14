@@ -73,9 +73,16 @@
     (plotting-stats (offset step 2) (offset abs 2) -1 1 -1 1))
 
    (generic-match
-    ;; ... in which case all straight lines are equally easy
+    ;; ... in which case all straight lines are equally easy.
     #(12 0 0)
     (plotting-stats (offset abs 2) (offset abs-anti 2) -1 1 1 3))
+
+   (generic-match
+    ;; The quartic mess also gets easier if the geometry is mostly
+    ;; outside the clip zone.
+    #(84 0.67413 9.9951)
+    (plotting-stats (offset quartic-mess 2.51) (offset quartic-mess-anti 2.51) -2 2 0 1))
+
    )
 
  (define-test (low-resolution-plots-need-fewer-points)
