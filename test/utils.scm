@@ -57,7 +57,7 @@
 ;; Here ylow and yhigh are expected to be the true maxima of f in the
 ;; given x range.
 (define (plot-stats plot anti-f xlow xhigh ylow yhigh)
-  (let* ((points (plot-known-points plot))
+  (let* ((points (plot-known-points-alist plot))
          (disc (discrepancies (antiderivative->integrator anti-f) points))
          (true-data-area (* (abs (- xhigh xlow)) (abs (- yhigh ylow))))
          (pixels (plot-pixels plot))
