@@ -40,9 +40,12 @@
   window
   dimensions-cache)
 
+(define *plot-x-res* 1200)
+(define *plot-y-res* 960)
+
 (define (make-plot point-source)
   (%make-plot
-   1200 960 #!default #!default #!default #!default
+   *plot-x-res* *plot-y-res* #!default #!default #!default #!default
    (empty-point-set) point-source #f #f))
 
 (define (plot-clear-dimensions-cache! plot)
