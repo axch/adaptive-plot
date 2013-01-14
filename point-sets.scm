@@ -39,7 +39,7 @@
   (filter (in-box? xlow xhigh ylow yhigh) point-list))
 
 (define (point-set-union point-list new-point-list)
-  (append point-list new-point-list))
+  (append new-point-list point-list))
 
 (define (point-set-insert point-list x y)
   (point-set-union point-list (alist->point-set `((,x . ,y)))))
