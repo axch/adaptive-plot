@@ -68,5 +68,6 @@
      (maximum pixel-disc)
      (sum pixel-disc))))
 
-(define (plotting-stats f anti-f xlow xhigh ylow yhigh)
-  (plot-stats (plot f xlow xhigh 'invisibly) anti-f xlow xhigh ylow yhigh))
+(define (plotting-stats f anti-f xlow xhigh ylow yhigh . adverbs)
+  (plot-stats (apply plot f xlow xhigh 'invisibly adverbs)
+              anti-f xlow xhigh ylow yhigh))

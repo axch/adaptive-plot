@@ -49,11 +49,33 @@
     #(328 0.86642 113.88)
     (plotting-stats sin (lambda (x) (- (cos x))) -10 10 -1 1))
 
+   ;; Now try it with the same number of points, but uniformly spaced
+   ;; along the x axis.  Somewhat to my surprise, this produces a
+   ;; (marginally) better plot.
+   (generic-match
+    #(328 0.54905 110.61)
+    (plotting-stats sin (lambda (x) (- (cos x))) -10 10 -1 1 '(x-uniformly 326)))
+
+   ;; Striving for the same number of points in an x-y uniform plot,
+   ;; however, leads to much lower measured quality (though I can't
+   ;; visually tell the difference).  In this case, that would be
+   ;; because x-y uniform plotting spends a lot of energy on areas
+   ;; where the y-value is changing fast, but those are also the areas
+   ;; where sin is close to linear.
+   (generic-match
+    #(329 172.32 675.75)
+    (plotting-stats sin (lambda (x) (- (cos x))) -10 10 -1 1 '(uniformly 47)))
+
    (generic-match
     ;; The plot of abs would only be discrepant at the kink, which is
     ;; contained in just one segment.
     #(40 0.63403 0.63403)
     (plotting-stats (offset abs) (offset abs-anti) -1 1 0 2))
+
+   ;; With abs, however, plotting uniformly is (surprise?) a disaster.
+   (generic-match
+    #(40 155.50 155.50)
+    (plotting-stats (offset abs) (offset abs-anti) -1 1 0 2 '(x-uniformly 38)))
 
    (generic-match
     ;; I am disappointed that there is a discrepancy in excess of 1
