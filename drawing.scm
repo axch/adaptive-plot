@@ -23,6 +23,9 @@
 (define *scheme-plot-window-x-res* 1024)
 (define *scheme-plot-window-y-res* 768)
 
+(define (plot-drawing? plot)
+  (graphics-device? (plot-window plot)))
+
 (define (plot-draw! plot)
   (plot-stop-drawing! plot)
   (plot-ensure-initialized! plot)
@@ -34,13 +37,13 @@
    (plot-sync-window! plot)))
 
 (define (plot-stop-drawing! plot)
-  (if (graphics-device? (plot-window plot))
+  (if (plot-drawing? plot)
       (graphics-close (plot-window plot)))
   (set-plot-window! plot #f)
   plot)
 
 (define (plot-sync-window! plot)
-  (if (graphics-device? (plot-window plot))
+  (if (plot-drawing? plot)
       (begin
        (graphics-clear (plot-window plot))
        (plot-ensure-initialized! plot)
@@ -62,7 +65,7 @@
   plot)
 
 (define (plot-draw-point! plot x y)
-  (if (graphics-device? (plot-window plot))
+  (if (plot-drawing? plot)
       (receive
        (xlow xhigh ylow yhigh) (plot-dimensions plot)
        (and (<= xlow y xhigh)
