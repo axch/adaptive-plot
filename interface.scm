@@ -20,21 +20,19 @@
 
 ;;;; Facade: common patterns made simple
 
-(define (plot f xlow xhigh)
+(define (plot f xlow xhigh . adverbs)
   (let ((new-plot (start-plot f xlow xhigh)))
-    (plot-draw! new-plot)
+    (if (not (memq 'quietly adverbs))
+        (plot-draw! new-plot))
     (plot-refine! new-plot)
     new-plot))
 
 (define (gnuplot f xlow xhigh . adverbs)
-  (apply plot-gnu! (plot-quietly f xlow xhigh) adverbs))
+  (apply plot-gnu! (plot f xlow xhigh 'quietly) adverbs))
 
 ;;;; Interactive manipulation
 
-(define (plot-quietly f xlow xhigh)
-  (let ((new-plot (start-plot f xlow xhigh)))
-    (plot-refine! new-plot)
-    new-plot))
+;; (plot ... 'quietly)
 
 ;; Also plot-draw! and plot-stop-drawing!
 

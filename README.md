@@ -30,7 +30,7 @@ Of independent interest:
 
 Interactive manipulation:
 
-(plot-quietly f xlow xhigh)
+(plot f xlow xhigh 'quietly)
 - Do the adaptive point selection, but produce no output.  Return the
   plot object.
 

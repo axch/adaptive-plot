@@ -49,7 +49,7 @@
 
 ;; Still works with a larger range; plot it without showing the Scheme
 ;; plot window just for kicks.
-(plot-quietly quartic-mess -10 10)
+(plot quartic-mess -10 10 'quietly)
 
 (plot-gnu! (out))
 
