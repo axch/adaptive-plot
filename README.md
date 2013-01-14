@@ -7,6 +7,7 @@ Facade:
 - Draw the function in a Scheme window.  Return the plot object.
 - Control the size of the Scheme window with *scheme-plot-window-x-res*,
   *scheme-plot-window-y-res*
+- Control the plot's resolution with *plot-x-res* and *plot-y-res*
 
 (gnuplot f xlow xhigh)
 - Draw the function in a fresh gnuplot window.  Return the plot object.
