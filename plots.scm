@@ -46,7 +46,8 @@
    (empty-point-set) point-source #f #f))
 
 (define (plot-clear-dimensions-cache! plot)
-  (set-plot-dimensions-cache! plot #f))
+  (set-plot-dimensions-cache! plot #f)
+  plot)
 
 (define (plot-pixels plot)
   (* (plot-xresolution plot) (plot-yresolution plot)))
@@ -58,16 +59,19 @@
 (define (plot-resize-x! plot #!optional new-xlow new-xhigh)
   (plot-clear-dimensions-cache! plot)
   (set-plot-xlow!  plot new-xlow)
-  (set-plot-xhigh! plot new-xhigh))
+  (set-plot-xhigh! plot new-xhigh)
+  plot)
 
 (define (plot-resize-y! plot #!optional new-ylow new-yhigh)
   (plot-clear-dimensions-cache! plot)
   (set-plot-ylow!  plot new-ylow)
-  (set-plot-yhigh! plot new-yhigh))
+  (set-plot-yhigh! plot new-yhigh)
+  plot)
 
 (define (plot-new-resolution! plot xres yres)
   (set-plot-xresolution! plot xres)
-  (set-plot-yresolution! plot yres))
+  (set-plot-yresolution! plot yres)
+  plot)
 
 (define (plot-compute-dimensions plot)
   (let ((relevant-points (plot-relevant-points plot)))
@@ -100,7 +104,7 @@
    plot (point-set-insert (plot-known-points plot) x y))
   (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
    (if ((in-box? xlow xhigh ylow yhigh) (cons x y))
-       'ok
+       plot
        (plot-clear-dimensions-cache! plot))))
 
 (define (plot-learn-point-set! plot points)
@@ -119,5 +123,5 @@
       (ensure-x-point-known! (plot-xlow plot)))
   (if (default-object? (plot-xhigh plot))
       (ensure-x-point-known! 1.)
-      (ensure-x-point-known! (plot-xhigh plot))))
-
+      (ensure-x-point-known! (plot-xhigh plot)))
+  plot)

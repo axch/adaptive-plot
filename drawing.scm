@@ -36,7 +36,8 @@
 (define (plot-stop-drawing! plot)
   (if (graphics-device? (plot-window plot))
       (graphics-close (plot-window plot)))
-  (set-plot-window! plot #f))
+  (set-plot-window! plot #f)
+  plot)
 
 (define (plot-sync-window! plot)
   (if (graphics-device? (plot-window plot))
@@ -57,7 +58,8 @@
              (%plot-line (plot-window plot)
                          (car x.y1) (cdr x.y1) (car x.y2) (cdr x.y2)))
            relevant-points
-           (cdr relevant-points)))))))
+           (cdr relevant-points))))))
+  plot)
 
 (define (plot-draw-point! plot x y)
   (if (graphics-device? (plot-window plot))
@@ -65,4 +67,5 @@
        (xlow xhigh ylow yhigh) (plot-dimensions plot)
        (and (<= xlow y xhigh)
 	    (<= ylow y yhigh)
-	    (%plot-point (plot-window plot) x y)))))
+	    (%plot-point (plot-window plot) x y))))
+  plot)
