@@ -64,7 +64,7 @@
 
 (define (start-plot f xlow xhigh)
   (letrec ((new-plot
-	    (make-plot 960 1200
+	    (make-plot 1200 960
 	     (lambda (x)
 	       (let ((answer (f x)))
 		 (plot-draw-point! new-plot x answer)
