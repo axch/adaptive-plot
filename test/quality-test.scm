@@ -66,6 +66,11 @@
     ;; Step seems to be harder than abs...
     #(71 1.9542 1.9542)
     (plotting-stats (offset step) (offset abs) -1 1 -1 1))
+
+   (generic-match
+    ;; ... unless, of course, the geometry is outside the x-clip
+    #(12 0 0)
+    (plotting-stats (offset step 2) (offset abs 2) -1 1 -1 1))
    )
 
  (define-test (low-resolution-plots-need-fewer-points)

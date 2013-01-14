@@ -97,4 +97,4 @@
   (define (plot-invisible-area plot)
     (/ (plot-data-area plot) (plot-pixels plot)))
   (lambda (seg)
-    (< (segment-lobe-area seg) (plot-invisible-area plot))))
+    (<= (segment-lobe-area seg) (plot-invisible-area plot))))
