@@ -23,20 +23,26 @@
 
 ;;; Uniform refinement
 
-(define (plot-uniform-refine! plot)
-  (plot-uniform-refine-x! plot)
-  (plot-uniform-refine-y! plot))
+(define (plot-uniform-refine! plot #!optional xres yres)
+  (if (default-object? yres)
+      (set! yres xres))
+  (plot-uniform-refine-x! plot xres)
+  (plot-uniform-refine-y! plot yres))
 
-(define (plot-uniform-refine-x! plot)
+(define (plot-uniform-refine-x! plot #!optional xres)
   (plot-ensure-initialized! plot)
+  (if (default-object? xres)
+      (set! xres (plot-xresolution plot)))
   (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
-   (plot-dim-refine! plot (desired-separation xlow xhigh (plot-xresolution plot)) car)
+   (plot-dim-refine! plot (desired-separation xlow xhigh xres) car)
    (plot-sync-window! plot)))
 
-(define (plot-uniform-refine-y! plot)
+(define (plot-uniform-refine-y! plot #!optional yres)
   (plot-ensure-initialized! plot)
+  (if (default-object? yres)
+      (set! yres (plot-yresolution plot)))
   (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
-   (plot-dim-refine! plot (desired-separation ylow yhigh (plot-yresolution plot)) cdr)
+   (plot-dim-refine! plot (desired-separation ylow yhigh yres) cdr)
    (plot-sync-window! plot)))
 
 (define (desired-separation low high desired-resolution)
