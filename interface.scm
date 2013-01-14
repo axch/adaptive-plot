@@ -31,8 +31,6 @@
 
 ;;;; Interactive manipulation
 
-(define last-plot #f)
-
 (define (plot-quietly f xlow xhigh)
   (let ((new-plot (start-plot f xlow xhigh)))
     (plot-refine! new-plot)
@@ -69,7 +67,6 @@
 	       (let ((answer (f x)))
 		 (plot-draw-point! new-plot x answer)
 		 answer)))))
-    (set! last-plot new-plot)
     (plot-resize-x! new-plot xlow xhigh)
     new-plot))
 

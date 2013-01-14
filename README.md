@@ -7,13 +7,12 @@ TODO Control the size of the discrepancy that is considered acceptable
 Facade:
 
 (plot f xlow xhigh)
-- Draw the function in a Scheme window.  Return the plot object and set last-plot.
+- Draw the function in a Scheme window.  Return the plot object.
 - Control the size of the Scheme window with *scheme-plot-window-x-res*,
   *scheme-plot-window-y-res*
 
 (gnuplot f xlow xhigh)
-- Draw the function in a fresh gnuplot window.  Set last-plot and
-  return the plot object.
+- Draw the function in a fresh gnuplot window.  Return the plot object.
 - TODO option to show the plot in a Scheme window while it's being refined
   - If so, the Scheme window should be closed before the gnuplot
     window appears
@@ -34,11 +33,9 @@ Of independent interest:
 
 Interactive manipulation:
 
-last-plot
-
 (plot-quietly f xlow xhigh)
 - Do the adaptive point selection, but produce no output.  Return the
-  plot object and set last-plot.
+  plot object.
 
 (plot-draw! plot)
 - Draw the plot in a Scheme window.  (Does not autorefine)
