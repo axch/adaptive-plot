@@ -26,8 +26,8 @@
     (plot-refine! new-plot)
     new-plot))
 
-(define (gnuplot f xlow xhigh #!optional gnuplot-extra gnuplot-prefix)
-  (plot-gnu! (plot-quietly f xlow xhigh) gnuplot-extra gnuplot-prefix))
+(define (gnuplot f xlow xhigh . adverbs)
+  (apply plot-gnu! (plot-quietly f xlow xhigh) adverbs))
 
 ;;;; Interactive manipulation
 
@@ -38,8 +38,8 @@
 
 ;; Also plot-draw! and plot-stop-drawing!
 
-(define (plot-gnu! plot #!optional gnuplot-extra gnuplot-prefix)
-  (gnuplot-alist (plot-relevant-points-alist plot) gnuplot-extra gnuplot-prefix)
+(define (plot-gnu! plot . adverbs)
+  (apply gnuplot-alist (plot-relevant-points-alist plot) adverbs)
   plot)
 
 (define (plot-zoom! plot #!optional new-xlow new-xhigh new-ylow new-yhigh)

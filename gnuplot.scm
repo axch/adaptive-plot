@@ -31,25 +31,23 @@
 	 (newline))
        alist))))
 
-(define (gnuplot-alist alist #!optional gnuplot-extra gnuplot-prefix)
-  (call-with-temporary-file-pathname
-   (lambda (pathname)
-     (gnuplot-write-alist alist pathname)
-     (let ((command (string-append
-		     "gnuplot -p -e \'"
-                     (if (default-object? gnuplot-prefix)
-                         ""
-                         (string-append gnuplot-prefix "; "))
-                     "plot \""
-		     (->namestring pathname)
-		     "\""
-		     (if (default-object? gnuplot-extra)
-			 " with lines"
-			 (string-append " " gnuplot-extra))
-		     "'")))
-       (display command)
-       (newline)
-       (run-shell-command command)))))
+(define (gnuplot-alist alist . adverbs)
+  (let ((gnuplot-extra (lax-alist-lookup adverbs 'commanding "with lines"))
+        (gnuplot-prefix (lax-alist-lookup adverbs 'prefixing "")))
+    (call-with-temporary-file-pathname
+     (lambda (pathname)
+       (gnuplot-write-alist alist pathname)
+       (let ((command (string-append
+                       "gnuplot -p -e \'"
+                       gnuplot-prefix
+                       "; plot \""
+                       (->namestring pathname)
+                       "\" "
+                       gnuplot-extra
+                       "'")))
+         (display command)
+         (newline)
+         (run-shell-command command))))))
 
 (define (gnuplot-histogram-alist alist #!optional data-name binsize)
   ;; TODO Abstract the commonalities among these two

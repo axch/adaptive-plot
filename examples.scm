@@ -62,4 +62,4 @@
 ;; misses around half of them completely.
 (plot (lambda (x) (sin (* 200 x))) -1 1)
 
-(plot-gnu! (out))
+(plot-gnu! (out) '(commanding "with lines title \"sin(200x)\""))
