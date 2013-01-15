@@ -84,21 +84,21 @@
   ;; If two are given, multiply them.
   (if (not (default-object? yres))
       (set! xres (* xres yres)))
-  (plot-ensure-initialized! plot)
-  (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
-   (plot-dim-refine! plot (desired-separation xlow xhigh 10) car))
-  (plot-sync-window! plot)
+  (plot-ensure-basic-refinement! plot)
   (plot-parabolic-interpolate!
    plot (plot-small-lobe plot xres)))
 
 (define (plot-adaptive-refine*! plot count)
-  (let ((used (counting-used-points plot
-               (lambda ()
-                 (plot-ensure-initialized! plot)
-                 (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
-                  (plot-dim-refine! plot (desired-separation xlow xhigh 10) car))
-                 (plot-sync-window! plot)))))
+  (let ((used (plot-ensure-basic-refinement! plot)))
     (plot-parabolic-interpolate! plot #!default (- count used))))
+
+(define (plot-ensure-basic-refinement! plot)
+  (counting-used-points plot
+   (lambda ()
+     (plot-ensure-initialized! plot)
+     (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
+      (plot-dim-refine! plot (desired-separation xlow xhigh 10) car))
+     (plot-sync-window! plot))))
 
 ;;; Iteratively refine the piecewise linear approximation that is the
 ;;; given plot by adding points in the places where it makes the
