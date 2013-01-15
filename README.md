@@ -40,7 +40,8 @@ REPL.  Adaptive Plot lets you
 - letting the library automatically choose how much and where to
   evaluate it to get a good picture.
 
-For example, if you want to see sin(100x), type:
+For example, if you want to see sin(100x), as x varies from -1 to 1,
+type:
 ```scheme
 (load "adaptive-plot/load")
 
@@ -61,7 +62,7 @@ legend.</p>
 
 This particular picture turned out to need 1672 points, placed
 adaptively, to come out this good.  If you only use 100 points and
-space them evenly (which is what typing `plot sin(100*x)` into Gnuplot
+space them evenly (which is what typing `plot [-1:1] sin(100*x)` into Gnuplot
 does by default) you get this:
 <table>
 <tr><td align="center">
@@ -69,31 +70,43 @@ does by default) you get this:
  of sin(100x)">
 </td></tr>
 <tr><td align="center">
-<p><b>Figure d</b>: sin(100x) with only 100 points, evenly spaced.</p>
+<p><b>Figure d</b>: sin(100x) with only 100 points, evenly spaced.  This
+is worse than ugly, it's deceptive, because the peaks are really all the
+same height (see Figure c).</p>
 </td></tr>
 </table>
 You can of course get Adaptive Plot to give you Figure d,
 ```scheme
 (gnuplot (lambda (x) (sin (* 100 x))) -1 1 '(x-uniformly 98)
-         '(commanding "title \"sin(200x)\""))
+         '(commanding "title \"sin(100x)\""))
 ```
 but why would you want to?
 
+Live Plotting
+-------------
 
+One other nice thing Adaptive Plot does for you is that, if you have a
+slow function you want to plot, you can see the points appear in a
+Scheme window as they are computed.  You can also open up a Scheme
+window showing a (partial) plot of a function, interact with that plot
+object from the REPL, and see the effects show up in the window as
+soon as they are computed.
 
+So how do I get it?
+===================
 
-For example, Figure b comes from
+Just `git clone` this repository,
 ```scheme
-(define (the-function x)
-  ... ; Lots of hairy code
-  )
-
-(gnuplot the-function -1 2 '(adaptive-with 40)
-  '(commanding "title \"Adaptive placement of the same 40 evaluations"))
+(load "adaptive-plot/load")
 ```
+and hack away.
+
+
+I can haz Reference Manual?
+===========================
 
 Concepts
-========
+--------
 
 A *plot* of a function is really an ordered collection of (x,y)
 points, where the x coordinates were chosen by some mechanism and the
@@ -128,9 +141,6 @@ should be at least as high as the resolution of the graphic where you will
 actually draw it; however, you may wish to draw a low-resolution plot
 on a high-resolution graphic to get a fast coarse view of an expensive
 function.
-
-Reference Manual
-================
 
 Making Simple Things Simple
 ---------------------------
@@ -194,9 +204,21 @@ more:
   plot.  Use this, for instance, to give a name to your function to
   appear in the legend.
 
-TODO For example
+For example, Figure b from the intro can be made with
+```scheme
+(define (the-function x)
+  ... ; Lots of hairy code
+  )
 
-TODO document existing default gnupolt commands
+(gnuplot the-function -1 2 '(adaptive-with 40)
+  '(commanding "title \"Adaptive placement of the same 40 evaluations"))
+```
+
+`gnuplot` will echo the Gnuplot command it ends up issuing to your
+REPL so you can see how to use `'prefixing` and `'commanding` to good
+effect.  In particular, `gnuplot` sets up some reasonable defaults
+using Gnuplot's `set`, but anything you prefix gets inserted after
+those `set`s so you can override it.
 
 `(replot plot . adverbs)`, `(regnuplot plot . adverbs)`
 
