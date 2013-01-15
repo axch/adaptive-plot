@@ -21,21 +21,26 @@
 ;;;; Facade: common patterns made simple
 
 (define (plot f xlow xhigh . adverbs)
+  (apply replot (new-plot f xlow xhigh) adverbs))
+
+(define (replot plot . adverbs)
   (define scheme-window-wanted?
     (not (eq? (last
                (filter (lambda (a) (or (eq? a 'invisibly) (eq? a 'visibly)))
                        (cons 'visibly adverbs)))
               'invisibly)))
-  (let ((plot (new-plot f xlow xhigh)))
-    (if scheme-window-wanted?
-        (plot-draw! plot))
-    (apply plot-refine! plot adverbs)
-    plot))
+  (if scheme-window-wanted?
+      (plot-draw! plot))
+  (apply plot-refine! plot adverbs)
+  plot)
 
 (define (gnuplot f xlow xhigh . adverbs)
+  (apply regnuplot (new-plot f xlow xhigh) adverbs))
+
+(define (regnuplot plot . adverbs)
   (apply plot-gnu!
          (plot-stop-drawing!
-          (apply plot f xlow xhigh 'invisibly adverbs)) adverbs))
+          (apply replot plot 'invisibly adverbs)) adverbs))
 
 ;;;; Interactive manipulation
 

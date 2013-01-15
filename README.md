@@ -18,6 +18,10 @@ Facade:
 - accepts additional adverbs
   - '(prefixing str) '(commanding str)
 
+replot, regnuplot
+- apply new adverbs to existing plot.  Point counts are interpreted as license
+  for additional points.
+
 
 Of independent interest:
 
