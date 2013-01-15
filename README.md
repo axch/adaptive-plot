@@ -523,7 +523,7 @@ effort.
 
 If the function being plotted is not actually a function (for example,
 has some internal state, or is randomized), Adaptive Plot will neither
-detect nor react.  You'll just get a very jumbled and confused plot,
+detect this nor react.  You'll just get a very jumbled and confused plot,
 which may require very many points to make (and refinement may even
 not terminate).
 
