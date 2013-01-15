@@ -66,7 +66,7 @@ The *resolution* of a plot is the resolution of the screen on which
 the plot is assuming it will be drawn: higher means features will be
 more smoothed out (at the cost of computing the value of the function
 at more points).  For best visual results, the resolution of the plot
-should be at least as high as the resolution of graphic where you will
+should be at least as high as the resolution of the graphic where you will
 actually draw it; however, you may wish to draw a low-resolution plot
 on a high-resolution graphic to get a fast coarse view of an expensive
 function.
