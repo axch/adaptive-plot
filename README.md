@@ -132,7 +132,8 @@ sampling; in regions of high curvature, denser sampling is required.
 
 Adaptive Plot watches the points that it computes when building a
 plot, and, based on the choppiness of the piecewise-linear curve that
-they make, [estimates](#plot-refinement-algorithms) whether additional points are necessary and where
+they make, [estimates](#plot-refinement-algorithms) whether additional
+points are necessary and where
 they would be most useful.
 
 The *resolution* of a plot is the resolution of the screen on which
@@ -158,7 +159,8 @@ the plot object.
 You can control several aspects of how this is done by supplying
 _adverbs_, which are either Scheme symbols or lists that begin with
 Scheme symbols (you need to quote them to keep them from being
-evaluated) (later adverbs override earlier ones):
+evaluated).  Later adverbs override earlier ones.  The adverbs
+`plot` accepts are:
 
 - `'invisibly` tells `plot` not to actually draw the Scheme window.
   This is useful if you want to manipulate the resulting plot object
@@ -169,11 +171,19 @@ evaluated) (later adverbs override earlier ones):
   the default for `plot`, but e.g., `gnuplot`, below, does not show a
   live window by default.
 
-- `'adaptively '(adaptively res^2) '(adaptively xres yres)
-  '(adaptively-with count) '(adaptively-to-with xres yres count)
-  'x-uniformly '(x-uniformly xres) 'y-uniformly '(y-uniformly yres)
-  'uniformly '(uniformly res)` control the actual point selection
-  algorithm, discussed below.  The default is `'adaptively`.
+- `'adaptively`, `'(adaptively res^2)`, `'(adaptively xres yres)`,
+  `'(adaptively-with count)`, `'(adaptively-to-with xres yres count)`,
+  `'x-uniformly`, `'(x-uniformly xres)`, `'y-uniformly`, `'(y-uniformly yres)`,
+  `'uniformly`, and `'(uniformly res)` control the actual point selection
+  algorithm, [discussed below](#plot-refinement-algorithms).
+  The default is `'adaptively`.
+
+For example,
+```scheme
+(plot abs -1 1 '(adaptive-with 40))
+```
+would draw a plot of the `abs` function in a Scheme window using
+exactly 40 points.
 
 In addition, you can control the size of the generated Scheme window
 by setting the global variables `*scheme-plot-window-x-res*` and
@@ -208,10 +218,6 @@ more:
 
 For example, Figure b from the intro can be made with
 ```scheme
-(define (the-function x)
-  ... ; Lots of hairy code
-  )
-
 (gnuplot the-function -1 2 '(adaptive-with 40)
   '(commanding "title \"Adaptive placement of the same 40 evaluations"))
 ```
