@@ -88,8 +88,8 @@
   (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
    (plot-dim-refine! plot (desired-separation xlow xhigh 10) car))
   (plot-sync-window! plot)
-  (plot-parabolic-interpolate! plot xres)
-  (plot-sync-window! plot))
+  (plot-parabolic-interpolate!
+   plot (plot-small-lobe plot xres)))
 
 (define (plot-adaptive-refine*! plot count)
   (let ((used (counting-used-points plot
@@ -98,18 +98,18 @@
                  (receive (xlow xhigh ylow yhigh) (plot-dimensions plot)
                   (plot-dim-refine! plot (desired-separation xlow xhigh 10) car))
                  (plot-sync-window! plot)))))
-    (plot-parabolic-interpolate*! plot (- count used))
-    (plot-sync-window! plot)))
+    (plot-parabolic-interpolate*! plot (- count used))))
 
 ;;; Iteratively refine the piecewise linear approximation that is the
 ;;; given plot by adding points in the places where it makes the
 ;;; biggest mistakes relative to a locally quadratic approximation of
 ;;; the function.
-(define (plot-parabolic-interpolate! plot #!optional res)
+(define (plot-parabolic-interpolate! plot #!optional drop?)
   (interpolate-approximation
    (plot-relevant-points-alist plot)
    (plot-watched-f plot)
-   (plot-small-lobe plot res)))
+   drop?)
+  (plot-sync-window! plot))
 
 ;;; Iteratively refine the piecewise linear approximation that is the
 ;;; given plot by adding points in the places where it makes the
@@ -119,7 +119,8 @@
   (interpolate-approximation*
    (plot-relevant-points-alist plot)
    (plot-watched-f plot)
-   count))
+   count)
+  (plot-sync-window! plot))
 
 (define (plot-watched-f plot)
   (lambda (x)
