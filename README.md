@@ -17,11 +17,6 @@ Of independent interest:
 
 (gnuplot-alist alist ...)
 
-(gnuplot-histogram-alist alist ...)
-- TODO Maybe unrelease this and keep it in my own files?
-- I think this is implementable in terms of gnuplot-alist now,
-  using the gnuplot-prefix argument
-
 
 Interactive manipulation:
 
