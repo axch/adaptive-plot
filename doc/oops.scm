@@ -31,6 +31,6 @@
 
 (gnuplot (offset example-f) -1 2 '(x-uniformly 40)
          '(prefixing "set term png; set output \"oops.png\"")
-         '(commanding "title \"A whole 40 data points of my expensive function"))
+         '(commanding "title \"40 evenly spaced data points of my expensive function"))
 
 (%exit 0)

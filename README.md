@@ -3,6 +3,13 @@ Has this ever happened to you?
 <img src="http://web.mit.edu/~axch/www/plotting/oops.png" alt="Bad plot
  from poorly chosen points" title="...">
 
+40 hours spent computing 40 data points, and all the insight you get
+into your hard-to-compute function is that plot?  Wouldn't you rather
+have something like this for the same effort?
+
+<img src="http://web.mit.edu/~axch/www/plotting/better.png" alt="Good plot
+ from well chosen points" title="...">
+
 Concepts
 ========
 
