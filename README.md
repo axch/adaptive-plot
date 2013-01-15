@@ -460,15 +460,23 @@ plot, it will be updated as refinement proceeds.
 Of Independent Interest
 -----------------------
 
-This function is a utility from the perspective of Adaptive Plot, but
-may be useful independently of all the rest of this machinery.
+These two functions are utilities from the perspective of Adaptive
+Plot, but may be useful independently of all the rest of this
+machinery.  They are defined in the file gnuplot.scm, which has no
+dependencies on any of the rest of Adaptive Plot, so may be lifted and
+used elsewhere if desired.
 
 `(gnuplot-alist alist . adverbs)`
 
 Plot the given list of points (as x-y pairs) in gnuplot, according to
-any supplied `prefixing` and/or `commanding` adverbs.  This is defined
-in the file gnuplot.scm, which has no dependencies on any of the rest
-of Adaptive Plot, so may be lifted and used elsewhere if desired.
+any supplied `prefixing` and/or `commanding` adverbs.
+
+`(gnuplot-write-alist alist filename)`
+
+Write the given list of points (as x-y pairs) into the given file
+(overwriting it) in a format the Gnuplot is happy with.  Yes, this
+function is trivial, but I already wrote it for you.
+
 
 Portability
 ===========
@@ -498,7 +506,52 @@ invention.  The portability problems I anticipate are
 Bugs
 ====
 
-TODO
+Adaptive Plot does not deal gracefully with functions that approach
+infinity within the plotting range.  In particular, the adaptive
+refinement will tend to try to explore the vicinity of the pole.  This
+makes two problems: effort will be spent on computing very large values
+of the function, which are likely to be both inaccurate and
+uninteresting; and the plotter might hit a value where the function is
+actually undefined, possibly causing a crash.
+
+Clipping the y range does not prevent Adaptive Plot from trying to
+explore that geometry.  To wit, if the function has something like a
+discontinuity (or a pole!) in the given x range but outside the given
+y range, Adaptive Plot will try to explore it anyway, wasting
+computational effort.
+
+If the function being plotted is not actually a function (for example,
+has some internal state, or is randomized), Adaptive Plot will neither
+detect nor react.  You'll just get a very jumbled and confused plot,
+which may require very many points to make (and refinement may even
+not terminate).
+
+`gnuplot`, `regnuplot`, and `plot-gnu!` are synchronous, so you can't
+have both your REPL and the gnuplot window open at the same time.
+
+Unimplemented Features
+======================
+
+Generalize adaptive refinement to parametric curves.  The concept is
+identical, except that the higher-order extrapolation is now trying
+guess the value of the parameter that would produce the greatest
+improvement in a piecewise linear approximation to a curve.
+
+Maybe generalize to plotting more than one function at once.
+Multifunction plots can already be accomplished with
+`plot-relevant-points`, `gnuplot-write-alist`, and some glue, but
+there may be some additional adaptiveness to be derived from plotting
+multiple functions at once.  For example, the piecewise linear
+approximations that adaptive refinement produces can be good starting
+points to look for intersections (or to confirm their absence); if
+such features are of interest, the plotting could focus more effort in
+such locations.
+
+Maybe generalize to Poincare sections, which often still draw
+continuous curves, but jump around sporadically inside them.  Poincare
+sections of chaotic trajectories are even more fun, because they jump
+around inside an area, that is nonetheless bounded by continuous
+curves.
 
 Author
 ======

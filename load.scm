@@ -43,10 +43,3 @@
 (load-relative-compiled "refinement")
 (load-relative-compiled "gnuplot")
 (load-relative-compiled "interface")
-
-;;; TODO Generalize autorefinement to non-curves?  (e.g. chaotic trajectories)
-;;; TODO Generalize to point sources that are not functions of the x dimension?
-;;; TODO Generalize to multiple point sources
-;;; TODO A way to avoid autorefining randomized functions for too long
-;;; TODO Make gnuplot output the default?  Find a way to give the repl
-;;;   back while keeping a gnuplot window open?
