@@ -13,3 +13,28 @@ Minor improvements:
   relevant-points abstraction and its segment-producing clients to
   produce cuts in the segment stream when a point in the x-range falls
   outside the y-range.  This affects segment splitting too.
+
+More testing:
+- A reasonable end-to-end test would be rebuilding the examples that
+  appear in the documentation and comparing the pictures to what they
+  should be.  A keen eye would be needed to detect subtle regressions
+  in plot quality.
+- Test code coverage of the documented interface functions, to the
+  extent possible.
+- Might be good to test zooming (checking that more points appear
+  where needed).
+
+Even more things to test:
+- Is there a sensible way to test y-range clipping?
+- Could test that the number of points generated is linear in the number
+  of geometric features (under constant relative resolution)
+- Could test that the running time is n log n in the number of points
+- plot (x-uniformly n) should produce n+1 points
+  - and they should be uniformly spaced!
+  - Why does it make n+2?  Is there a fencepost error somewhere?
+- plot (adaptively-with n) should produce n points (on a fresh plot
+  as well as on an existing plot) for n >= 12.
+- plot 'adaptively-to-with stops at either the adaptive or the count,
+  whichever is binding.
+- Autorefinement should query the function relatively little
+  - as compared with uniform refinement for the same discrepancy
