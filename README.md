@@ -191,10 +191,10 @@ by setting the global variables `*scheme-plot-window-x-res*` and
 target resolution by setting the global variables `*plot-x-res*` and
 `*plot-y-res*`.
 
-`(gnuplot f xlow xhigh)`
+`(gnuplot f xlow xhigh . adverbs)`
 
 Draw the function `f` in a Gnuplot window.  This operation is
-synchronous: `gnuplot` does not return until you close Gnuplot window.
+synchronous: `gnuplot` does not return until you close the Gnuplot window.
 Return the plot object.
 
 By default, `gnuplot` does not draw a Scheme window while `f` is being
@@ -206,27 +206,31 @@ aesthetically).
 `gnuplot` accepts all the same adverbs that `plot` does, plus two
 more:
 
-- `'(prefixing str)` will insert the given `str` in the Gnuplot
+- `(prefixing str)` will insert the given `str` in the Gnuplot
   command stream before the `plot` command that draws the desired
   plot.  Use this, for instance, to ask Gnuplot to write the plot
   to a file.
 
-- `'(commanding str)` will insert the given `str` as an additional
+- `(commanding str)` will insert the given `str` as an additional
   modifier at the end of the `plot` command that draws the desired
   plot.  Use this, for instance, to give a name to your function to
   appear in the legend.
 
 For example, Figure b from the intro can be made with
 ```scheme
+(define (the-function x)
+  ... ; Lots of hairy Scheme code
+  )
+
 (gnuplot the-function -1 2 '(adaptive-with 40)
   '(commanding "title \"Adaptive placement of the same 40 evaluations"))
 ```
 
 `gnuplot` will echo the Gnuplot command it ends up issuing to your
-REPL so you can see how to use `'prefixing` and `'commanding` to good
+REPL so you can see how to use the `prefixing` and `commanding` adverbs to good
 effect.  In particular, `gnuplot` sets up some reasonable defaults
-using Gnuplot's `set`, but anything you prefix gets inserted after
-those `set`s so you can override it.
+using Gnuplot's `set`, but anything you prefix gets inserted after this,
+so you can override it.
 
 `(replot plot . adverbs)`, `(regnuplot plot . adverbs)`
 
