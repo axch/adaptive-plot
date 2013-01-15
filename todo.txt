@@ -13,6 +13,11 @@ Minor improvements:
   relevant-points abstraction and its segment-producing clients to
   produce cuts in the segment stream when a point in the x-range falls
   outside the y-range.  This affects segment splitting too.
+- add a function to query a plot about how good it things its linear
+  approximation is?  Actually computing this from the known points
+  would be n log n, so maybe it should be memoized in some nice way.
+- Add a ./script/plot commandline tool that takes an expression in x
+  and plots it?  Not clear how useful this is.
 
 More testing:
 - A reasonable end-to-end test would be rebuilding the examples that
