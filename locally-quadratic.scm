@@ -144,3 +144,22 @@
                (new-y (f new-x)))
           (loop (update-interpolation-queue
                  to-do (cons new-x new-y) drop?))))))
+
+;;; Iteratively refine the piecewise linear approximation of the given
+;;; function `f' given by the given `points', splitting the worst
+;;; segment first.  Returns nothing useful; the communication
+;;; mechanism is the x values that `f' is called with.  If supplied,
+;;; the `count' argument is the number of points to add.  If `count'
+;;; is not supplied, interpolation will proceed forever (unless `f'
+;;; escapes with a nonlocal control transfer of some kind).
+(define (interpolate-approximation* points f #!optional count)
+  (let loop ((done 0)
+             (to-do (interpolation-queue points)))
+    (if (and (not (default-object? count))
+             (>= done count))
+        'ok
+        (let* ((new-x (segment-candidate-x (wt-tree/min to-do)))
+               (new-y (f new-x)))
+          (loop (+ done 1)
+                (update-interpolation-queue
+                 to-do (cons new-x new-y)))))))
