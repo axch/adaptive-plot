@@ -85,12 +85,16 @@
   (if (not (default-object? yres))
       (set! xres (* xres yres)))
   (plot-ensure-basic-refinement! plot)
-  (plot-parabolic-interpolate!
-   plot (plot-small-lobe plot xres)))
+  (plot-parabolic-interpolate! plot (plot-small-lobe plot xres)))
 
 (define (plot-adaptive-refine*! plot count)
   (let ((used (plot-ensure-basic-refinement! plot)))
     (plot-parabolic-interpolate! plot #!default (- count used))))
+
+(define (plot-adaptive-refine**! plot xres yres count)
+  (let ((used (plot-ensure-basic-refinement! plot)))
+    (plot-parabolic-interpolate!
+     plot (plot-small-lobe plot (* xres yres)) (- count used))))
 
 (define (plot-ensure-basic-refinement! plot)
   (counting-used-points plot

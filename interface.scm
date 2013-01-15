@@ -83,6 +83,7 @@
 (define refinement-functions
   `((adaptively  . ,plot-adaptive-refine!)
     (adaptively-with . ,plot-adaptive-refine*!)
+    (adaptively-to-with . ,plot-adaptive-refine**!)
     (uniformly   . ,plot-uniform-refine!)
     (x-uniformly . ,plot-uniform-refine-x!)
     (y-uniformly . ,plot-uniform-refine-y!)))
