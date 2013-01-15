@@ -132,7 +132,7 @@ sampling; in regions of high curvature, denser sampling is required.
 
 Adaptive Plot watches the points that it computes when building a
 plot, and, based on the choppiness of the piecewise-linear curve that
-they make, estimates whether additional points are necessary and where
+they make, [estimates](#plot-refinement-algorithms) whether additional points are necessary and where
 they would be most useful.
 
 The *resolution* of a plot is the resolution of the screen on which
