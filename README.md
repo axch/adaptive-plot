@@ -4,7 +4,8 @@ Has this ever happened to you?
 <table>
 <tr><td align="center">
 <img src="http://web.mit.edu/~axch/www/plotting/oops.png" alt="Bad plot
- from poorly chosen points" title="...">
+ from poorly chosen points" title="Why did I spend so much time near 1.5
+ and so little near 0.6?">
 </td></tr>
 <tr><td align="center">
 <p style="padding:0 auto"><b>Figure a</b>: A function plotted with 40 data points
@@ -19,7 +20,8 @@ have something like Figure b for the same effort?
 <table>
 <tr><td align="center">
 <img src="http://web.mit.edu/~axch/www/plotting/better.png" alt="Good plot
- from well chosen points" title="...">
+ from well chosen points" title="Isn't it nice when the computer can think
+ about what it's doing?">
 </td></tr>
 <tr><td align="center">
 <p style="position:relative; padding:0 100px"><b>Figure b</b>: The same function
