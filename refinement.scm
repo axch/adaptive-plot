@@ -116,9 +116,10 @@
 ;;; biggest mistakes relative to a locally quadratic approximation of
 ;;; the function.
 (define (plot-parabolic-interpolate*! plot #!optional count)
-  (interpolate-approximation*
+  (interpolate-approximation
    (plot-relevant-points-alist plot)
    (plot-watched-f plot)
+   #!default
    count)
   (plot-sync-window! plot))
 

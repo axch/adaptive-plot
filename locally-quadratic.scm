@@ -130,36 +130,24 @@
 ;;; Iteratively refine the piecewise linear approximation of the given
 ;;; function `f' given by the given `points', splitting the worst
 ;;; segment first.  Returns nothing useful; the communication
-;;; mechanism is the x values that `f' is called with.  If supplied,
-;;; the `drop?' argument is a predicate that picks out those segments
-;;; that are so good they need not be further refined.  Interpolation
-;;; proceeds until all remaining segments satisfy `drop?'.  If `drop?'
-;;; is not supplied, interpolation will proceed forever (unless `f'
-;;; escapes with a nonlocal control transfer of some kind).
-(define (interpolate-approximation points f #!optional drop?)
-  (let loop ((to-do (interpolation-queue points drop?)))
-    (if (wt-tree/empty? to-do)
-        'ok
-        (let* ((new-x (segment-candidate-x (wt-tree/min to-do)))
-               (new-y (f new-x)))
-          (loop (update-interpolation-queue
-                 to-do (cons new-x new-y) drop?))))))
+;;; mechanism is the x values that `f' is called with.
 
-;;; Iteratively refine the piecewise linear approximation of the given
-;;; function `f' given by the given `points', splitting the worst
-;;; segment first.  Returns nothing useful; the communication
-;;; mechanism is the x values that `f' is called with.  If supplied,
-;;; the `count' argument is the number of points to add.  If `count'
-;;; is not supplied, interpolation will proceed forever (unless `f'
-;;; escapes with a nonlocal control transfer of some kind).
-(define (interpolate-approximation* points f #!optional count)
+;;; The two final arguments indicate when to stop refining.
+;;; - `drop?', if supplied, is a predicate that identifies segments
+;;;   that are so good they need not be further refined.
+;;; - `count', if supplied, is the maximum number of points to add.
+;;; - If neither is supplied, interpolation will proceed forever
+;;;   (unless `f' escapes with a nonlocal control transfer of some
+;;;   kind).
+(define (interpolate-approximation points f #!optional drop? count)
   (let loop ((done 0)
-             (to-do (interpolation-queue points)))
-    (if (and (not (default-object? count))
-             (>= done count))
+             (to-do (interpolation-queue points drop?)))
+    (if (or (wt-tree/empty? to-do)
+            (and (not (default-object? count))
+                 (>= done count)))
         'ok
         (let* ((new-x (segment-candidate-x (wt-tree/min to-do)))
                (new-y (f new-x)))
           (loop (+ done 1)
                 (update-interpolation-queue
-                 to-do (cons new-x new-y)))))))
+                 to-do (cons new-x new-y) drop?))))))
