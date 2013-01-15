@@ -1,95 +1,336 @@
-Facade:
+Concepts
+========
 
-(plot f xlow xhigh)
-- Draw the function in a Scheme window.  Return the plot object.
-- Control the size of the Scheme window with *scheme-plot-window-x-res*,
-  *scheme-plot-window-y-res*
-- Accepts adverbs
-  - 'visibly 'invisibly
-  - 'uniformly '(uniformly res) '(x-uniformly xres) '(y-uniformly yres)
-  - 'adaptively '(adaptively res^2) '(adaptively xres yres)
-  - '(adaptively-with count)
-  - '(adaptively-to-with xres yres count)
-  - default: visibly, (adaptively 1200 960)
-- Control the plot's default resolution with *plot-x-res* and *plot-y-res*
+A *plot* of a function is really an ordered collection of (x,y)
+points, where the x coordinates were chosen by some mechanism and the
+y coordinates were computed by applying the function to those x
+coordinates.
 
-(gnuplot f xlow xhigh)
-- Draw the function in a fresh gnuplot window.  Return the plot object.
-- accepts additional adverbs
-  - '(prefixing str) '(commanding str)
+The actual pictures are *linear interpolations* -- draw the leftmost
+point, draw a straight line from it to the next point, then from there
+to the next, etc.  (One could interpolate nonlinearly, for instance
+with splines, but the point is to study the function, so I chose
+linear interpolation for Adaptive Plot because it is very simple and
+easily understood.)  This means that the picture you see is actually a
+piecewise-linear approximation of your function.
 
-replot, regnuplot
-- apply new adverbs to existing plot.  Point counts are interpreted as license
-  for additional points.
+A plot will look smooth when the line segments it is made of are small
+enough compared to the angles they make with each other and the
+thickness of the lines drawn on screen that your eye runs them
+together into one curve.  In regions where the function being plotted
+is almost linear, this can be accomplished with relatively sparse
+sampling; in regions of high curvature, denser sampling is required.
+
+Adaptive Plot watches the points that it computes when building a
+plot, and, based on the choppiness of the piecewise-linear curve that
+they make, estimates whether additional points are necessary and where
+they would be most useful.
+
+The *resolution* of a plot is the resolution of the screen on which
+the plot is assuming it will be drawn: higher means features will be
+more smoothed out (at the cost of computing the value of the function
+at more points).  For best visual results, the resolution of the plot
+should be at least as high as the resolution of graphic where you will
+actually draw it; however, you may wish to draw a low-resolution plot
+on a high-resolution graphic to get a fast coarse view of an expensive
+function.
+
+Reference Manual
+================
+
+Making Simple Things Simple
+---------------------------
+
+`(plot f xlow xhigh . adverbs)`
+
+Draw the function `f` in a Scheme window.  The Scheme window is live,
+in the sense that new points are added as soon as they are computed
+rather than waiting for the plotting process to complete.  The
+liveness is mainly useful when `f` is expensive to evaluate.  Return
+the plot object.
+
+You can control several aspects of how this is done by supplying
+_adverbs_, which are either Scheme symbols or lists that begin with
+Scheme symbols (you need to quote them to keep them from being
+evaluated) (later adverbs override earlier ones):
+
+- `'invisibly` tells `plot` not to actually draw the Scheme window.
+  This is useful if you want to manipulate the resulting plot object
+  some other way before looking at the plot.  See also `new-plot`,
+  below.
+
+- `'visibly`, in contrast, requests the live Scheme window.  This is
+  the default for `plot`, but e.g., `gnuplot`, below, does not show a
+  live window by default.
+
+- `'adaptively '(adaptively res^2) '(adaptively xres yres)
+  '(adaptively-with count) '(adaptively-to-with xres yres count)
+  'x-uniformly '(x-uniformly xres) 'y-uniformly '(y-uniformly yres)
+  'uniformly '(uniformly res)` control the actual point selection
+  algorithm, discussed below.  The default is `'adaptively`.
+
+In addition, you can control the size of the generated Scheme window
+by setting the global variables `*scheme-plot-window-x-res*` and
+`*scheme-plot-window-y-res*`, and you can control the plot's default
+target resolution by setting the global variables `*plot-x-res*` and
+`*plot-y-res*`.
+
+`(gnuplot f xlow xhigh)`
+
+Draw the function `f` in a Gnuplot window.  This operation is
+synchronous: `gnuplot` does not return until you close Gnuplot window.
+Return the plot object.
+
+By default, `gnuplot` does not draw a Scheme window while `f` is being
+plotted, but passing it the `visibly` adverb will make it do so.  The
+Scheme window will be closed when the plotting is done, to make room
+for the Gnuplot window (since Gnuplot renders plots more
+aesthetically).
+
+`gnuplot` accepts all the same adverbs that `plot` does, plus two
+more:
+
+- `'(prefixing str)` will insert the given `str` in the Gnuplot
+  command stream before the `plot` command that draws the desired
+  plot.  Use this, for instance, to ask Gnuplot to write the plot
+  to a file.
+
+- `'(commanding str)` will insert the given `str` as an additional
+  modifier at the end of the `plot` command that draws the desired
+  plot.  Use this, for instance, to give a name to your function to
+  appear in the legend.
+
+TODO For example
+
+TODO document existing default gnupolt commands
+
+`(replot plot . adverbs)`, `(regnuplot plot . adverbs)`
+
+Apply new adverbs to an existing plot and redraw (either in a Scheme
+window or in Gnuplot, as appropriate).  Previously supplied adverbs
+are not remembered, but previously plotted points are.  Adverbs that
+indicate plotting with some number of points mean use that many more
+points.
+
+Plot Refinement Algorithms
+--------------------------
+
+*Parabolic* refinement compares the linear approximation to a locally
+quadratic approximation (from sets of three consecutive
+already-plotted points) and queries that x coordinate that brings them
+closest together.  Parabolic refinement adds one point at a time, in a
+greedy fashion: query wherever looks best at the time.  Parabolic
+refinement is the default; you can also select it explicitly with the
+`adaptively` adverbs, which also lets you control the stopping
+condition.
+
+- `'adaptively' selects parabolic refinement until the plot's target
+  resolution is reached (default 1200x960).
+
+- `'(adaptively res^2)' selects parabolic refinement until the given
+  resolution, in units of total pixels, is reached.  (Parabolic
+  refinement works on total area, so the target aspect ratio of the
+  plot does not affect it).
+
+- `'(adaptively xres yres)` selects parabolic refinement until
+  the given resolution.  Since parabolic refinement works on
+  total area, this is equivalent to `(adaptively (* xres yres))`.
+
+- `'(adaptively-with count)` selects parabolic refinement for a fixed
+  number of points, regardless of the resolution attained thereby.
+  Note that the first 12 points are spaced uniformly along the x-axis
+  to make an initial approximation to refine, so to actually benefit
+  from parabolic refinement `count` should be more than 12.
+
+- `'(adaptively-to-with xres yres count)` is a combination of the
+  previous two: refinement proceeds until either the desired
+  resolution is reached or `count` points have been added, and then
+  stops.
+
+Arguments to `adaptively-with` and `adaptively-to-with` are optional.
+Without the `count`, the latter reduces to `adaptively`; whereas the
+former, without the `count`, will refine forever.
+
+*Uniform* refinement along either the x or the y dimension makes sure
+that all segments are not too long in the given dimension, by trying
+to break any such too-long segment up into the fewest uniform-length
+pieces necessary to bring it down to size.  Uniform refinement in the
+x dimension is therefore not adaptive at all (because the x
+coordinates of new points do not depend on the values of the function
+at old points), but uniform refinement in the y dimension is adaptive,
+in the sense that it will throw points at regions where the function's
+value is changing rapidly.
+
+You can select uniform refinement along one or both dimensions with
+the `uniformly` adverbs, as well as control the size it aims for
+
+- `'(x-uniformly xres)` makes the x-lengths of all segments shorter
+  than the given resolution (higher resolution means shorter
+  segments).
+
+- `'x-uniformly` makes the x-lengths of all segments shorter than the
+  plot's x-resolution.  Note that the default for plot resolution is
+  chosen with parabolic refinement in mind, so this adverb may be
+  surprisingly expensive.
+
+- `'(y-uniformly yres)` tries to make the y-lengths of all segments
+  shorter than the given resolution (higher resolution means shorter
+  segments).  The attempt is made by breaking any y-longer segment
+  uniformly in the x dimension; if the function is nonlinear, not all
+  the resulting segments will have y-lengths shorter than the desired
+  resolution.  y-uniform refinement is not automatically iterated,
+  because if the function has a sufficienly large discontinuity,
+  iteration would not terminate.
+
+- `'y-uniformly` tries to make the y-lengths of all segments shorter
+  than the plot's y-resolution.
+
+- `'(uniformly res)` does `'(x-uniformly res)` first and then
+  `'(y-uniformly res)`.
+
+- `'uniformly` does `'x-uniformly` first and then `'y-uniformly`.
 
 
-Of independent interest:
+Interactive manipulation
+------------------------
 
-(gnuplot-alist alist ...)
-- '(prefixing str) '(commanding str)
+`(plot f xlow xhigh 'invisibly . more-adverbs)`
+
+As a reminder, `plot` can be made to do the adaptive point selection,
+but show no output.  It returns the plot object, which can be further
+manipulated.
+
+`(plot-draw! plot)`
+
+Draw the given plot in a Scheme window and return the plot.  Does not
+refine.
+
+`(plot-zoom-x! plot #!optional new-xlow new-xhigh)`
+
+Change the x boundaries of the given plot and compute more points (if
+necessary) so that the new view reaches the plot's resolution, the
+return the plot.  Useful for looking at a part of the function's
+geometry more closely without recomputing the points already plotted,
+or at a different region without forgetting the points already
+plotted.  If either boundary is left off, set it to include all
+avilable already plotted points (and at least the x coordinates -1 and
++1).  If this plot is being followed in a live Scheme window, its
+boundaries become the new bounds.
+
+`(plot-zoom-y! plot #!optional new-ylow new-yhigh)`
+
+Clip the plot window to only show the curve within the given
+boundaries in the y dimension and compute more points (if necessary)
+so that the new view reaches the plot's resolution, then return the
+plot.  Useful avoiding being confused by a spike in the function.  If
+either boundary is left off, include all y values (including ones the
+function may produce in the future).  If this plot is being followed
+in a live Scheme window, its boundaries become the new bounds.
+
+`(plot-zoom! plot #!optional new-xlow new-xhigh new-ylow new-yhigh)`
+
+Do both `plot-zoom-x!` and `plot-zoom-y!`.
+
+`(plot-resolve! plot xres yres)`
+
+Change the plot's resolution and compute more points (if necessary) so
+that the current view reaches the new resolution, then return the plot.
+
+`(plot-stop-drawing! plot)`
+
+Get rid of the Scheme window (it will not be recreated until you call
+`plot-draw!`), and return the plot.
+
+`(plot-gnu! plot . adverbs)`
+
+Draw the (current state of) the plot in a fresh gnuplot window and
+return the plot.  Does not compute additional points.  Accepts the
+adverbs `'prefixing` and `'commanding`, with the same effect as
+`gnuplot`.
 
 
-Interactive manipulation:
+Interactive querying
+--------------------
 
-(plot f xlow xhigh 'invisibly)
-- Do the adaptive point selection, but produce no output.  Return the
-  plot object.
+`(plot-xlow plot)` `(plot-xhigh plot)` `(plot-ylow plot)` `(plot-yhigh plot)`
 
-(plot-draw! plot)
-- Draw the plot in a Scheme window.  (Does not autorefine)
+Return the appropriate limit for this plot's range of interest.
+Returns the default object (which satisfies `default-object?`) if that
+boundary is not constrained.
 
-plot-zoom!, plot-zoom-x!, plot-zoom-y!
-- Zoom the plot view (in or out) and refine
-- The semantics of omitting bounds along the x dimension are complicated:
-  They constitute a request to test the function at -1 and 1, but then to
-  clip the plot output to include all available data.
+`(plot-dimensions plot)`
 
-plot-resolve!
-- set the plot's resolution and refine
-- The semantics of the plot's resolution are that it determines the
-  size of features the refinement will try to explore.  For best
-  visual results, this should match or exceed the resolution of the
-  graphic where the plot will be drawn.  For fastest computation, this
-  should be as small as possible.  Only the product matters for
-  locally quadratic refinement.
+Return the bounding box the plot will be drawn in as four values:
+`(xlow xhigh ylow yhigh)`.  This is not the same as calling
+`plot-xlow`, etc, because it computes what the effective boundaries
+are for dimensions that are not constrained.
 
-(plot-stop-drawing! plot)
-- Get rid of the Scheme window (it will not be recreated automatically)
+`(plot-xresolution plot)` `(plot-yresolution plot)`
 
-(plot-gnu! plot)
-- Draw the (current state of) the plot in a fresh gnuplot window.  (Does not
-  autorefine)
+Return the target x- or y-resolution of the plot.
 
+`(plot-pixels plot)`
 
-Interactive querying:
+Return the plot's target number of pixels.  This is just the product
+of the x resolution times the y resolution, but is relevant because
+the parabolic refinement algorithm does not care about the aspect
+ratio.
 
-plot-xlow plot-xhigh plot-ylow plot-yhigh plot-dimensions
+`(plot-known-points-alist plot)`
 
-plot-xresolution ? plot-yresolution ?
+Return all the points the plot has computed so far as a list of x-y
+pairs.
 
-(plot-known-points-alist plot)
-- extract the known points as a list of x-y pairs
+`(plot-relevant-points-alist plot)`
 
-(plot-relevant-points-alist plot)
-- extract the known points filtered by the current viewport
+Return the points that fall within the plot's current viewport
+boundaries (xlow, xhigh, ylow, yhigh) as a list of x-y pairs.
+
+`(plot-count plot)`
+
+Return the number of points the plot has computed so far.
 
 TODO discover the size of the discrepancy
 - Maybe this is just a unit testing utility?
 
 
-Manipulate without autorefinement:
+Manipulate without autorefinement
+---------------------------------
 
-(new-plot f xlow xhigh)
-- Create a plot, but do not make a Scheme window or invoke the
-  function to be plotted.
+`(new-plot f xlow xhigh)`
 
-plot-resize!, plot-resize-x!, plot-resize-y!
-- Zoom the plot view without refining
+Create and return a plot object, but do not make a Scheme window or
+start refining.  Does not invoke the function to be plotted.
 
-plot-new-resolution!
-- set the plot's resolution without triggering refinement
+`(plot-resize-x! plot #!optional xlow xhigh)`,
+`(plot-resize-y! plot #!optional ylow yhigh)`,
+`(plot-resize!   plot #!optional xlow xhigh ylow yhigh)`
 
-plot-refine!
-- manually invoke adaptive refinement
-- accepts refinement adverbs
-- does not and should not care about visibility adverbs
+Like `plot-zoom*`, but do not compute additional points until called
+for.
+
+`(plot-new-resolution! plot xres yres)`
+
+Like `plot-resolve!`, but do not compute additional points until called
+for.
+
+`(plot-refine! plot . adverbs)`
+
+Manually invoke adaptive refinement, according to any `adaptively` or
+`uniformly` adverbs supplied.  The default is `'adaptively`.  Return
+the plot object.  If there is a live Scheme window following this
+plot, it will be updated as refinement proceeds.
+
+
+Of independent interest
+-----------------------
+
+This function is a utility from the perspective of Adaptive Plot, but
+may be useful independently of all the rest of this machinery.
+
+`(gnuplot-alist alist ...)`
+
+Plot the given list of points (as x-y pairs) in gnuplot, according to
+any supplied `prefixing` and/or `commanding` adverbs.  This is defined
+in the file gnuplot.scm, which has no dependencies on any of the rest
+of Adaptive Plot, so may be lifted and used elsewhere if desired.
