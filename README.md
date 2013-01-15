@@ -162,21 +162,21 @@ Scheme symbols (you need to quote them to keep them from being
 evaluated).  Later adverbs override earlier ones.  The adverbs
 `plot` accepts are:
 
-- `'invisibly` tells `plot` not to actually draw the Scheme window.
+- `invisibly` tells `plot` not to actually draw the Scheme window.
   This is useful if you want to manipulate the resulting plot object
   some other way before looking at the plot.  See also `new-plot`,
   below.
 
-- `'visibly`, in contrast, requests the live Scheme window.  This is
+- `visibly`, in contrast, requests the live Scheme window.  This is
   the default for `plot`, but e.g., `gnuplot`, below, does not show a
   live window by default.
 
-- `'adaptively`, `'(adaptively res^2)`, `'(adaptively xres yres)`,
-  `'(adaptively-with count)`, `'(adaptively-to-with xres yres count)`,
-  `'x-uniformly`, `'(x-uniformly xres)`, `'y-uniformly`, `'(y-uniformly yres)`,
-  `'uniformly`, and `'(uniformly res)` control the actual point selection
-  algorithm, [discussed below](#plot-refinement-algorithms).
-  The default is `'adaptively`.
+- `adaptively`, `(adaptively res^2)`, `(adaptively xres yres)`,
+  `(adaptively-with count)`, `(adaptively-to-with xres yres count)`,
+  `x-uniformly`, `(x-uniformly xres)`, `y-uniformly`, `(y-uniformly yres)`,
+  `uniformly`, and `(uniformly res)` control the [actual point selection
+  algorithm](#plot-refinement-algorithms).
+  The default is `adaptively`.
 
 For example,
 ```scheme
