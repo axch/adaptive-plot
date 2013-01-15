@@ -40,7 +40,7 @@ points, where the x coordinates were chosen by some mechanism and the
 y coordinates were computed by applying the function to those x
 coordinates.
 
-The actual pictures are *linear interpolations* -- draw the leftmost
+The actual pictures are *linear interpolations*&mdash;draw the leftmost
 point, draw a straight line from it to the next point, then from there
 to the next, etc.  (One could interpolate nonlinearly, for instance
 with splines, but the point is to study the function, so I chose
