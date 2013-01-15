@@ -4,18 +4,25 @@ Facade:
 - Draw the function in a Scheme window.  Return the plot object.
 - Control the size of the Scheme window with *scheme-plot-window-x-res*,
   *scheme-plot-window-y-res*
-- Control the plot's resolution with *plot-x-res* and *plot-y-res*
+- Accepts adverbs
+  - 'visibly 'invisibly
+  - 'uniformly '(uniformly res) '(x-uniformly xres) '(y-uniformly yres)
+  - 'adaptively '(adaptively res^2) '(adaptively xres yres)
+  - '(adaptively-with count)
+  - '(adaptively-to-with xres yres count)
+  - default: visibly, (adaptively 1200 960)
+- Control the plot's default resolution with *plot-x-res* and *plot-y-res*
 
 (gnuplot f xlow xhigh)
 - Draw the function in a fresh gnuplot window.  Return the plot object.
-  - with visibly shows the plot in a Scheme window while it's being refined
-- TODO pick an interface for gnuplot control strings
-  - global variables to hold defaults if parameters not supplied?
+- accepts additional adverbs
+  - '(prefixing str) '(commanding str)
 
 
 Of independent interest:
 
 (gnuplot-alist alist ...)
+- '(prefixing str) '(commanding str)
 
 
 Interactive manipulation:
@@ -80,6 +87,8 @@ plot-new-resolution!
 
 plot-refine!
 - manually invoke adaptive refinement
+- accepts refinement adverbs
+- does not and should not care about visibility adverbs
 
 plot-uniform-refine!, plot-uniform-refine-x!, plot-uniform-refine-y!
 - manually refine a plot in the x or y dimension or both with uniform spacing
