@@ -279,6 +279,15 @@ Arguments to `adaptively-with` and `adaptively-to-with` are optional.
 Without the `count`, the latter reduces to `adaptively`; whereas the
 former, without the `count`, will refine forever.
 
+For example,
+```scheme
+(plot cos -10 10 '(adaptively-to-with 640 480 100))
+```
+will produce a plot of cos(x) between -10 and 10 that's good for
+display at a resolution of 640x480, unless this takes more than 100
+evaluations of cos, in which case it will stop at the best it can
+do with 100 points.
+
 *Uniform* refinement along either the x or the y dimension makes sure
 that all segments are not too long in the given dimension, by trying
 to break any such too-long segment up into the fewest uniform-length
