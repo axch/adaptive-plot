@@ -76,3 +76,13 @@
        (display command)
        (newline)
        (run-shell-command command)))))
+
+;; A "lax alist" is a list whose pairs are treated as alist elements,
+;; but which is allowed to have non-pairs also (which are ignored).
+(define (lax-alist-lookup alist item default #!optional =)
+  (let ((binding (assoc item (filter pair? alist) =)))
+    (if binding
+        ;; I really want to be looking up from two-element lists
+        ;; rather than pairs, so this does not iterpret proper alists.
+        (cadr binding)
+        default)))
