@@ -252,25 +252,25 @@ refinement is the default; you can also select it explicitly with the
 `adaptively` adverbs, which also lets you control the stopping
 condition.
 
-- `'adaptively' selects parabolic refinement until the plot's target
+- `adaptively` selects parabolic refinement until the plot's target
   resolution is reached (default 1200x960).
 
-- `'(adaptively res^2)' selects parabolic refinement until the given
+- `(adaptively res^2)` selects parabolic refinement until the given
   resolution, in units of total pixels, is reached.  (Parabolic
   refinement works on total area, so the target aspect ratio of the
   plot does not affect it).
 
-- `'(adaptively xres yres)` selects parabolic refinement until
+- `(adaptively xres yres)` selects parabolic refinement until
   the given resolution.  Since parabolic refinement works on
   total area, this is equivalent to `(adaptively (* xres yres))`.
 
-- `'(adaptively-with count)` selects parabolic refinement for a fixed
+- `(adaptively-with count)` selects parabolic refinement for a fixed
   number of points, regardless of the resolution attained thereby.
   Note that the first 12 points are spaced uniformly along the x-axis
   to make an initial approximation to refine, so to actually benefit
   from parabolic refinement `count` should be more than 12.
 
-- `'(adaptively-to-with xres yres count)` is a combination of the
+- `(adaptively-to-with xres yres count)` is a combination of the
   previous two: refinement proceeds until either the desired
   resolution is reached or `count` points have been added, and then
   stops.
@@ -292,16 +292,16 @@ value is changing rapidly.
 You can select uniform refinement along one or both dimensions with
 the `uniformly` adverbs, as well as control the size it aims for
 
-- `'(x-uniformly xres)` makes the x-lengths of all segments shorter
+- `(x-uniformly xres)` makes the x-lengths of all segments shorter
   than the given resolution (higher resolution means shorter
   segments).
 
-- `'x-uniformly` makes the x-lengths of all segments shorter than the
+- `x-uniformly` makes the x-lengths of all segments shorter than the
   plot's x-resolution.  Note that the default for plot resolution is
   chosen with parabolic refinement in mind, so this adverb may be
   surprisingly expensive.
 
-- `'(y-uniformly yres)` tries to make the y-lengths of all segments
+- `(y-uniformly yres)` tries to make the y-lengths of all segments
   shorter than the given resolution (higher resolution means shorter
   segments).  The attempt is made by breaking any y-longer segment
   uniformly in the x dimension; if the function is nonlinear, not all
@@ -310,13 +310,13 @@ the `uniformly` adverbs, as well as control the size it aims for
   because if the function has a sufficienly large discontinuity,
   iteration would not terminate.
 
-- `'y-uniformly` tries to make the y-lengths of all segments shorter
+- `y-uniformly` tries to make the y-lengths of all segments shorter
   than the plot's y-resolution.
 
-- `'(uniformly res)` does `'(x-uniformly res)` first and then
-  `'(y-uniformly res)`.
+- `(uniformly res)` does `(x-uniformly res)` first and then
+  `(y-uniformly res)`.
 
-- `'uniformly` does `'x-uniformly` first and then `'y-uniformly`.
+- `uniformly` does `x-uniformly` first and then `y-uniformly`.
 
 
 Interactive manipulation
