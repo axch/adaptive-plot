@@ -16,6 +16,11 @@
 ### License along with Adaptive Plot.  If not, see
 ### <http://www.gnu.org/licenses/>.
 
+SCMS = $(wildcard *.scm)
+PNGS = $(subst .scm,.png,$(SCMS))
+
+all: $(PNGS)
+
 %.png: %.scm
 	mit-scheme --compiler -heap 6000 --batch-mode --no-init-file \
 	--eval '(set! load/suppress-loading-message? #t)' \
