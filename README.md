@@ -339,3 +339,39 @@ Plot the given list of points (as x-y pairs) in gnuplot, according to
 any supplied `prefixing` and/or `commanding` adverbs.  This is defined
 in the file gnuplot.scm, which has no dependencies on any of the rest
 of Adaptive Plot, so may be lifted and used elsewhere if desired.
+
+Portability
+===========
+
+TODO
+
+Bugs
+====
+
+TODO
+
+Author
+======
+
+Alexey Radul, axch@mit.edu
+
+License
+=======
+
+This file is part of Adaptive Plot, a library for plotting
+functions from the MIT Scheme REPL
+Copyright (C) 2010-2011 Alexey Radul
+
+Adaptive Plot is free software: you can redistribute it and/or
+modify it under the terms of the GNU Affero General Public License
+as published by the Free Software Foundation, either version 3 of
+the License, or (at your option) any later version.
+
+Adaptive Plot is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public
+License along with Adaptive Plot.  If not, see
+<http://www.gnu.org/licenses/>.
