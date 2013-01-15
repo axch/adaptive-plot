@@ -1,0 +1,15 @@
+Minor improvements:
+- call plot-sync-window! at least every 100ms so you always see an
+  up-to-date line drawing
+- make the autorefinement functions (e.g., plot-zoom-x!) accept
+  adverbs to pass to plot-refine! ?
+- allow the plot object to remember adverbs (e.g. given to new-plot or
+  added with a new (plot-modify! plot . adverbs))?
+- allow new-plot to accept an alist of points already computed from f before
+  (e.g., by a previous plot whose plot object you did not want to save)
+- add a merge-plots or plot-merge-points function for adding previously
+  computed points from the same function to a plot in progress
+- Proper y-range clipping might be implementable by adjusting the
+  relevant-points abstraction and its segment-producing clients to
+  produce cuts in the segment stream when a point in the x-range falls
+  outside the y-range.  This affects segment splitting too.
