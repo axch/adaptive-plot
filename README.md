@@ -105,6 +105,8 @@ and hack away.
 I can haz Reference Manual?
 ===========================
 
+Sure.
+
 Concepts
 --------
 
