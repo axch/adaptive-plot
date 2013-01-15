@@ -508,17 +508,18 @@ Bugs
 
 Adaptive Plot does not deal gracefully with functions that approach
 infinity within the plotting range.  In particular, the adaptive
-refinement will tend to try to explore the vicinity of the pole.  This
+refinement will tend to try to explore the vicinity of the singularity.  This
 makes two problems: effort will be spent on computing very large values
 of the function, which are likely to be both inaccurate and
 uninteresting; and the plotter might hit a value where the function is
 actually undefined, possibly causing a crash.
 
 Clipping the y range does not prevent Adaptive Plot from trying to
-explore that geometry.  To wit, if the function has something like a
-discontinuity (or a pole!) in the given x range but outside the given
-y range, Adaptive Plot will try to explore it anyway, wasting
-computational effort.
+explore that geometry.  To wit, if the function has something
+interesting, like a high curvarture area, or a discontinuity (or a
+singularity!) in the given x range but outside the given y range,
+Adaptive Plot will try to explore it anyway, wasting computational
+effort.
 
 If the function being plotted is not actually a function (for example,
 has some internal state, or is randomized), Adaptive Plot will neither
