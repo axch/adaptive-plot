@@ -63,3 +63,13 @@
 (plot (lambda (x) (sin (* 200 x))) -1 1)
 
 (plot-gnu! (out) '(commanding "with lines title \"sin(200x)\""))
+
+;; The following function is chosen to have a relatively sharp
+;; transition (with interesting behavior) and relatively large flat
+;; regions.  The idea is to make it look like it might be hard to
+;; compute, so plot points are at a premium; and to make it have very
+;; local geometry of interest, so that placing them well is valuable.
+(define (example-f x)
+  (cond ((< x 0) (+ 0.1 (* 5 (exp (* 100 x)))))
+        (else (+ 1.1 (* 4 (exp (* 100 (- x))))))))
+;; (gnuplot (offset example-f) -1 2 '(x-uniformly 28)) is duly terrible
