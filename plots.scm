@@ -128,3 +128,8 @@
       (ensure-x-point-known! 1.)
       (ensure-x-point-known! (plot-xhigh plot)))
   plot)
+
+(define (counting-used-points plot thunk)
+  (let ((known-already (length (plot-known-points plot))))
+    (thunk)
+    (- (length (plot-known-points plot)) known-already)))
