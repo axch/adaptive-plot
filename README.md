@@ -8,7 +8,7 @@ Has this ever happened to you?
  and so little near 0.6?">
 </td></tr>
 <tr><td align="center">
-<p style="padding:0 auto"><b>Figure a</b>: A function plotted with 40 data points
+<p><b>Figure a</b>: A function plotted with 40 data points
 evenly spaced along the x axis</p>
 </td></tr>
 </table>
@@ -24,7 +24,7 @@ have something like Figure b for the same effort?
  about what it's doing?">
 </td></tr>
 <tr><td align="center">
-<p style="position:relative; padding:0 100px"><b>Figure b</b>: The same function
+<p><b>Figure b</b>: The same function
 plotted with 40 data points with adaptively chosen x coordinates.</p>
 </td></tr>
 </table>
@@ -32,7 +32,65 @@ plotted with 40 data points with adaptively chosen x coordinates.</p>
 Enter Adaptive Plot
 ===================
 
-TODO Examples
+a library for intelligently plotting functions from the MIT Scheme
+REPL.  Adaptive Plot lets you
+
+- plot from the read-eval-print loop any real function you have
+  implemented as a Scheme program,
+- letting the library automatically choose how much and where to
+  evaluate it to get a good picture.
+
+For example, if you want to see sin(100x), type:
+```scheme
+(load "adaptive-plot/load")
+
+(gnuplot (lambda (x) (sin (* 100 x))) -1 1)
+```
+and you get
+<table>
+<tr><td align="center">
+<img src="http://web.mit.edu/~axch/www/plotting/sin100x.png" alt="Good plot
+ of sin(100x)">
+</td></tr>
+<tr><td align="center">
+<p><b>Figure c</b>: sin(100x)
+plotted with enough points to make out all the geometry, but no
+legend.</p>
+</td></tr>
+</table>
+
+This particular picture turned out to need 1672 points, placed
+adaptively, to come out this good.  If you only use 100 points and
+space them evenly (which is what typing `plot sin(100*x)` into Gnuplot
+does by default) you get this:
+<table>
+<tr><td align="center">
+<img src="http://web.mit.edu/~axch/www/plotting/sin100x-bad.png" alt="Bad plot
+ of sin(100x)">
+</td></tr>
+<tr><td align="center">
+<p><b>Figure d</b>: sin(100x) with only 100 points, evenly spaced.</p>
+</td></tr>
+</table>
+You can of course get Adaptive Plot to give you Figure d,
+```scheme
+(gnuplot (lambda (x) (sin (* 100 x))) -1 1 '(x-uniformly 98)
+         '(commanding "title \"sin(200x)\""))
+```
+but why would you want to?
+
+
+
+
+For example, Figure b comes from
+```scheme
+(define (the-function x)
+  ... ; Lots of hairy code
+  )
+
+(gnuplot the-function -1 2 '(adaptive-with 40)
+  '(commanding "title \"Adaptive placement of the same 40 evaluations"))
+```
 
 Concepts
 ========
