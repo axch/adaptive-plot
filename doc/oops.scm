@@ -30,7 +30,7 @@
         (else (+ 1.1 (* 4 (exp (* 100 (- x))))))))
 
 (gnuplot (offset example-f) -1 2 '(x-uniformly 40)
-         '(prefixing "set term png; set output \"oops.png\"")
-         '(commanding "title \"40 evenly spaced data points of my expensive function"))
+         '(prefixing "set term png size 480,360; set output \"oops.png\"")
+         '(commanding "title \"40 evenly spaced values\nof my expensive function"))
 
 (%exit 0)

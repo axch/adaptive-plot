@@ -1,14 +1,31 @@
 Has this ever happened to you?
+==============================
 
+<table>
+<tr><td align="center">
 <img src="http://web.mit.edu/~axch/www/plotting/oops.png" alt="Bad plot
  from poorly chosen points" title="...">
-
-40 hours spent computing 40 data points, and all the insight you get
-into your hard-to-compute function is that plot?  Wouldn't you rather
-have something like this for the same effort?
-
+</td><td align="center">
 <img src="http://web.mit.edu/~axch/www/plotting/better.png" alt="Good plot
  from well chosen points" title="...">
+</td></tr>
+<tr><td align="center">
+<p style="padding:0 auto"><b>Figure a</b>: A function plotted with 40 data points
+evenly spaced along the x axis</p>
+</td><td align="center">
+<p style="position:relative; padding:0 100px"><b>Figure b</b>: The same function
+plotted with 40 data points with adaptively chosen x coordinates.</p>
+</td></tr>
+</table>
+
+40 hours spent computing 40 data points, and all the insight you get
+into your hard-to-compute function is Figure a?  Wouldn't you rather
+have something like Figure b for the same effort?
+
+Enter Adaptive Plot
+===================
+
+TODO Examples
 
 Concepts
 ========
