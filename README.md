@@ -1,6 +1,6 @@
 Has this ever happened to you?
 
-<img src="http://web.mit.edu/axch/plotting/oops.png" alt="Bad plot
+<img src="http://web.mit.edu/~axch/www/plotting/oops.png" alt="Bad plot
  from poorly chosen points" title="...">
 
 Concepts
