@@ -36,23 +36,27 @@
 ;;; lobe-area is the area of the larger, and the candidate-x is the
 ;;; x-coordinate of the point that would take the biggest triangular
 ;;; bite out of it.  An invariant of the geomtery is that
-;;; x1 < candidate-x < x2.  If lobe-area is 0, candidate-x may be #f.
+;;; x1 < candidate-x < x2.  If lobe-area is 0, any point will take
+;;; an equally null bite out of the lobe, so candidate-x will be
+;;; the midpoint between x1 and x2.
 (define-structure (segment safe-accessors (constructor %make-segment))
   p0 p1 p2 p3 candidate-x lobe-area)
 
 (define (make-segment p0 p1 p2 p3)
+  (define mid-x (/ (+ (car p1) (car p2)) 2))
+  (define mid-y (/ (+ (cdr p1) (cdr p2)) 2))
   (receive
    (p0-area p0-x p0-y)
    (if p0
        (parabola-stats 'right
         (car p0) (cdr p0) (car p1) (cdr p1) (car p2) (cdr p2))
-       (values 0 #f #f))
+       (values 0 mid-x mid-y))
    (receive
     (p3-area p3-x p3-y)
     (if p3
 	(parabola-stats 'left
          (car p1) (cdr p1) (car p2) (cdr p2) (car p3) (cdr p3))
-	(values 0 #f #f))
+	(values 0 mid-x mid-y))
     (if (> p0-area p3-area)
 	(%make-segment p0 p1 p2 p3 p0-x p0-area)
 	(%make-segment p0 p1 p2 p3 p3-x p3-area)))))

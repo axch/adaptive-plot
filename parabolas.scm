@@ -124,7 +124,7 @@
 ;;; The stats of the p1,0 lobe of the parabola that goes through
 ;;; (x1, 0), (0, 0), and (x3, y), with the condition that x1 < 0 < x3
 ;;; or x3 < 0 < x1.  The stats of such a parabola are the area between
-;;; the lobe and the axis, and the x and y corrdinates of the point
+;;; the lobe and the axis, and the x and y coordinates of the point
 ;;; that takes the largest possible triangular bite out of it
 ;;; (returned in that order).
 (define (grounded-parabola-stats x1 x3 y)
