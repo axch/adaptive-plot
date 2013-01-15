@@ -314,7 +314,7 @@ the `uniformly` adverbs, as well as control the size it aims for
   shorter than the given resolution (higher resolution means shorter
   segments).  The attempt is made by breaking any y-longer segment
   uniformly in the x dimension; if the function is nonlinear, not all
-  the resulting segments will have y-lengths shorter than the desired
+  the resulting segments will necessarily have y-lengths shorter than the desired
   resolution.  y-uniform refinement is not automatically iterated,
   because if the function has a sufficienly large discontinuity,
   iteration would not terminate.
@@ -328,7 +328,7 @@ the `uniformly` adverbs, as well as control the size it aims for
 - `uniformly` does `x-uniformly` first and then `y-uniformly`.
 
 
-Interactive manipulation
+Interactive Manipulation
 ------------------------
 
 `(plot f xlow xhigh 'invisibly . more-adverbs)`
@@ -345,7 +345,7 @@ refine.
 `(plot-zoom-x! plot #!optional new-xlow new-xhigh)`
 
 Change the x boundaries of the given plot and compute more points (if
-necessary) so that the new view reaches the plot's resolution, the
+necessary) so that the new view reaches the plot's resolution, then
 return the plot.  Useful for looking at a part of the function's
 geometry more closely without recomputing the points already plotted,
 or at a different region without forgetting the points already
@@ -359,8 +359,8 @@ boundaries become the new bounds.
 Clip the plot window to only show the curve within the given
 boundaries in the y dimension and compute more points (if necessary)
 so that the new view reaches the plot's resolution, then return the
-plot.  Useful avoiding being confused by a spike in the function.  If
-either boundary is left off, include all y values (including ones the
+plot.  Useful for avoiding being confused by a spike in the function.  If
+either boundary is left off, include all y values in the direction (including ones the
 function may produce in the future).  If this plot is being followed
 in a live Scheme window, its boundaries become the new bounds.
 
@@ -382,25 +382,26 @@ Get rid of the Scheme window (it will not be recreated until you call
 
 Draw the (current state of) the plot in a fresh gnuplot window and
 return the plot.  Does not compute additional points.  Accepts the
-adverbs `'prefixing` and `'commanding`, with the same effect as
+adverbs `prefixing` and `commanding`, with the same effect as
 `gnuplot`.
 
 
-Interactive querying
+Interactive Querying
 --------------------
 
-`(plot-xlow plot)` `(plot-xhigh plot)` `(plot-ylow plot)` `(plot-yhigh plot)`
+`(plot-xlow plot)`, `(plot-xhigh plot)`, `(plot-ylow plot)`, `(plot-yhigh plot)`
 
 Return the appropriate limit for this plot's range of interest.
-Returns the default object (which satisfies `default-object?`) if that
+Return the default object (which satisfies `default-object?`) if that
 boundary is not constrained.
 
 `(plot-dimensions plot)`
 
 Return the bounding box the plot will be drawn in as four values:
 `(xlow xhigh ylow yhigh)`.  This is not the same as calling
-`plot-xlow`, etc, because it computes what the effective boundaries
-are for dimensions that are not constrained.
+`plot-xlow`, etc, because it computes from the already plotted points
+what the effective boundaries are for dimensions that are not
+constrained.
 
 `(plot-xresolution plot)` `(plot-yresolution plot)`
 
@@ -427,12 +428,9 @@ boundaries (xlow, xhigh, ylow, yhigh) as a list of x-y pairs.
 
 Return the number of points the plot has computed so far.
 
-TODO discover the size of the discrepancy
-- Maybe this is just a unit testing utility?
 
-
-Manipulate without autorefinement
----------------------------------
+Manipulation Without Autorefinement
+-----------------------------------
 
 `(new-plot f xlow xhigh)`
 
@@ -454,18 +452,18 @@ for.
 `(plot-refine! plot . adverbs)`
 
 Manually invoke adaptive refinement, according to any `adaptively` or
-`uniformly` adverbs supplied.  The default is `'adaptively`.  Return
+`uniformly` adverbs supplied.  The default is `adaptively`.  Return
 the plot object.  If there is a live Scheme window following this
 plot, it will be updated as refinement proceeds.
 
 
-Of independent interest
+Of Independent Interest
 -----------------------
 
 This function is a utility from the perspective of Adaptive Plot, but
 may be useful independently of all the rest of this machinery.
 
-`(gnuplot-alist alist ...)`
+`(gnuplot-alist alist . adverbs)`
 
 Plot the given list of points (as x-y pairs) in gnuplot, according to
 any supplied `prefixing` and/or `commanding` adverbs.  This is defined
