@@ -30,7 +30,7 @@
         (else (+ 1.1 (* 4 (exp (* 100 (- x))))))))
 
 (gnuplot (offset example-f) -1 2 '(adaptively-with 40)
-         '(prefixing "set term png size 480,360; set output \"better.png\"")
-         '(commanding "title \"Adaptive placement of\nthe same 40 evaluations"))
+         '(prefixing "set term png size 640,480; set output \"better.png\"")
+         '(commanding "title \"Adaptive placement of the same 40 evaluations"))
 
 (%exit 0)
