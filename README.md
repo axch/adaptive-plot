@@ -75,7 +75,7 @@ TODO discover the size of the discrepancy
 
 Manipulate without autorefinement:
 
-(start-plot f xlow xhigh)
+(new-plot f xlow xhigh)
 - Create a plot, but do not make a Scheme window or invoke the
   function to be plotted.
 
