@@ -473,7 +473,27 @@ of Adaptive Plot, so may be lifted and used elsewhere if desired.
 Portability
 ===========
 
-TODO
+Adaptive Plot is written in and for MIT Scheme on Ubuntu, and no
+particular effort has been invested in porting it to other platforms.
+That said, I expect porting should be a matter of tedium, not
+invention.  The portability problems I anticipate are
+
+- Live Scheme windows: Every mature Scheme system on every OS has a
+  graphics API, but they are all different.  A sufficient portability
+  layer should not be impossible (after all, all I do with windows is
+  draw points and lines on them), but it may be simpler to drop this
+  convenience feature.
+- Calling out to Gnuplot: Every mature Scheme system has a mechanism
+  to ask the operating system to invoke external programs, and again,
+  they are all different.  This is in the same category as the live
+  windows, but less painful.
+- Code style idiosyncracies: I liberally rely upon various functions
+  and syntax provided by MIT Scheme that are not standard for Scheme.
+  Other Schemes have similar constructs with different syntax; this
+  should be just a bunch of doc-grovelling.
+- The unit test suite: is written in my [Test
+  Manager](../test-manager/) framework, which you would also need to
+  port if you wanted the test suite; but that should be easier.
 
 Bugs
 ====
