@@ -492,7 +492,7 @@ invention.  The portability problems I anticipate are
   Other Schemes have similar constructs with different syntax; this
   should be just a bunch of doc-grovelling.
 - The unit test suite: is written in my [Test
-  Manager](../test-manager/) framework, which you would also need to
+  Manager](test-manager/) framework, which you would also need to
   port if you wanted the test suite; but that should be easier.
 
 Bugs
