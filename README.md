@@ -1,3 +1,5 @@
+In memoriam, Aaron Swartz, November 8, 1986 &ndash; January 11, 2013.
+
 Has this ever happened to you?
 ==============================
 
