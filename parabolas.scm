@@ -18,9 +18,9 @@
 
 (declare (usual-integrations))
 
-;;;; Some geometry of parabolas
+;;;; Geometry of parabolas
 
-;;; I am interested in refining my plots with the points that make the
+;;; I am interested in refining plots with the points that make the
 ;;; most visual difference.  My heuristic for visual difference is
 ;;; that the new point should, locally, bring the piecewise-linear
 ;;; plot closest to the piecewise-parabolic plot, where closeness is

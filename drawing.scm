@@ -20,6 +20,10 @@
 
 ;;;; Drawing
 
+;;; Creating, releasing, and maintaining live Scheme windows.  The
+;;; only really tricky thing here is making sure there are enough
+;;; points in the plot to pick window boundaries from.
+
 (define *scheme-plot-window-x-res* 1024)
 (define *scheme-plot-window-y-res* 768)
 

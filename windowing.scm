@@ -1,19 +1,24 @@
-;;; This file is part of Adaptive Plot, a library for plotting
-;;; functions from the MIT Scheme REPL
+;;; This file is a supporting library for Adaptive Plot, a library for
+;;; plotting functions from the MIT Scheme REPL
 ;;; Copyright (C) 1986, 1987, 1988, 1989, 1990, 1991, 1992, 1993, 1994,
 ;;;     1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 ;;;     2006, 2007, 2008, 2009, 2010, 2011 Massachusetts Institute of
 ;;;     Technology
 ;;;
-;;; Adaptive Plot is free software: you can redistribute it and/or
-;;; modify it under the terms of the GNU Affero General Public License
-;;; as published by the Free Software Foundation, either version 3 of
-;;; the License, or (at your option) any later version.
+;;; This program is free software: you can redistribute it and/or
+;;; modify it under the terms of the GNU General Public License as
+;;; published by the Free Software Foundation, either version 3 of the
+;;; License, or (at your option) any later version.
 ;;;
-;;; Adaptive Plot is distributed in the hope that it will be useful,
+;;; This program is distributed in the hope that it will be useful,
 ;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-;;; Affero General Public License for more details.
+;;; General Public License for more details.
+;;;
+;;; Adaptive Plot itself can be redistributed and/or modified under
+;;; the terms of the GNU Affero General Public License as published by
+;;; the Free Software Foundation, either version 3 of the License, or
+;;; (at your option) any later version.
 ;;;
 ;;; You should have received a copy of the GNU Affero General Public
 ;;; License along with Adaptive Plot.  If not, see
@@ -27,7 +32,8 @@
 ;;; (scmutils/src/open.scm).  The copy is to avoid depending on
 ;;; ScmUtils; I also renamed the procedures to avoid conflicting with
 ;;; ScmUtils.  That file is licensed "GPLv2 or later", which I believe
-;;; permits me to incorporate it into Adaptive Plot under AGPLv3.
+;;; permits me to redistribute it under "GPLv3 or later" and
+;;; incorporate it into Adaptive Plot, which is AGPLv3.
 ;;; -- axch
 (define (new-plot-window xmin xmax ymin ymax
 			 frame-width frame-height #!optional display)

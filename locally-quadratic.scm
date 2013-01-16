@@ -26,9 +26,12 @@
 ;;; Any two consecutive segments of a piecewise linear curve can be
 ;;; evaluated by comparing them to the parabola defined by those three
 ;;; points.  The quality of a segment is given by how small a lobe the
-;;; parabola in question makes over it.  Any one segment can be
-;;; evaluated in one of two ways, using one of its two neighbors.  I
-;;; take the more critical of the two evaluations.
+;;; parabola in question makes over it (details in parabolas.scm).
+;;; Any one segment can be evaluated in one of two ways, using one of
+;;; its two neighbors.  I take the more critical of the two
+;;; evaluations.  Given the evaluations of all segments, the
+;;; refinement loop just repeatedly splits the worst segment in twain
+;;; until done.
 
 ;;; A `segment' record represents the segment between p1 and p2 of the
 ;;; four points p0, p1, p2, and p3.  x0 < x1 < x2 < x3.  At most one

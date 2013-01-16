@@ -481,6 +481,64 @@ Write the given list of points (as x-y pairs) into the given file
 function is trivial, but I already wrote it for you.
 
 
+Developer Documentation
+=======================
+
+The developer documentation is the source code and the commentary
+therein.  In particular, each source file has some discussion at the
+beginning of what that file is about and what the salient things in it
+are.  Here's a table of contents (and suggested reading order):
+
+- Interesting stuff
+
+  - interface.scm: Primary entry points, and user-level functions that
+    don't clearly belong in another file.
+  - refinement.scm: Uniform refinement, and the administration around
+    parabolic refinement.
+  - locally-quadratic.scm: The actual parabolic refinement loop and
+    supporting data structures.
+  - parabolas.scm: Geometry of parabolas, for parabolic refinement.
+
+- Semi-involved support
+
+  - drawing.scm: Dealing with making, dropping, and updating any
+    requested live Scheme windows.
+  - windowing.scm: The actual mechanics of opening a window and
+    drawing a point or a line on it.
+  - gnuplot.scm: Gnuplot plotting of alist data.
+
+- Fairly boring support
+
+  - plots.scm: The actual data structure holding the things a plot
+    remembers.
+  - point-sets.scm: An abstraction for clipping sets of points in the
+    plane.  The implementation is uninteresting, but this is a place
+    where a proper range tree could be dropped in if overhead needed
+    to be that low.
+  - utils.scm: Two random utlities.
+  - auto-compilation.scm: Automatically invoke the MIT Scheme
+    compiler, if necessary and possible, to (re)compile files before
+    loading them.  This has nothing to do with Adaptive Plot, but I
+    figured copying it in was easier than making an external
+    dependency.
+  - load.scm: Orchestrate the loading sequence.  Nothing interesting
+    to see here.
+  - Makefile: Run the test suite or build a local copy of this
+    documentation.  Note that there is no "build" as such; source is
+    automatically recompiled at loading time as needed.
+  - doc/ : Some stuff for generating the pictures that appear in this
+    README.
+
+- Test suite
+
+  - Run it with `make test`.
+  - The `test/` directory contains the actual test suite (with some
+    test-time-only utilities in test/utils.scm).
+  - The `testing/` directory is a git submodule pointed at the [Test
+    Manager](http://github.com/axch/test-manager/) framework that the
+    test suite relies upon.
+
+
 Portability
 ===========
 

@@ -18,7 +18,11 @@
 
 (declare (usual-integrations))
 
-;;;; Gnuplot output
+;;;; Gnuplot output of alist data
+
+;;; This is just writing files to disk and issuing shell commands.
+;;; This file intentionally does not depend on any of the rest of
+;;; Adaptive Plot, so can be lifted and used elsewhere.
 
 (load-option 'synchronous-subprocess)
 

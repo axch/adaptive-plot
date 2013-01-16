@@ -18,6 +18,8 @@
 
 (declare (usual-integrations))
 
+;;;; Why is it that every project seems to have a file like this?
+
 (define (in-box? #!optional xlow xhigh ylow yhigh)
   (lambda (x.y)
     (and (or (default-object? xlow)

@@ -18,6 +18,13 @@
 
 (declare (usual-integrations))
 
+;;;; Interface
+
+;;; This file collects the functions that are meant to be called
+;;; directly by the user, as opposed to other parts of the system.
+;;; Not all documented user-facing functions are to be found here, but
+;;; the major and common ones are.
+
 ;;;; Facade: common patterns made simple
 
 (define (plot f xlow xhigh . adverbs)

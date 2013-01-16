@@ -19,9 +19,13 @@
 (declare (usual-integrations))
 
 ;;;; Refinement of plots until visual continuity
-;;;; (up to the resolution held in the plot object).
 
-;;; Uniform refinement
+;;; (up to the any explicit stop condition, or the resolution held in
+;;; the plot object).
+
+;;;; Uniform refinement
+
+;;; See the README for a description of what this algorithm does.
 
 (define (plot-uniform-refine! plot #!optional xres yres)
   (if (default-object? yres)
@@ -75,7 +79,10 @@
 	  '())))
   (append-map needed-interpoint-queries known-points (cdr known-points)))
 
-;;; Adaptive refinement by parabolic interpolation
+;;;; Adaptive refinement by parabolic interpolation
+
+;;; See the README for a description of what this algorithm does, and
+;;; locally-quadratic.scm for how it does it.
 
 (define (plot-adaptive-refine! plot #!optional xres yres)
   ;; The optional arguments set the intended number of pixels to

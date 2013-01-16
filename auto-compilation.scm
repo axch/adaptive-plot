@@ -18,6 +18,13 @@
 
 (declare (usual-integrations))
 
+;;;; Auto-compilation
+
+;;; A facility for automatically (re)compiling files at load time so
+;;; as to avoid both the hassle of manual recompilations and the
+;;; slowness of running interpreted code.  Takes care around macros
+;;; from previously loaded files.
+
 (define (self-relatively thunk)
   (if (current-eval-unit #f)
       (with-working-directory-pathname
