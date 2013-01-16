@@ -99,7 +99,7 @@ Just `git clone` this repository,
 ```scheme
 (load "adaptive-plot/load")
 ```
-and hack away.  Try out the example commandsx in `examples.scm`
+and hack away.  Try out the example commands in `examples.scm`
 and see how it works.
 
 If you want to develop Adaptive Plot, you will want to also get the
@@ -492,7 +492,7 @@ are.  Here's a table of contents (and suggested reading order):
 
 - Interesting stuff
 
-  - `examples.scm`: A few plots commands for your pleasure.
+  - `examples.scm`: A few plot commands for your pleasure.
   - `interface.scm`: Primary entry points, and user-level functions that
     don't clearly belong in another file.
   - `refinement.scm`: Uniform refinement, and the administration around
