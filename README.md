@@ -320,7 +320,7 @@ the `uniformly` adverbs, as well as control the size it aims for
   uniformly in the x dimension; if the function is nonlinear, not all
   the resulting segments will necessarily have y-lengths shorter than the desired
   resolution.  y-uniform refinement is not automatically iterated,
-  because if the function has a sufficienly large discontinuity,
+  because if the function has a sufficiently large discontinuity,
   iteration would not terminate.
 
 - `y-uniformly` tries to make the y-lengths of all segments shorter
@@ -354,7 +354,7 @@ return the plot.  Useful for looking at a part of the function's
 geometry more closely without recomputing the points already plotted,
 or at a different region without forgetting the points already
 plotted.  If either boundary is left off, set it to include all
-avilable already plotted points (and at least the x coordinates -1 and
+available already plotted points (and at least the x coordinates -1 and
 +1).  If this plot is being followed in a live Scheme window, its
 boundaries become the new bounds.
 
@@ -518,7 +518,7 @@ are.  Here's a table of contents (and suggested reading order):
     plane.  The implementation is uninteresting, but this is a place
     where a proper range tree could be dropped in if overhead needed
     to be that low.
-  - `utils.scm`: Two random utlities.
+  - `utils.scm`: Two random utilities.
   - `auto-compilation.scm`: Automatically invoke the MIT Scheme
     compiler, if necessary and possible, to (re)compile files before
     loading them.  This has nothing to do with Adaptive Plot, but I
@@ -560,7 +560,7 @@ invention.  The portability problems I anticipate are
   to ask the operating system to invoke external programs, and again,
   they are all different.  This is in the same category as the live
   windows, but less painful.
-- Code style idiosyncracies: I liberally rely upon various functions
+- Code style idiosyncrasies: I liberally rely upon various functions
   and syntax provided by MIT Scheme that are not standard for Scheme.
   Other Schemes have similar constructs with different syntax; this
   should be just a bunch of doc-grovelling.
@@ -581,7 +581,7 @@ actually undefined, possibly causing a crash.
 
 Clipping the y range does not prevent Adaptive Plot from trying to
 explore that geometry.  To wit, if the function has something
-interesting, like a high curvarture area, or a discontinuity (or a
+interesting, like a high curvature area, or a discontinuity (or a
 singularity!) in the given x range but outside the given y range,
 Adaptive Plot will try to explore it anyway, wasting computational
 effort.
@@ -601,7 +601,7 @@ parabola geometry code (see `parabolas.scm`) such that I don't
 actually know how to characterize the next point it picks.  However,
 it does pick something reasonable, and the results are still
 aesthetic, so this is a performance (and reproducibility) problem
-rather than a correctess problem.
+rather than a correctness problem.
 
 Unimplemented Features
 ======================
