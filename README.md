@@ -101,6 +101,9 @@ Just `git clone` this repository,
 ```
 and hack away.
 
+If you want to develop Adaptive Plot, you will want to also get the
+unit test framework that Adaptive Plot uses.  Type `git submodule
+update`.
 
 I can haz Reference Manual?
 ===========================
