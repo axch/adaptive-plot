@@ -16,7 +16,7 @@
 ;;; License along with Adaptive Plot.  If not, see
 ;;; <http://www.gnu.org/licenses/>.
 
-;;;; Plotting
+;;;; Loading Adaptive Plot
 
 (define (self-relatively thunk)
   (let ((place (ignore-errors current-load-pathname)))
@@ -28,9 +28,6 @@
 
 (define (load-relative filename)
   (self-relatively (lambda () (load filename))))
-
-(load-option 'synchronous-subprocess)
-(load-option 'wt-tree)
 
 (load-relative "auto-compilation")
 (load-relative-compiled "utils")

@@ -21,6 +21,8 @@
 ;;;; Evaluating piecewise linear approximations with locally quadratic
 ;;;; approximations.
 
+(load-option 'wt-tree)
+
 ;;; Any two consecutive segments of a piecewise linear curve can be
 ;;; evaluated by comparing them to the parabola defined by those three
 ;;; points.  The quality of a segment is given by how small a lobe the

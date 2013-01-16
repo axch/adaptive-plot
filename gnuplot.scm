@@ -20,6 +20,8 @@
 
 ;;;; Gnuplot output
 
+(load-option 'synchronous-subprocess)
+
 (define (gnuplot-write-alist alist filename)
   (with-output-to-file filename
     (lambda ()
