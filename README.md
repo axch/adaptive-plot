@@ -593,6 +593,14 @@ not terminate).
 `gnuplot`, `regnuplot`, and `plot-gnu!` are synchronous, so you can't
 have both your REPL and the gnuplot window open at the same time.
 
+Parabolic refinement doesn't actually pick the point of greatest
+anticipated convergence of areas.  There is a subtle bug in the
+parabola geometry code (see `parabolas.scm`) such that I don't
+actually know how to characterize the next point it picks.  However,
+it does pick something reasonable, and the results are still
+aesthetic, so this is a performance (and reproducibility) problem
+rather than a correctess problem.
+
 Unimplemented Features
 ======================
 
