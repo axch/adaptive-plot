@@ -491,45 +491,45 @@ are.  Here's a table of contents (and suggested reading order):
 
 - Interesting stuff
 
-  - interface.scm: Primary entry points, and user-level functions that
+  - `interface.scm`: Primary entry points, and user-level functions that
     don't clearly belong in another file.
-  - refinement.scm: Uniform refinement, and the administration around
+  - `refinement.scm`: Uniform refinement, and the administration around
     parabolic refinement.
-  - locally-quadratic.scm: The actual parabolic refinement loop and
+  - `locally-quadratic.scm`: The actual parabolic refinement loop and
     supporting data structures.
-  - parabolas.scm: Geometry of parabolas, for parabolic refinement.
-  - todo.txt: The "issue tracker".
+  - `parabolas.scm`: Geometry of parabolas, for parabolic refinement.
+  - `todo.txt`: The "issue tracker".
 
 - Semi-involved support
 
-  - drawing.scm: Dealing with making, dropping, and updating any
+  - `drawing.scm`: Dealing with making, dropping, and updating any
     requested live Scheme windows.
-  - windowing.scm: The actual mechanics of opening a window and
+  - `windowing.scm`: The actual mechanics of opening a window and
     drawing a point or a line on it.
-  - gnuplot.scm: Gnuplot plotting of alist data.
+  - `gnuplot.scm`: Gnuplot plotting of alist data.
 
 - Fairly boring support
 
-  - plots.scm: The actual data structure holding the things a plot
+  - `plots.scm`: The actual data structure holding the things a plot
     remembers.
-  - point-sets.scm: An abstraction for clipping sets of points in the
+  - `point-sets.scm`: An abstraction for clipping sets of points in the
     plane.  The implementation is uninteresting, but this is a place
     where a proper range tree could be dropped in if overhead needed
     to be that low.
-  - utils.scm: Two random utlities.
-  - auto-compilation.scm: Automatically invoke the MIT Scheme
+  - `utils.scm`: Two random utlities.
+  - `auto-compilation.scm`: Automatically invoke the MIT Scheme
     compiler, if necessary and possible, to (re)compile files before
     loading them.  This has nothing to do with Adaptive Plot, but I
     figured copying it in was easier than making an external
     dependency.
-  - load.scm: Orchestrate the loading sequence.  Nothing interesting
+  - `load.scm`: Orchestrate the loading sequence.  Nothing interesting
     to see here.
-  - Makefile: Run the test suite or build a local copy of this
-    documentation.  Note that there is no "build" as such; source is
+  - `Makefile: Run the test suite or build a local copy of this
+    documentation.  Note` that there is no "build" as such; source is
     automatically recompiled at loading time as needed.
-  - doc/ : Some stuff for generating the pictures that appear in this
+  - `doc/` : Some stuff for generating the pictures that appear in this
     README.
-  - LICENSE: The AGPLv3, under which Adaptive Plot is licensed.
+  - `LICENSE`: The AGPLv3, under which Adaptive Plot is licensed.
 
 - Test suite
 
