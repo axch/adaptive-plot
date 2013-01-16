@@ -498,6 +498,7 @@ are.  Here's a table of contents (and suggested reading order):
   - locally-quadratic.scm: The actual parabolic refinement loop and
     supporting data structures.
   - parabolas.scm: Geometry of parabolas, for parabolic refinement.
+  - todo.txt: The "issue tracker".
 
 - Semi-involved support
 
@@ -528,6 +529,7 @@ are.  Here's a table of contents (and suggested reading order):
     automatically recompiled at loading time as needed.
   - doc/ : Some stuff for generating the pictures that appear in this
     README.
+  - LICENSE: The AGPLv3, under which Adaptive Plot is licensed.
 
 - Test suite
 
