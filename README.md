@@ -633,8 +633,8 @@ Alexey Radul, axch@mit.edu
 License
 =======
 
-This file is part of Adaptive Plot, a library for plotting
-functions from the MIT Scheme REPL
+This file is part of Adaptive Plot, a library for intelligently
+plotting functions from the MIT Scheme REPL.
 Copyright (C) 2010-2011 Alexey Radul
 
 Adaptive Plot is free software: you can redistribute it and/or
