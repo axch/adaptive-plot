@@ -104,7 +104,7 @@ and see how it works.
 
 If you want to develop Adaptive Plot, you will want to also get the
 unit test framework that Adaptive Plot uses.  Type `git submodule
-update`.
+init` and `git submodule update`.
 
 I can haz Reference Manual?
 ===========================
