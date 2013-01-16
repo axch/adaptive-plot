@@ -31,45 +31,35 @@
 (plot-gnu! (out))
 
 ;; Sharp extremum at 1/(sqrt 2); the weird constant is there to
-;; prevent the plotter from guessing the minimum by accident.
-;; Gnuplot natively cuts the extremum off.
+;; prevent the plotter from guessing the minimum by accident.  It
+;; still finds it pretty well.
 (plot (lambda (x) (abs (- x (/ 1 (sqrt 2))))) -1 1)
 
-(plot-gnu! (out))
+;; Compare the same task with 100 uniformly spaced points:
+(plot (lambda (x) (abs (- x (/ 1 (sqrt 2))))) -1 1 '(x-uniformly 98))
 
-;; Smooth extremum at zero; trace out the discontinuities at -1 and 1
+;; This function has a smooth extremum at zero and discontinuities at
+;; -1 and 1.
 (define (quartic-mess x)
   (cond ((< x -1) 0.95)
         ((> x 1) 0.95)
         (else (expt x 4))))
 
+;; The plotter traces out both the extremum and the discontinuities.
 (plot quartic-mess -3 3)
 
-(plot-gnu! (out))
+;; We can plot the same thing straight to gnuplot output.
+(gnuplot quartic-mess -3 3)
 
 ;; Still works with a larger range; plot it without showing the Scheme
 ;; plot window just for kicks.
 (plot quartic-mess -10 10 'invisibly)
 
+;; There it is!
 (plot-gnu! (out))
 
-;; Offset so it can't guess the key points
-(plot (lambda (x) (quartic-mess (+ x (sqrt 2)))) -3 3)
-
-(plot-gnu! (out))
-
-;; Gnuplot not only fails to follow the heights of the peaks, it
-;; misses around half of them completely.
-(plot (lambda (x) (sin (* 200 x))) -1 1)
-
-(plot-gnu! (out) '(commanding "with lines title \"sin(200x)\""))
-
-;; The following function is chosen to have a relatively sharp
-;; transition (with interesting behavior) and relatively large flat
-;; regions.  The idea is to make it look like it might be hard to
-;; compute, so plot points are at a premium; and to make it have very
-;; local geometry of interest, so that placing them well is valuable.
-(define (example-f x)
-  (cond ((< x 0) (+ 0.1 (* 5 (exp (* 100 x)))))
-        (else (+ 1.1 (* 4 (exp (* 100 (- x))))))))
-;; (gnuplot (offset example-f) -1 2 '(x-uniformly 28)) is duly terrible
+;; Compare this to plotting the same thing natively in Gnuplot.
+(plot-gnu! (lambda (x) (sin (* 200 x))) -1 1 'visibly
+           '(commanding "with lines title \"sin(200x)\""))
+;; Using only 100 evenly spaced points not only fails to follow the
+;; the extrema all the way, it misses around half of them completely.
