@@ -27,6 +27,12 @@
 ;;; which to draw points as they appear, and updated line-drawings
 ;;; from time to time.
 
+;;; I am using setters rather than updaters because the window is an
+;;; imperative structure anyway, and has to be kept in sync with the
+;;; known-points list, so a persistent (in the Sleator and Tarjan
+;;; sense) plot object doesn't make much sense.  And the mutators all
+;;; return the plot, so you can chain them just the same.
+
 (define-structure
   (plot safe-accessors (constructor %make-plot))
   xresolution
