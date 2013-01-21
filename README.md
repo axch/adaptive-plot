@@ -546,7 +546,7 @@ are.  Here's a table of contents (and suggested reading order):
 
 
 Portability
-===========
+-----------
 
 Adaptive Plot is written in and for MIT Scheme on Ubuntu, and no
 particular effort has been invested in porting it to other platforms.
