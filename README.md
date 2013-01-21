@@ -528,8 +528,8 @@ are.  Here's a table of contents (and suggested reading order):
     dependency.
   - `load.scm`: Orchestrate the loading sequence.  Nothing interesting
     to see here.
-  - `Makefile: Run the test suite or build a local copy of this
-    documentation.  Note` that there is no "build" as such; source is
+  - `Makefile`: Run the test suite or build a local copy of this
+    documentation.  Note that there is no "build" as such; source is
     automatically recompiled at loading time as needed.
   - `doc/` : Some stuff for generating the pictures that appear in this
     README.
