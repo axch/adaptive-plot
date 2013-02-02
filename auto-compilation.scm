@@ -26,11 +26,12 @@
 ;;; from previously loaded files.
 
 (define (self-relatively thunk)
-  (if (current-eval-unit #f)
-      (with-working-directory-pathname
-       (directory-namestring (current-load-pathname))
-       thunk)
-      (thunk)))
+  (let ((place (ignore-errors current-load-pathname)))
+    (if (pathname? place)
+	(with-working-directory-pathname
+	 (directory-namestring place)
+	 thunk)
+	(thunk))))
 
 (define (load-relative filename #!optional environment)
   (self-relatively (lambda () (load filename environment))))
@@ -83,4 +84,3 @@
 
 (define (load-relative-compiled filename #!optional environment)
   (self-relatively (lambda () (load-compiled filename environment))))
-
